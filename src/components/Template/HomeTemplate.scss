@@ -1,0 +1,21 @@
+.HomeTemplate {
+  margin: 0 auto;
+  max-width: 1080px;
+}
+
+.HomeTemplate .head {
+  display: flex;
+  align-items: flex-end;
+  h2 {
+    padding: 0 20px;
+  }
+}
+
+.HomeTemplate .scale-selector {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.HomeTemplate .card-wrap {
+  display: flex;
+}
