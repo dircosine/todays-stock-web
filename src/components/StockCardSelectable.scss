@@ -8,17 +8,3 @@
     align-items: center;
   }
 }
-
-// TODO: info 컴포넌트로 분리
-h3 {
-  display: inline;
-  font-size: 20px;
-}
-
-.info {
-  padding: 8px;
-
-  .code {
-    margin: 0px 4px;
-  }
-}

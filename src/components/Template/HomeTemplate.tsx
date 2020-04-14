@@ -28,8 +28,8 @@ type HomeTemplateProps = {
 
 function HomeTemplate({ stockInfos }: HomeTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
-  // const [round, setRound] = useState<Round>(Round.Round32);
-  const [round, setRound] = useState<Round>(Round.Done);
+  const [round, setRound] = useState<Round>(Round.Round32);
+  // const [round, setRound] = useState<Round>(Round.Done);
   const [progress, setProgress] = useState(1);
   const [progressLimit, setProgressLimit] = useState(stockInfos.length / 2);
   const [leftIndex, setLeftIndex] = useState(0);
@@ -139,14 +139,14 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               className="winner"
               stockInfo={stockInfos[0]}
               showChart={true}
-              showInfoType="all"
+              infoExtent="all"
             />
             <div className="space-column" />
             <StockCard
               className="second"
               stockInfo={stockInfos[1]}
               showChart={true}
-              showInfoType="all"
+              infoExtent="all"
             />
           </div>
           <div className="space-row" />
@@ -156,7 +156,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                 <StockCard
                   stockInfo={stockInfo}
                   showChart={true}
-                  showInfoType="all"
+                  infoExtent="all"
                 />
               </li>
             ))}
@@ -165,7 +165,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                 <StockCard
                   stockInfo={stockInfo}
                   showChart={false}
-                  showInfoType="all"
+                  infoExtent="all"
                 />
               </li>
             ))}
@@ -177,7 +177,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                 <StockCard
                   stockInfo={stockInfo}
                   showChart={false}
-                  showInfoType="head"
+                  infoExtent="head"
                 />
               </li>
             ))}
@@ -189,7 +189,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                 <StockCard
                   stockInfo={stockInfo}
                   showChart={false}
-                  showInfoType="head"
+                  infoExtent="head"
                 />
               </li>
             ))}
