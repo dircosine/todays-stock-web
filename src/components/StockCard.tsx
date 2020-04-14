@@ -2,13 +2,13 @@ import React from 'react';
 import { Card } from 'antd';
 
 import { StockInfo } from '../pages/HomePage';
-import StockInfoDisplayable, { InfoExtent } from './StockInfoDisplayable';
+import StockInfoDisplayable, { InfoSection } from './StockInfoDisplayable';
 
 type StockCardProps = {
   className?: string | undefined;
   stockInfo: StockInfo;
   showChart: boolean;
-  infoExtent: InfoExtent;
+  infoExtent: InfoSection[];
 };
 
 function StockCard({
@@ -32,7 +32,7 @@ function StockCard({
         />
       )}
 
-      <StockInfoDisplayable stockInfo={stockInfo} infoExtent={infoExtent} />
+      {/* <StockInfoDisplayable stockInfo={stockInfo} infoExtent={infoExtent} /> */}
     </Card>
   );
 }

@@ -48,7 +48,10 @@ function StockCardSelectable({
           <Spin />
         </div>
       ) : (
-        <StockInfoDisplayable stockInfo={stockInfo} infoExtent="all" />
+        <StockInfoDisplayable
+          stockInfo={stockInfo}
+          infoExtent={['head', 'chart', 'price', 'more']}
+        />
       )}
     </Card>
   );

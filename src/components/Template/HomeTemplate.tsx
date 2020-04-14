@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Radio } from 'antd';
+import { Radio, List, Tag, Divider, Card } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import EventDate from '../EventDate';
-import StockCard from '../StockCard';
 import StockCardSelectable from '../StockCardSelectable';
 import { StockInfo } from '../../pages/HomePage';
 
+import { RightOutlined } from '@ant-design/icons';
+
 import './HomeTemplate.scss';
+import Emoji from '../Emoji';
+import StockInfoDisplayable from '../StockInfoDisplayable';
 
 enum Round {
   Round32 = '32강',
@@ -28,12 +31,14 @@ type HomeTemplateProps = {
 
 function HomeTemplate({ stockInfos }: HomeTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
-  const [round, setRound] = useState<Round>(Round.Round32);
-  // const [round, setRound] = useState<Round>(Round.Done);
+  // const [round, setRound] = useState<Round>(Round.Round32);
+  const [round, setRound] = useState<Round>(Round.Done);
   const [progress, setProgress] = useState(1);
   const [progressLimit, setProgressLimit] = useState(stockInfos.length / 2);
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(stockInfos.length / 2);
+
+  const [infoOpenIndexes, setInfoOpenIndexes] = useState<number[]>([]);
 
   const setNextRound = () => {
     setRound((p) => {
@@ -88,6 +93,18 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
     });
   };
 
+  const toggleInfoOpen = (index: number) => {
+    if (infoOpenIndexes.includes(index)) {
+      setInfoOpenIndexes((p) =>
+        p.filter((i) => {
+          return i !== index;
+        }),
+      );
+    } else {
+      setInfoOpenIndexes((p) => [index, ...p]);
+    }
+  };
+
   if (round !== Round.Done) {
     return (
       <div className="HomeTemplate">
@@ -100,7 +117,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
             </p>
           )}
         </div>
-        <p>32강은 차트만 보고 후딱 추려 보자구용</p>
+        <p className="announce">32강은 차트만 보고 후딱 추려 보자구용</p>
         <div className="scale-selector">
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScale}>
             <Radio.Button value="day">일봉</Radio.Button>
@@ -115,7 +132,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
             position="left"
             onClick={handleCardClick}
           />
-          <div className="space-column" />
+          <div className="space-vertical" />
           <StockCardSelectable
             stockInfo={stockInfos[rightIndex]}
             chartScale={chartScale}
@@ -133,7 +150,136 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
           <h2>{round}</h2>
         </div>
 
-        <div className="rank-display">
+        <div className="content">
+          <div className="rank" style={{ background: 'white' }}>
+            <List
+              size="large"
+              dataSource={stockInfos.slice(0, 8)}
+              renderItem={(item, index) => (
+                <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <Card
+                    bordered={false}
+                    style={{
+                      background: 'none',
+                      width: '100%',
+                    }}
+                    bodyStyle={{
+                      padding: 12,
+                    }}
+                    onClick={() => toggleInfoOpen(index)}
+                    hoverable
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ flex: 1 }}>
+                        {index === 0 && <Emoji symbol="🥇" />}
+                        {index === 1 && <Emoji symbol="🥈" />}
+                        {(index === 2 || index === 3) && <Emoji symbol="🥉" />}
+
+                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                        <span style={{ margin: '0 4px' }}>{item.code}</span>
+                        <Tag>{item.market}</Tag>
+                      </div>
+                      <RightOutlined
+                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                      />
+                    </div>
+                    {infoOpenIndexes.includes(index) && (
+                      <StockInfoDisplayable
+                        stockInfo={item}
+                        key={index}
+                        infoExtent={['price', 'chart', 'more']}
+                      />
+                    )}
+                  </Card>
+                </List.Item>
+              )}
+            />
+            <Divider dashed={true}> 16강 탈락! 그래도 이름은 알렸다..</Divider>
+            <List
+              size="large"
+              dataSource={stockInfos.slice(8, 16)}
+              renderItem={(item, index) => (
+                <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <Card
+                    bordered={false}
+                    style={{
+                      background: 'none',
+                      width: '100%',
+                    }}
+                    bodyStyle={{
+                      padding: 12,
+                    }}
+                    onClick={() => toggleInfoOpen(index)}
+                    hoverable
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                        <span style={{ margin: '0 4px' }}>{item.code}</span>
+                        <Tag>{item.market}</Tag>
+                      </div>
+                      <RightOutlined
+                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                      />
+                    </div>
+                    {infoOpenIndexes.includes(index) && (
+                      <StockInfoDisplayable
+                        stockInfo={item}
+                        key={index}
+                        infoExtent={['price', 'chart', 'more']}
+                      />
+                    )}
+                  </Card>
+                </List.Item>
+              )}
+            />
+            <Divider dashed={true}>
+              차트만 보고 걸렀지만.. 다시보니 선녀?!
+            </Divider>
+            <List
+              size="large"
+              dataSource={stockInfos.slice(16)}
+              renderItem={(item, index) => (
+                <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <Card
+                    bordered={false}
+                    style={{
+                      background: 'none',
+                      width: '100%',
+                    }}
+                    bodyStyle={{
+                      padding: 12,
+                    }}
+                    onClick={() => toggleInfoOpen(index)}
+                    hoverable
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                        <span style={{ margin: '0 4px' }}>{item.code}</span>
+                        <Tag>{item.market}</Tag>
+                      </div>
+                      <RightOutlined
+                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                      />
+                    </div>
+                    {infoOpenIndexes.includes(index) && (
+                      <StockInfoDisplayable
+                        stockInfo={item}
+                        key={index}
+                        infoExtent={['price', 'chart', 'more']}
+                      />
+                    )}
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </div>
+          <div className="space-vertical" />
+          <div className="share"></div>
+        </div>
+
+        {/* <div className="rank-display">
           <div className="rank-1-2">
             <StockCard
               className="winner"
@@ -141,7 +287,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               showChart={true}
               infoExtent="all"
             />
-            <div className="space-column" />
+            <div className="space-vertical" />
             <StockCard
               className="second"
               stockInfo={stockInfos[1]}
@@ -149,7 +295,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               infoExtent="all"
             />
           </div>
-          <div className="space-row" />
+          <div className="space-horizontal" />
           <ul className="rank-3-8">
             {stockInfos.slice(2, 4).map((stockInfo) => (
               <li className="item" key={stockInfo.code}>
@@ -170,7 +316,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               </li>
             ))}
           </ul>
-          <div className="space-row" />
+          <div className="space-horizontal" />
           <ul className="rank-8-16">
             {stockInfos.slice(8, 16).map((stockInfo) => (
               <li className="item" key={stockInfo.code}>
@@ -182,7 +328,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               </li>
             ))}
           </ul>
-          <div className="space-row" />
+          <div className="space-horizontal" />
           <ul className="rank-under-16">
             {stockInfos.slice(16).map((stockInfo) => (
               <li className="item" key={stockInfo.code}>
@@ -194,7 +340,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     );
   }
