@@ -1,3 +1,15 @@
+.StockCardSelectable {
+  flex: 1;
+
+  .spinner {
+    display: flex;
+    min-height: 35vw;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// TODO: info 컴포넌트로 분리
 h3 {
   display: inline;
   font-size: 20px;
