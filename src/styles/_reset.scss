@@ -21,6 +21,14 @@ a {
   color: inherit;
 }
 
+ul,
+ol,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 html,
 body {
   height: 100%;
