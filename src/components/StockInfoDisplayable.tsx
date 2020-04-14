@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tag } from 'antd';
+import React, { useState } from 'react';
+import { Tag, Spin } from 'antd';
 
 import Price from './Price';
 import { StockInfo } from '../pages/HomePage';
@@ -19,11 +19,32 @@ function StockInfoDisplayable({
   chartScale,
   infoExtent,
 }: StockInfoDisplayableProps) {
+  const [imgLoading, setImgLoading] = useState(true);
+
+  const handleImgLoad = () => {
+    setImgLoading(false);
+  };
+
+  if (imgLoading) {
+    return (
+      <>
+        <img
+          alt={stockInfo.name + ' chart'}
+          src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
+          width="100%"
+          onLoad={handleImgLoad}
+        />
+        <div className="spinner">
+          <Spin />
+        </div>
+      </>
+    );
+  }
   return (
     <div className="StockInfoDisplayable">
       {infoExtent.includes('head') && (
         <div className="info-head">
-          <h3>{stockInfo.name}</h3>
+          <strong className="name">{stockInfo.name}</strong>
           <span className="code">{stockInfo.code}</span>
           <Tag>{stockInfo.market}</Tag>
         </div>
@@ -41,7 +62,7 @@ function StockInfoDisplayable({
         </div>
       )}
       {infoExtent.includes('more') && (
-        <ul className="info-all">
+        <ul className="info-more">
           <li>
             시가총액
             <strong>{stockInfo.cap}</strong>억원 / {stockInfo.market}

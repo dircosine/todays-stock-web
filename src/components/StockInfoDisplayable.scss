@@ -1,14 +1,21 @@
-.StockInfoDisplayable {
-  h3 {
-    display: inline;
-    font-size: 20px;
+.spinner {
+  display: flex;
+  min-height: 300px;
+  justify-content: center;
+  align-items: center;
+}
+
+.StockInfoDisplayable .info-head {
+  .name {
+    font-size: 18px;
   }
 
-  .info {
-    padding: 8px;
-
-    .code {
-      margin: 0px 4px;
-    }
+  .code {
+    margin: 0px 4px;
   }
+}
+
+.StockInfoDisplayable .info-more,
+.info-price {
+  padding: 0 8px;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeTemplate from '../components/Template/HomeTemplate';
+import HomeTemplate from '../components/templates/HomeTemplate';
 
 import stockInfos from '../sample_stock_infos.json';
 export type StockInfo = {

@@ -38,7 +38,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(stockInfos.length / 2);
 
-  const [infoOpenIndexes, setInfoOpenIndexes] = useState<number[]>([]);
+  const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
 
   const setNextRound = () => {
     setRound((p) => {
@@ -93,15 +93,15 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
     });
   };
 
-  const toggleInfoOpen = (index: number) => {
-    if (infoOpenIndexes.includes(index)) {
-      setInfoOpenIndexes((p) =>
-        p.filter((i) => {
-          return i !== index;
+  const toggleInfoOpen = (code: string) => {
+    if (infoOpenCodes.includes(code)) {
+      setInfoOpenCodes((p) =>
+        p.filter((c) => {
+          return c !== code;
         }),
       );
     } else {
-      setInfoOpenIndexes((p) => [index, ...p]);
+      setInfoOpenCodes((p) => [code, ...p]);
     }
   };
 
@@ -166,7 +166,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                     bodyStyle={{
                       padding: 12,
                     }}
-                    onClick={() => toggleInfoOpen(index)}
+                    onClick={() => toggleInfoOpen(item.code)}
                     hoverable
                   >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -180,13 +180,13 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                         <Tag>{item.market}</Tag>
                       </div>
                       <RightOutlined
-                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
                       />
                     </div>
-                    {infoOpenIndexes.includes(index) && (
+                    {infoOpenCodes.includes(item.code) && (
                       <StockInfoDisplayable
                         stockInfo={item}
-                        key={index}
+                        key={item.code}
                         infoExtent={['price', 'chart', 'more']}
                       />
                     )}
@@ -209,7 +209,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                     bodyStyle={{
                       padding: 12,
                     }}
-                    onClick={() => toggleInfoOpen(index)}
+                    onClick={() => toggleInfoOpen(item.code)}
                     hoverable
                   >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -219,13 +219,13 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                         <Tag>{item.market}</Tag>
                       </div>
                       <RightOutlined
-                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
                       />
                     </div>
-                    {infoOpenIndexes.includes(index) && (
+                    {infoOpenCodes.includes(item.code) && (
                       <StockInfoDisplayable
                         stockInfo={item}
-                        key={index}
+                        key={item.code}
                         infoExtent={['price', 'chart', 'more']}
                       />
                     )}
@@ -250,7 +250,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                     bodyStyle={{
                       padding: 12,
                     }}
-                    onClick={() => toggleInfoOpen(index)}
+                    onClick={() => toggleInfoOpen(item.code)}
                     hoverable
                   >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -260,13 +260,13 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
                         <Tag>{item.market}</Tag>
                       </div>
                       <RightOutlined
-                        rotate={infoOpenIndexes.includes(index) ? 90 : 0}
+                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
                       />
                     </div>
-                    {infoOpenIndexes.includes(index) && (
+                    {infoOpenCodes.includes(item.code) && (
                       <StockInfoDisplayable
                         stockInfo={item}
-                        key={index}
+                        key={item.code}
                         infoExtent={['price', 'chart', 'more']}
                       />
                     )}
@@ -278,69 +278,6 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
           <div className="space-vertical" />
           <div className="share"></div>
         </div>
-
-        {/* <div className="rank-display">
-          <div className="rank-1-2">
-            <StockCard
-              className="winner"
-              stockInfo={stockInfos[0]}
-              showChart={true}
-              infoExtent="all"
-            />
-            <div className="space-vertical" />
-            <StockCard
-              className="second"
-              stockInfo={stockInfos[1]}
-              showChart={true}
-              infoExtent="all"
-            />
-          </div>
-          <div className="space-horizontal" />
-          <ul className="rank-3-8">
-            {stockInfos.slice(2, 4).map((stockInfo) => (
-              <li className="item" key={stockInfo.code}>
-                <StockCard
-                  stockInfo={stockInfo}
-                  showChart={true}
-                  infoExtent="all"
-                />
-              </li>
-            ))}
-            {stockInfos.slice(4, 8).map((stockInfo) => (
-              <li className="item" key={stockInfo.code}>
-                <StockCard
-                  stockInfo={stockInfo}
-                  showChart={false}
-                  infoExtent="all"
-                />
-              </li>
-            ))}
-          </ul>
-          <div className="space-horizontal" />
-          <ul className="rank-8-16">
-            {stockInfos.slice(8, 16).map((stockInfo) => (
-              <li className="item" key={stockInfo.code}>
-                <StockCard
-                  stockInfo={stockInfo}
-                  showChart={false}
-                  infoExtent="head"
-                />
-              </li>
-            ))}
-          </ul>
-          <div className="space-horizontal" />
-          <ul className="rank-under-16">
-            {stockInfos.slice(16).map((stockInfo) => (
-              <li className="item" key={stockInfo.code}>
-                <StockCard
-                  stockInfo={stockInfo}
-                  showChart={false}
-                  infoExtent="head"
-                />
-              </li>
-            ))}
-          </ul>
-        </div> */}
       </div>
     );
   }
