@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Tag, Spin } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Tag, Spin, Skeleton } from 'antd';
 
 import Price from './Price';
 import { StockInfo } from '../pages/HomePage';
@@ -19,7 +19,11 @@ function StockInfoDisplayable({
   chartScale,
   infoExtent,
 }: StockInfoDisplayableProps) {
-  const [imgLoading, setImgLoading] = useState(true);
+  const [imgLoading, setImgLoading] = useState(infoExtent.includes('chart'));
+
+  useEffect(() => {
+    setImgLoading(infoExtent.includes('chart'));
+  }, [infoExtent]);
 
   const handleImgLoad = () => {
     setImgLoading(false);
@@ -28,15 +32,17 @@ function StockInfoDisplayable({
   if (imgLoading) {
     return (
       <>
+        {/* Dummy lender for onLoad/onFail trigger */}
         <img
           alt={stockInfo.name + ' chart'}
           src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
-          width="100%"
+          width="0%"
           onLoad={handleImgLoad}
         />
         <div className="spinner">
           <Spin />
         </div>
+        <Skeleton paragraph={{ rows: 3 }} />
       </>
     );
   }
