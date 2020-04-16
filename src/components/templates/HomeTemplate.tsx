@@ -31,8 +31,8 @@ type HomeTemplateProps = {
 
 function HomeTemplate({ stockInfos }: HomeTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
-  // const [round, setRound] = useState<Round>(Round.Round32);
-  const [round, setRound] = useState<Round>(Round.Done);
+  const [round, setRound] = useState<Round>(Round.Round32);
+  // const [round, setRound] = useState<Round>(Round.Done);
   const [progress, setProgress] = useState(1);
   const [progressLimit, setProgressLimit] = useState(stockInfos.length / 2);
   const [leftIndex, setLeftIndex] = useState(0);
