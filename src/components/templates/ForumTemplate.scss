@@ -1,0 +1,23 @@
+.ForumTemplate {
+  .content {
+    display: flex;
+  }
+
+  .rank {
+    flex: 1;
+    background: white;
+    border-radius: 4px;
+  }
+
+  .share {
+    padding: 12px 24px;
+    flex: 1;
+    height: 100px;
+    border-radius: 4px;
+    background-color: white;
+
+    .copy-btn {
+      margin-left: 4px;
+    }
+  }
+}

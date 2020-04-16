@@ -7,11 +7,6 @@
     }
   }
 
-  .announce {
-    text-align: center;
-    font-size: 20px;
-  }
-
   .scale-selector {
     display: flex;
     flex-direction: row-reverse;
@@ -20,24 +15,4 @@
   .card-wrap {
     display: flex;
   }
-}
-
-.HomeTemplate .content {
-  display: flex;
-
-  .rank {
-    flex: 1;
-  }
-  .share {
-    flex: 1;
-    background-color: blanchedalmond;
-  }
-}
-
-.HomeTemplate .space-horizontal {
-  height: 50px;
-}
-
-.HomeTemplate .space-vertical {
-  width: 20px;
 }

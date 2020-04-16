@@ -5,17 +5,21 @@
   align-items: center;
 }
 
-.StockInfoDisplayable .info-head {
+.info-head {
+  padding: 0 16px;
+
   .name {
-    font-size: 18px;
+    font-size: 20px;
+    margin-right: 4px;
   }
 
   .code {
-    margin: 0px 4px;
+    margin-right: 4px;
   }
 }
 
-.StockInfoDisplayable .info-more,
+.info-more,
 .info-price {
-  padding: 0 8px;
+  margin: 10px 0;
+  padding: 0 16px;
 }

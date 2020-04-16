@@ -4,12 +4,14 @@ import { Card } from 'antd';
 import { StockInfo } from '../pages/HomePage';
 import { Position } from './templates/HomeTemplate';
 
+import { Round } from './templates/HomeTemplate';
 import StockInfoDisplayable from './StockInfoDisplayable';
 
 type StockCardSelectableProps = {
   stockInfo: StockInfo;
   chartScale: 'day' | 'week' | 'month';
   position: Position;
+  round: Round;
   onClick: (position: Position) => void;
 };
 
@@ -17,6 +19,7 @@ function StockCardSelectable({
   stockInfo,
   chartScale,
   position,
+  round,
   onClick,
 }: StockCardSelectableProps) {
   const handleCardClick = () => {
@@ -34,6 +37,7 @@ function StockCardSelectable({
       <StockInfoDisplayable
         stockInfo={stockInfo}
         infoExtent={['head', 'chart', 'price', 'more']}
+        hideInfo={round === Round.Round32}
         chartScale={chartScale}
       />
     </Card>
