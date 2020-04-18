@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { List, Tag, Divider, Card, Space, Input, Button } from 'antd';
-import { RadioChangeEvent } from 'antd/lib/radio';
+import { List, Tag, Divider, Card, Space, Input, Button, Progress } from 'antd';
+import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Emoji from '../Emoji';
@@ -22,13 +22,13 @@ type ForumTemplateProps = {
 };
 
 function ForumTemplate({ stockInfos }: ForumTemplateProps) {
-  const [chartScale, setChartScale] = useState<ChartScale>('day');
+  const [chartScaleMarket, setChartScaleMarket] = useState<ChartScale>('day');
 
   const [copyDone, setCopyDone] = useState(false);
   const [showAllRank, setShowAllRank] = useState(false);
 
   const handleScaleChange = (e: RadioChangeEvent) => {
-    setChartScale(e.target.value);
+    setChartScaleMarket(e.target.value);
   };
 
   const handleCopy = () => {
@@ -50,17 +50,86 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
       <Alert type="info" showIcon message={<div>announce here</div>} />
       <div className="content">
         <div className="column-1">
-          <div className="statistics-market">
-            <h3>마켓 통계</h3>
+          <div className="panel statistics-market">
+            <h3>시장 통계</h3>
+            <div className="scale-selector market">
+              <Radio.Group
+                onChange={handleScaleChange}
+                defaultValue={chartScaleMarket}
+              >
+                <Radio.Button value="day">일봉</Radio.Button>
+                <Radio.Button value="week">주봉</Radio.Button>
+                <Radio.Button value="month">월봉</Radio.Button>
+              </Radio.Group>
+            </div>
+            <div className="market kospi">
+              <h4>코스피</h4>
+              <div>
+                <img
+                  src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
+                  alt="KOSPI Chart"
+                  width="100%"
+                />
+              </div>
+              <div className="statistics">
+                <Progress
+                  strokeWidth={16}
+                  percent={50}
+                  successPercent={30}
+                  showInfo={false}
+                />
+                <div className="forecast-label">
+                  <span>
+                    판다! <strong>30%</strong>
+                  </span>
+                  <span>
+                    홀드! <strong>20%</strong>
+                  </span>
+                  <span>
+                    산다! <strong>50%</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <Divider />
+            <div className="market kosdaq">
+              <h4>코스닥</h4>
+              <div>
+                <img
+                  src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
+                  alt="KOSPI Chart"
+                  width="100%"
+                />
+                <div className="statistics">
+                  <Progress
+                    strokeWidth={16}
+                    percent={70}
+                    successPercent={20}
+                    showInfo={false}
+                  />
+                  <div className="forecast-label">
+                    <span>
+                      판다! <strong>20%</strong>
+                    </span>
+                    <span>
+                      홀드! <strong>50%</strong>
+                    </span>
+                    <span>
+                      산다! <strong>30%</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <SpaceHorizontal />
-          <div className="statistics-individual">
+          <div className="panel statistics-individual">
             <h3>오늘의 종목 통계</h3>
           </div>
         </div>
         <SpaceVertical />
         <div className="column-2">
-          <div className="share">
+          <div className="panel share">
             <h3>공유</h3>
             <div style={{ display: 'flex' }}>
               <Input
@@ -83,8 +152,8 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
             </div>
           </div>
           <SpaceHorizontal />
-          <div className="rank">
-            <h3 hidden={true}>랭크</h3>
+          <div className="panel rank">
+            <h3>내가 뽑은 순위</h3>
             <MyRank
               stockInfos={stockInfos}
               showAll={showAllRank}
@@ -92,7 +161,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
             />
           </div>
           <SpaceHorizontal />
-          <div className="discussion ">
+          <div className="panel discussion ">
             <h3>토론</h3>
           </div>
         </div>

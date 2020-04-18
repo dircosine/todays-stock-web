@@ -10,24 +10,69 @@
     flex-direction: column;
   }
 
-  .statistics-market,
+  .panel {
+    padding: 12px 24px;
+    border-radius: 4px;
+    background-color: white;
+  }
+
+  .statistics-market {
+    .scale-selector {
+      text-align: end;
+    }
+
+    .market {
+      // margin: 20px 0px;
+    }
+
+    $black: black;
+    $red: #f40003;
+    $blue: #0e61d3;
+
+    @function hatching($color) {
+      @return repeating-linear-gradient(
+        60deg,
+        mix(white, $color, 50),
+        mix(white, $color, 50) 2px,
+        mix(white, $color, 60) 2px,
+        mix(white, $color, 60) 6px
+      );
+    }
+
+    .ant-progress-inner {
+      background: hatching($red);
+    }
+
+    .ant-progress-bg {
+      background: hatching($black);
+      border-radius: 0px;
+    }
+
+    .ant-progress-success-bg {
+      background: hatching($blue);
+      border-radius: 0px;
+    }
+
+    .forecast-label {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
   .statistics-individual,
   .discussion {
-    padding: 12px 24px;
-    background-color: white;
     height: 500px;
   }
 
   .rank {
     background: white;
     border-radius: 4px;
+    .MyRank {
+      margin: 0px -24px;
+    }
   }
 
   .share {
-    padding: 12px 24px;
-    border-radius: 4px;
-    background-color: white;
-
     .copy-btn {
       margin-left: 4px;
     }
