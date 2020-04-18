@@ -64,6 +64,7 @@ function HomeTemplate({ stockInfos }: HomeTemplateProps) {
   };
 
   const handleScaleChange = (e: RadioChangeEvent) => {
+    e.preventDefault();
     setChartScale(e.target.value);
   };
 

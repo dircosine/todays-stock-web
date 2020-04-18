@@ -10,6 +10,7 @@ import {
   Progress,
   Skeleton,
   Empty,
+  Tabs,
 } from 'antd';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -49,6 +50,7 @@ type ForumTemplateProps = {
 
 function ForumTemplate({ stockInfos }: ForumTemplateProps) {
   const [chartScaleMarket, setChartScaleMarket] = useState<ChartScale>('day');
+  const [marketTabSelected, setMarketTabSelected] = useState('코스피');
   const [commentTags, setCommentTags] = useState([
     stockInfos[0].name,
     stockInfos[1].name,
@@ -58,6 +60,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
   const [showAllRank, setShowAllRank] = useState(false);
 
   const handleScaleChange = (e: RadioChangeEvent) => {
+    e.preventDefault();
     setChartScaleMarket(e.target.value);
   };
 
@@ -96,81 +99,91 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
         <div className="column-1">
           <div className="panel statistics-market">
             <h3>시장 통계</h3>
-            <div className="scale-selector market">
-              <Radio.Group
-                onChange={handleScaleChange}
-                defaultValue={chartScaleMarket}
-              >
-                <Radio.Button value="day">일봉</Radio.Button>
-                <Radio.Button value="week">주봉</Radio.Button>
-                <Radio.Button value="month">월봉</Radio.Button>
-              </Radio.Group>
-            </div>
-            <div className="market kospi">
-              <h4>코스피</h4>
-              <Button type="link" onClick={() => handleAddTag('코스피')}>
-                댓글
-              </Button>
-              <div>
-                <img
-                  src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
-                  alt="KOSPI Chart"
-                  width="100%"
-                />
-              </div>
-              <div className="statistics">
-                <Progress
-                  strokeWidth={16}
-                  percent={50}
-                  successPercent={30}
-                  showInfo={false}
-                />
-                <div className="forecast-label">
-                  <span>
-                    판다! <strong>30%</strong>
-                  </span>
-                  <span>
-                    홀드! <strong>20%</strong>
-                  </span>
-                  <span>
-                    산다! <strong>50%</strong>
-                  </span>
+            <Tabs
+              defaultActiveKey="코스피"
+              onChange={(activeKey: string) => setMarketTabSelected(activeKey)}
+              tabBarExtraContent={
+                <div style={{ textAlign: 'end' }}>
+                  <Button
+                    type="link"
+                    onClick={() => handleAddTag(marketTabSelected)}
+                  >
+                    태그
+                  </Button>
+                  <Radio.Group
+                    onChange={handleScaleChange}
+                    defaultValue={chartScaleMarket}
+                  >
+                    <Radio.Button value="day">일봉</Radio.Button>
+                    <Radio.Button value="week">주봉</Radio.Button>
+                    <Radio.Button value="month">월봉</Radio.Button>
+                  </Radio.Group>
                 </div>
-              </div>
-            </div>
-            <Divider />
-            <div className="market kosdaq">
-              <h4>코스닥</h4>
-              <Button type="link" onClick={() => handleAddTag('코스닥')}>
-                댓글
-              </Button>
-              <div>
-                <img
-                  src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
-                  alt="KOSDAQ Chart"
-                  width="100%"
-                />
-                <div className="statistics">
-                  <Progress
-                    strokeWidth={16}
-                    percent={70}
-                    successPercent={20}
-                    showInfo={false}
-                  />
-                  <div className="forecast-label">
-                    <span>
-                      판다! <strong>20%</strong>
-                    </span>
-                    <span>
-                      홀드! <strong>50%</strong>
-                    </span>
-                    <span>
-                      산다! <strong>30%</strong>
-                    </span>
+              }
+            >
+              <Tabs.TabPane tab="코스피" key="코스피">
+                <div className="market kospi">
+                  <h4 hidden={true}>코스피 통계</h4>
+                  <div>
+                    <img
+                      src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
+                      alt="KOSPI Chart"
+                      width="100%"
+                    />
+                  </div>
+                  <div className="statistics">
+                    <Progress
+                      strokeWidth={16}
+                      percent={50}
+                      successPercent={30}
+                      showInfo={false}
+                    />
+                    <div className="forecast-label">
+                      <span>
+                        판다! <strong>30%</strong>
+                      </span>
+                      <span>
+                        홀드! <strong>20%</strong>
+                      </span>
+                      <span>
+                        산다! <strong>50%</strong>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="코스닥" key="코스닥">
+                <div className="market kosdaq">
+                  <h4 hidden={true}>코스닥 통계</h4>
+                  <div>
+                    <img
+                      src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
+                      alt="KOSDAQ Chart"
+                      width="100%"
+                    />
+                    <div className="statistics">
+                      <Progress
+                        strokeWidth={16}
+                        percent={70}
+                        successPercent={20}
+                        showInfo={false}
+                      />
+                      <div className="forecast-label">
+                        <span>
+                          판다! <strong>20%</strong>
+                        </span>
+                        <span>
+                          홀드! <strong>50%</strong>
+                        </span>
+                        <span>
+                          산다! <strong>30%</strong>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Tabs.TabPane>
+            </Tabs>
           </div>
           <SpaceHorizontal />
           <div className="panel statistics-individual">
