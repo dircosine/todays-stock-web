@@ -14,6 +14,8 @@ import { RightOutlined, CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { ChartScale } from './HomeTemplate';
 
 import './ForumTemplate.scss';
+import SpaceHorizontal from '../SpaceHorizontal';
+import MyRank from '../MyRank';
 
 type ForumTemplateProps = {
   stockInfos: StockInfo[];
@@ -22,28 +24,19 @@ type ForumTemplateProps = {
 function ForumTemplate({ stockInfos }: ForumTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
-  const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
-
   const [copyDone, setCopyDone] = useState(false);
+  const [showAllRank, setShowAllRank] = useState(false);
 
   const handleScaleChange = (e: RadioChangeEvent) => {
     setChartScale(e.target.value);
   };
 
-  const toggleInfoOpen = (code: string) => {
-    if (infoOpenCodes.includes(code)) {
-      setInfoOpenCodes((p) =>
-        p.filter((c) => {
-          return c !== code;
-        }),
-      );
-    } else {
-      setInfoOpenCodes((p) => [code, ...p]);
-    }
-  };
-
   const handleCopy = () => {
     setCopyDone(true);
+  };
+
+  const toggleShowAll = () => {
+    setShowAllRank(!showAllRank);
   };
 
   return (
@@ -56,156 +49,52 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
       </div>
       <Alert type="info" showIcon message={<div>announce here</div>} />
       <div className="content">
-        <div className="share">
-          <h3>공유</h3>
-          <div style={{ display: 'flex' }}>
-            <Input
-              style={{ flex: 1 }}
-              value={document.location.href}
-              disabled
-            />
-            <CopyToClipboard text={document.location.href} onCopy={handleCopy}>
-              <Button
-                className="copy-btn"
-                type={copyDone ? 'default' : 'primary'}
-                icon={copyDone ? <CheckOutlined /> : <CopyOutlined />}
-              >
-                {copyDone ? '' : '복사'}
-              </Button>
-            </CopyToClipboard>
+        <div className="column-1">
+          <div className="statistics-market">
+            <h3>마켓 통계</h3>
+          </div>
+          <SpaceHorizontal />
+          <div className="statistics-individual">
+            <h3>오늘의 종목 통계</h3>
           </div>
         </div>
         <SpaceVertical />
-        <div className="rank">
-          <h3 hidden={true}>랭크</h3>
-          <List
-            size="large"
-            dataSource={stockInfos.slice(0, 8)}
-            renderItem={(item, index) => (
-              <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <Card
-                  bordered={false}
-                  style={{
-                    background: 'none',
-                    width: '100%',
-                  }}
-                  bodyStyle={{
-                    padding: 12,
-                  }}
-                  onClick={() => toggleInfoOpen(item.code)}
-                  hoverable
+        <div className="column-2">
+          <div className="share">
+            <h3>공유</h3>
+            <div style={{ display: 'flex' }}>
+              <Input
+                style={{ flex: 1 }}
+                value={document.location.href}
+                disabled
+              />
+              <CopyToClipboard
+                text={document.location.href}
+                onCopy={handleCopy}
+              >
+                <Button
+                  className="copy-btn"
+                  type={copyDone ? 'default' : 'primary'}
+                  icon={copyDone ? <CheckOutlined /> : <CopyOutlined />}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      {index === 0 && <Emoji symbol="🥇" />}
-                      {index === 1 && <Emoji symbol="🥈" />}
-                      {(index === 2 || index === 3) && <Emoji symbol="🥉" />}
-
-                      <Space size={4}>
-                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                        <span>{item.code}</span>
-                        <Tag>{item.market}</Tag>
-                      </Space>
-                    </div>
-                    <RightOutlined
-                      rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                    />
-                  </div>
-                  {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
-                  )}
-                </Card>
-              </List.Item>
-            )}
-          />
-          <Divider dashed={true}> 16강 탈락! 그래도 이름은 알렸다..</Divider>
-          <List
-            size="large"
-            dataSource={stockInfos.slice(8, 16)}
-            renderItem={(item) => (
-              <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <Card
-                  bordered={false}
-                  style={{
-                    background: 'none',
-                    width: '100%',
-                  }}
-                  bodyStyle={{
-                    padding: 12,
-                  }}
-                  onClick={() => toggleInfoOpen(item.code)}
-                  hoverable
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <Space size={4}>
-                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                        <span>{item.code}</span>
-                        <Tag>{item.market}</Tag>
-                      </Space>
-                    </div>
-                    <RightOutlined
-                      rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                    />
-                  </div>
-                  {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
-                  )}
-                </Card>
-              </List.Item>
-            )}
-          />
-          <Divider dashed={true}>
-            차트만 보고 걸렀지만.. 다시보니 선녀?!
-          </Divider>
-          <List
-            size="large"
-            dataSource={stockInfos.slice(16)}
-            renderItem={(item) => (
-              <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <Card
-                  bordered={false}
-                  style={{
-                    background: 'none',
-                    width: '100%',
-                  }}
-                  bodyStyle={{
-                    padding: 12,
-                  }}
-                  onClick={() => toggleInfoOpen(item.code)}
-                  hoverable
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <Space size={4}>
-                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                        <span>{item.code}</span>
-                        <Tag>{item.market}</Tag>
-                      </Space>
-                    </div>
-                    <RightOutlined
-                      rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                    />
-                  </div>
-                  {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
-                  )}
-                </Card>
-              </List.Item>
-            )}
-          />
+                  {copyDone ? '' : '복사'}
+                </Button>
+              </CopyToClipboard>
+            </div>
+          </div>
+          <SpaceHorizontal />
+          <div className="rank">
+            <h3 hidden={true}>랭크</h3>
+            <MyRank
+              stockInfos={stockInfos}
+              showAll={showAllRank}
+              toggleShowAll={toggleShowAll}
+            />
+          </div>
+          <SpaceHorizontal />
+          <div className="discussion ">
+            <h3>토론</h3>
+          </div>
         </div>
       </div>
     </div>
