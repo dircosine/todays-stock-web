@@ -10,9 +10,10 @@ type MyRankProps = {
   stockInfos: StockInfo[];
   showAll: boolean;
   toggleShowAll: () => void;
+  onAddTag: (name: string) => void;
 };
 
-function MyRank({ stockInfos, showAll, toggleShowAll }: MyRankProps) {
+function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
   const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
 
   const toggleInfoOpen = (code: string) => {
@@ -29,6 +30,10 @@ function MyRank({ stockInfos, showAll, toggleShowAll }: MyRankProps) {
 
   const handleShowAll = () => {
     toggleShowAll();
+  };
+
+  const handleAddTag = (name: string) => {
+    onAddTag(name);
   };
 
   const showAllBtn = (
@@ -62,24 +67,38 @@ function MyRank({ stockInfos, showAll, toggleShowAll }: MyRankProps) {
               bodyStyle={{
                 padding: 12,
               }}
-              onClick={() => toggleInfoOpen(item.code)}
-              hoverable
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ flex: 1 }}>
-                  {index === 0 && <Emoji symbol="🥇" />}
-                  {index === 1 && <Emoji symbol="🥈" />}
-                  {(index === 2 || index === 3) && <Emoji symbol="🥉" />}
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    {index === 0 && <Emoji symbol="🥇" />}
+                    {index === 1 && <Emoji symbol="🥈" />}
+                    {(index === 2 || index === 3) && <Emoji symbol="🥉" />}
 
-                  <Space size={4}>
-                    <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                    <span>{item.code}</span>
-                    <Tag>{item.market}</Tag>
-                  </Space>
+                    <Space size={4}>
+                      <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                      <span>{item.code}</span>
+                      <Tag>{item.market}</Tag>
+                    </Space>
+                  </div>
+                  <Button type="link" onClick={() => handleAddTag(item.name)}>
+                    댓글
+                  </Button>
                 </div>
-                <RightOutlined
-                  rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                />
+                <Button
+                  style={{ border: 0, boxShadow: 'none' }}
+                  onClick={() => toggleInfoOpen(item.code)}
+                >
+                  <RightOutlined
+                    rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
+                  />
+                </Button>
               </div>
               {infoOpenCodes.includes(item.code) && (
                 <StockInfoDisplayable
@@ -109,20 +128,37 @@ function MyRank({ stockInfos, showAll, toggleShowAll }: MyRankProps) {
                   bodyStyle={{
                     padding: 12,
                   }}
-                  onClick={() => toggleInfoOpen(item.code)}
-                  hoverable
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <Space size={4}>
-                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                        <span>{item.code}</span>
-                        <Tag>{item.market}</Tag>
-                      </Space>
+                    <div
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div>
+                        <Space size={4}>
+                          <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                          <span>{item.code}</span>
+                          <Tag>{item.market}</Tag>
+                        </Space>
+                      </div>
+                      <Button
+                        type="link"
+                        onClick={() => handleAddTag(item.name)}
+                      >
+                        댓글
+                      </Button>
                     </div>
-                    <RightOutlined
-                      rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                    />
+                    <Button
+                      style={{ border: 0, boxShadow: 'none' }}
+                      onClick={() => toggleInfoOpen(item.code)}
+                    >
+                      <RightOutlined
+                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
+                      />
+                    </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
                     <StockInfoDisplayable
@@ -153,20 +189,37 @@ function MyRank({ stockInfos, showAll, toggleShowAll }: MyRankProps) {
                   bodyStyle={{
                     padding: 12,
                   }}
-                  onClick={() => toggleInfoOpen(item.code)}
-                  hoverable
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div style={{ flex: 1 }}>
-                      <Space size={4}>
-                        <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                        <span>{item.code}</span>
-                        <Tag>{item.market}</Tag>
-                      </Space>
+                    <div
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <div>
+                        <Space size={4}>
+                          <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                          <span>{item.code}</span>
+                          <Tag>{item.market}</Tag>
+                        </Space>
+                      </div>
+                      <Button
+                        type="link"
+                        onClick={() => handleAddTag(item.name)}
+                      >
+                        댓글
+                      </Button>
                     </div>
-                    <RightOutlined
-                      rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                    />
+                    <Button
+                      style={{ border: 0, boxShadow: 'none' }}
+                      onClick={() => toggleInfoOpen(item.code)}
+                    >
+                      <RightOutlined
+                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
+                      />
+                    </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
                     <StockInfoDisplayable

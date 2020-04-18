@@ -22,7 +22,9 @@
     }
 
     .market {
-      // margin: 20px 0px;
+      h4 {
+        display: inline;
+      }
     }
 
     $black: black;
@@ -59,9 +61,14 @@
     }
   }
 
-  .statistics-individual,
-  .discussion {
+  .statistics-individual {
     height: 500px;
+  }
+
+  .share {
+    .copy-btn {
+      margin-left: 4px;
+    }
   }
 
   .rank {
@@ -72,9 +79,23 @@
     }
   }
 
-  .share {
-    .copy-btn {
-      margin-left: 4px;
+  .comments {
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+
+      .username-tag {
+        margin: 8px 0px;
+      }
+
+      .username {
+        margin: 0px 12px;
+      }
+
+      .submit-btn {
+        margin-top: 8px;
+        align-self: flex-end;
+      }
     }
   }
 }

@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { List, Tag, Divider, Card, Space, Input, Button, Progress } from 'antd';
+import {
+  List,
+  Tag,
+  Divider,
+  Card,
+  Space,
+  Input,
+  Button,
+  Progress,
+  Skeleton,
+  Empty,
+} from 'antd';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -10,12 +21,27 @@ import SpaceVertical from '../SpaceVertical';
 import { StockInfo } from '../../pages/HomePage';
 
 import { Alert } from 'antd';
-import { RightOutlined, CopyOutlined, CheckOutlined } from '@ant-design/icons';
+import { EditOutlined, CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { ChartScale } from './HomeTemplate';
 
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
 import MyRank from '../MyRank';
+import TextArea from 'antd/lib/input/TextArea';
+
+const tagColors = [
+  'magenta',
+  'red',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+];
 
 type ForumTemplateProps = {
   stockInfos: StockInfo[];
@@ -23,6 +49,10 @@ type ForumTemplateProps = {
 
 function ForumTemplate({ stockInfos }: ForumTemplateProps) {
   const [chartScaleMarket, setChartScaleMarket] = useState<ChartScale>('day');
+  const [commentTags, setCommentTags] = useState([
+    stockInfos[0].name,
+    stockInfos[1].name,
+  ]);
 
   const [copyDone, setCopyDone] = useState(false);
   const [showAllRank, setShowAllRank] = useState(false);
@@ -37,6 +67,20 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
 
   const toggleShowAll = () => {
     setShowAllRank(!showAllRank);
+  };
+
+  const handleAddTag = (name: string) => {
+    if (!commentTags.includes(name)) {
+      setCommentTags((p) => [...p, name]);
+    }
+  };
+  const handleTagClose = (tag: string) => {
+    setCommentTags((p) => p.filter((t) => t !== tag));
+  };
+
+  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('submit!');
   };
 
   return (
@@ -64,6 +108,9 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
             </div>
             <div className="market kospi">
               <h4>코스피</h4>
+              <Button type="link" onClick={() => handleAddTag('코스피')}>
+                댓글
+              </Button>
               <div>
                 <img
                   src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
@@ -94,10 +141,13 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
             <Divider />
             <div className="market kosdaq">
               <h4>코스닥</h4>
+              <Button type="link" onClick={() => handleAddTag('코스닥')}>
+                댓글
+              </Button>
               <div>
                 <img
                   src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
-                  alt="KOSPI Chart"
+                  alt="KOSDAQ Chart"
                   width="100%"
                 />
                 <div className="statistics">
@@ -158,11 +208,46 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
               stockInfos={stockInfos}
               showAll={showAllRank}
               toggleShowAll={toggleShowAll}
+              onAddTag={handleAddTag}
             />
           </div>
           <SpaceHorizontal />
-          <div className="panel discussion ">
-            <h3>토론</h3>
+          <div className="panel comments">
+            <h3>댓글</h3>
+            <form className="comment-form" onSubmit={handleCommentSubmit}>
+              <div className="username-tag">
+                <span className="username">
+                  <strong>익명</strong>
+                </span>
+                {commentTags.map((tag, i) => (
+                  <Tag
+                    key={i}
+                    closable
+                    color={tagColors[i % 11]}
+                    onClose={(e: any) => {
+                      e.preventDefault();
+                      handleTagClose(tag);
+                    }}
+                  >
+                    {tag}
+                  </Tag>
+                ))}
+              </div>
+              <TextArea
+                placeholder="한 마디씩 남겨주세용"
+                autoSize={{ minRows: 2 }}
+              />
+              <Button className="submit-btn" htmlType="submit" type="primary">
+                남기기
+              </Button>
+            </form>
+            <Divider />
+            <div className="comment-content">
+              <Empty
+                description="처음으로 댓글을 남겨보세요!"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            </div>
           </div>
         </div>
       </div>
