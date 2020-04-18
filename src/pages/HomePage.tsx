@@ -1,8 +1,6 @@
 import React from 'react';
 import HomeTemplate from '../components/templates/HomeTemplate';
-
 import stockInfos from '../sample_stock_infos.json';
-import BaseTemplate from '../components/templates/BaseTemplate';
 
 export type StockInfo = {
   name: string;
@@ -33,11 +31,7 @@ function shuffle(a: StockInfo[]) {
 }
 
 function HomePage(props: HomePageProps) {
-  return (
-    <BaseTemplate>
-      <HomeTemplate stockInfos={shuffle(stockInfos)} />
-    </BaseTemplate>
-  );
+  return <HomeTemplate stockInfos={shuffle(stockInfos)} />;
 }
 
 export default HomePage;

@@ -1,28 +1,15 @@
 import React, { useState } from 'react';
-import {
-  List,
-  Tag,
-  Divider,
-  Card,
-  Space,
-  Input,
-  Button,
-  Progress,
-  Skeleton,
-  Empty,
-  Tabs,
-} from 'antd';
+import { Tag, Divider, Input, Button, Progress, Empty, Tabs } from 'antd';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Emoji from '../Emoji';
-import StockInfoDisplayable from '../StockInfoDisplayable';
 import SpaceVertical from '../SpaceVertical';
 
 import { StockInfo } from '../../pages/HomePage';
 
 import { Alert } from 'antd';
-import { EditOutlined, CopyOutlined, CheckOutlined } from '@ant-design/icons';
+import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { ChartScale } from './HomeTemplate';
 
 import './ForumTemplate.scss';

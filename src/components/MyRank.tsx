@@ -57,7 +57,12 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
         dataSource={showAll ? stockInfos.slice(0, 8) : stockInfos.slice(0, 4)}
         loadMore={!showAll && showAllBtn}
         renderItem={(item, index) => (
-          <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <List.Item
+            style={{
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
+          >
             <Card
               bordered={false}
               style={{
@@ -65,7 +70,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                 width: '100%',
               }}
               bodyStyle={{
-                padding: 12,
+                padding: '12px 0px',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -88,7 +93,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                     </Space>
                   </div>
                   <Button type="link" onClick={() => handleAddTag(item.name)}>
-                    댓글
+                    태그
                   </Button>
                 </div>
                 <Button
@@ -126,7 +131,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                     width: '100%',
                   }}
                   bodyStyle={{
-                    padding: 12,
+                    padding: '12px 0px',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -148,7 +153,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                         type="link"
                         onClick={() => handleAddTag(item.name)}
                       >
-                        댓글
+                        태그
                       </Button>
                     </div>
                     <Button
@@ -187,7 +192,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                     width: '100%',
                   }}
                   bodyStyle={{
-                    padding: 12,
+                    padding: '12px 0px',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -209,7 +214,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                         type="link"
                         onClick={() => handleAddTag(item.name)}
                       >
-                        댓글
+                        태그
                       </Button>
                     </div>
                     <Button

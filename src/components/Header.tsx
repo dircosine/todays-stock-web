@@ -1,22 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { ClickParam } from 'antd/lib/menu';
 
-type HeaderProps = {};
+type HeaderProps = RouteComponentProps & {};
 
-function Header(props: HeaderProps) {
+function Header({ location }: HeaderProps) {
+  const [current, setCurrent] = useState(location.pathname);
+  const handleMenuClick = (e: ClickParam) => {
+    setCurrent(e.key);
+  };
+
   return (
     <Layout.Header>
       <Link to="/">
         <div className="logo" />
       </Link>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-        <Menu.Item key="1">nav 1</Menu.Item>
-        <Menu.Item key="2">nav 2</Menu.Item>
-        <Menu.Item key="3">nav 3</Menu.Item>
+
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        defaultSelectedKeys={[current]}
+        onClick={handleMenuClick}
+      >
+        <Menu.Item key="/tournament">
+          <Link to="/">오늘의 토너먼트</Link>
+        </Menu.Item>
+        <Menu.Item key="/forum">
+          <Link to="/forum">오늘의 포럼</Link>
+        </Menu.Item>
       </Menu>
     </Layout.Header>
   );
 }
 
-export default Header;
+export default withRouter(Header);
