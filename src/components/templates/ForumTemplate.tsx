@@ -17,6 +17,7 @@ import SpaceHorizontal from '../SpaceHorizontal';
 import MyRank from '../MyRank';
 import TextArea from 'antd/lib/input/TextArea';
 import SharePanel from '../SharePanel';
+import EventDate from '../EventDate';
 
 const tagColors = [
   'magenta',
@@ -71,13 +72,14 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
 
   return (
     <div className="ForumTemplate">
-      {/* <EventDate date={new Date()} /> */}
+      <h1>
+        <EventDate date={new Date()} />의 포럼
+      </h1>
       <div className="head">
-        <h2>
-          <Emoji symbol="🎉" /> 완료!
-        </h2>
+        {/* <h2>
+          <Emoji symbol="🎉" /> 포럼
+        </h2> */}
       </div>
-      <Alert type="info" showIcon message={<div>announce here</div>} />
       <div className="two-column content">
         <div className="column-1">
           <div className="panel statistics-market">

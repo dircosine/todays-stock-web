@@ -1,4 +1,13 @@
 .ForumTemplate {
+  .head {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    h2 {
+      padding: 0 20px;
+    }
+  }
+
   .two-column {
     display: flex;
   }

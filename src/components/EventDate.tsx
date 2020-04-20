@@ -6,7 +6,7 @@ type EventDateProps = {
 
 function EventDate({ date }: EventDateProps) {
   // prettier-ignore
-  return <div>{`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`}</div>;
+  return <span>{`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`}</span>;
 }
 
 export default EventDate;

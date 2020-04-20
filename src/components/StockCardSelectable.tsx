@@ -29,7 +29,7 @@ function StockCardSelectable({
   return (
     <Card
       className="StockCardSelectable"
-      style={{ flex: 1 }}
+      style={{ flex: 1, borderRadius: 4 }}
       bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
       onClick={handleCardClick}
       hoverable

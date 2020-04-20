@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radio, Card, Button, Space } from 'antd';
+import { Radio, Card, Button, Space, Divider } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 
@@ -15,6 +15,7 @@ import MarketInfoDisplayable from '../MarketInfoDisplayable';
 import MyRank from '../MyRank';
 import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
+import EventDate from '../EventDate';
 
 export enum Round {
   Round32 = 32,
@@ -61,7 +62,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   const [showAllRank, setShowAllRank] = useState(false);
 
-  const setNextRound = () => {
+  const setNextRound = (): void => {
     setRound((p) => {
       switch (p) {
         case Round.Round32:
@@ -80,6 +81,24 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           return Round.Interrupt;
       }
     });
+  };
+
+  const displayRound = (): string => {
+    switch (round) {
+      case Round.Round32:
+      case Round.Round16:
+      case Round.Round8:
+      case Round.Round4:
+        return `${round} 강`;
+      case Round.Round2:
+        return '결승';
+      case Round.RoundMarket:
+        return '시장 예측';
+      case Round.Done:
+        return '완료!';
+      default:
+        return '중단';
+    }
   };
 
   const swapPosition = () => {
@@ -133,9 +152,11 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   return (
     <div className="TournamentTemplate">
-      {/* <EventDate date={new Date()} /> */}
+      <h1>
+        <EventDate date={new Date()} />의 토너먼트
+      </h1>
       <div className="head">
-        <h2>{round}</h2>
+        <h2>{displayRound()}</h2>
         {round !== Round.Round2 &&
           round !== Round.RoundMarket &&
           round !== Round.Done && (
@@ -144,26 +165,34 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             </p>
           )}
       </div>
-      <Alert
-        type="info"
-        showIcon
-        message={
-          <TextLoop mask>
-            <div>32강은 차트만 보고 후딱 추려 보자구용</div>
-            <div>종목 정보는 16강부터 제공됩니다</div>
-          </TextLoop>
-        }
-      />
-      <div className="content">
-        {round !== Round.Done && (
-          <div className="scale-selector">
-            <Radio.Group onChange={handleScaleChange} defaultValue={chartScale}>
-              <Radio.Button value="day">일봉</Radio.Button>
-              <Radio.Button value="week">주봉</Radio.Button>
-              <Radio.Button value="month">월봉</Radio.Button>
-            </Radio.Group>
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ flex: 1 }}>
+            <Alert
+              type="info"
+              showIcon
+              message={
+                <TextLoop mask>
+                  <div>32강은 차트만 보고 후딱 추려 보자구용</div>
+                  <div>종목 정보는 16강부터 제공됩니다</div>
+                </TextLoop>
+              }
+            />
           </div>
-        )}
+          <SpaceVertical />
+          {round !== Round.Done && (
+            <div className="scale-selector">
+              <Radio.Group
+                onChange={handleScaleChange}
+                defaultValue={chartScale}
+              >
+                <Radio.Button value="day">일봉</Radio.Button>
+                <Radio.Button value="week">주봉</Radio.Button>
+                <Radio.Button value="month">월봉</Radio.Button>
+              </Radio.Group>
+            </div>
+          )}
+        </div>
         {round !== Round.Done && round !== Round.RoundMarket && (
           <div className="card-wrap">
             <StockCardSelectable
