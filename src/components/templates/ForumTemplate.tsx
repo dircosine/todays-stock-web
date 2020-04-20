@@ -6,16 +6,17 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import Emoji from '../Emoji';
 import SpaceVertical from '../SpaceVertical';
 
-import { StockInfo } from '../../pages/HomePage';
+import { StockInfo } from '../../pages/TournamentPage';
 
 import { Alert } from 'antd';
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
-import { ChartScale } from './HomeTemplate';
+import { ChartScale } from './TournamentTemplate';
 
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
 import MyRank from '../MyRank';
 import TextArea from 'antd/lib/input/TextArea';
+import SharePanel from '../SharePanel';
 
 const tagColors = [
   'magenta',
@@ -43,16 +44,11 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
     stockInfos[1].name,
   ]);
 
-  const [copyDone, setCopyDone] = useState(false);
   const [showAllRank, setShowAllRank] = useState(false);
 
   const handleScaleChange = (e: RadioChangeEvent) => {
     e.preventDefault();
     setChartScaleMarket(e.target.value);
-  };
-
-  const handleCopy = () => {
-    setCopyDone(true);
   };
 
   const toggleShowAll = () => {
@@ -82,7 +78,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
         </h2>
       </div>
       <Alert type="info" showIcon message={<div>announce here</div>} />
-      <div className="content">
+      <div className="two-column content">
         <div className="column-1">
           <div className="panel statistics-market">
             <h3>시장 통계</h3>
@@ -179,28 +175,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
         </div>
         <SpaceVertical />
         <div className="column-2">
-          <div className="panel share">
-            <h3>공유</h3>
-            <div style={{ display: 'flex' }}>
-              <Input
-                style={{ flex: 1 }}
-                value={document.location.href}
-                disabled
-              />
-              <CopyToClipboard
-                text={document.location.href}
-                onCopy={handleCopy}
-              >
-                <Button
-                  className="copy-btn"
-                  type={copyDone ? 'default' : 'primary'}
-                  icon={copyDone ? <CheckOutlined /> : <CopyOutlined />}
-                >
-                  {copyDone ? '' : '복사'}
-                </Button>
-              </CopyToClipboard>
-            </div>
-          </div>
+          <SharePanel />
           <SpaceHorizontal />
           <div className="panel rank">
             <h3>내가 뽑은 순위</h3>

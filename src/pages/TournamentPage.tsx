@@ -1,5 +1,7 @@
 import React from 'react';
-import HomeTemplate from '../components/templates/HomeTemplate';
+import TournamentTemplate, {
+  Round,
+} from '../components/templates/TournamentTemplate';
 import stockInfos from '../sample_stock_infos.json';
 
 export type StockInfo = {
@@ -19,7 +21,7 @@ export type StockInfo = {
   industryChange: string;
 };
 
-type HomePageProps = {};
+type TournamentPageProps = {};
 
 // TODO: lib 분리
 function shuffle(a: StockInfo[]) {
@@ -30,8 +32,8 @@ function shuffle(a: StockInfo[]) {
   return a;
 }
 
-function HomePage(props: HomePageProps) {
-  return <HomeTemplate stockInfos={shuffle(stockInfos)} />;
+function TournamentPage(props: TournamentPageProps) {
+  return <TournamentTemplate stockInfos={shuffle(stockInfos)} />;
 }
 
-export default HomePage;
+export default TournamentPage;

@@ -17,7 +17,7 @@ function Header({ location }: HeaderProps) {
         <div className="logo" />
       </Link>
 
-      <Menu
+      {/* <Menu
         theme="dark"
         mode="horizontal"
         defaultSelectedKeys={[current]}
@@ -29,7 +29,7 @@ function Header({ location }: HeaderProps) {
         <Menu.Item key="/forum">
           <Link to="/forum">오늘의 포럼</Link>
         </Menu.Item>
-      </Menu>
+      </Menu> */}
     </Layout.Header>
   );
 }

@@ -1,0 +1,30 @@
+.MarketInfoDisplayable {
+  display: flex;
+  flex-direction: column;
+}
+
+.spinner {
+  display: flex;
+  min-height: 200px;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-head {
+  padding: 0 16px;
+
+  .name {
+    font-size: 20px;
+    margin-right: 4px;
+  }
+
+  .code {
+    margin-right: 4px;
+  }
+}
+
+.info-more,
+.info-price {
+  margin: 10px 0;
+  padding: 0 16px;
+}

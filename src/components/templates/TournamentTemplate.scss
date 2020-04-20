@@ -1,0 +1,43 @@
+.TournamentTemplate {
+  .head {
+    display: flex;
+    align-items: flex-end;
+    h2 {
+      padding: 0 20px;
+    }
+  }
+
+  .scale-selector {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 8px 0px;
+  }
+  .card-wrap {
+    display: flex;
+  }
+
+  .two-column {
+    display: flex;
+
+    .panel {
+      padding: 12px 24px;
+      border-radius: 4px;
+      background-color: white;
+    }
+
+    .column-1,
+    .column-2 {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rank {
+      background: white;
+      border-radius: 4px;
+      .MyRank {
+        margin: 0px -24px;
+      }
+    }
+  }
+}

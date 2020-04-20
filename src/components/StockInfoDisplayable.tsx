@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Tag, Spin, Skeleton, Divider } from 'antd';
 
 import Price from './Price';
-import { StockInfo } from '../pages/HomePage';
+import { StockInfo } from '../pages/TournamentPage';
 
 import './StockInfoDisplayable.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from './pages/HomePage';
+import TournamentPage from './pages/TournamentPage';
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import ForumPage from './pages/ForumPage';
 import BaseTemplate from './components/templates/BaseTemplate';
@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <BaseTemplate>
           <Switch>
-            <Route exact path="/" component={HomePage} />
+            <Route exact path="/" component={TournamentPage} />
             <Route exact path="/forum" component={ForumPage} />
             <Redirect path="*" to="/" />
           </Switch>

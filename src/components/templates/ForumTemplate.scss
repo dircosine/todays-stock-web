@@ -1,5 +1,5 @@
 .ForumTemplate {
-  .content {
+  .two-column {
     display: flex;
   }
 
@@ -63,12 +63,6 @@
 
   .statistics-individual {
     height: 500px;
-  }
-
-  .share {
-    .copy-btn {
-      margin-left: 4px;
-    }
   }
 
   .rank {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StockInfo } from '../pages/HomePage';
+import { StockInfo } from '../pages/TournamentPage';
 import { List, Card, Space, Tag, Divider, Button } from 'antd';
 
 import { RightOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ type MyRankProps = {
   stockInfos: StockInfo[];
   showAll: boolean;
   toggleShowAll: () => void;
-  onAddTag: (name: string) => void;
+  onAddTag?: (name: string) => void;
 };
 
 function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
@@ -33,7 +33,9 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
   };
 
   const handleAddTag = (name: string) => {
-    onAddTag(name);
+    if (onAddTag) {
+      onAddTag(name);
+    }
   };
 
   const showAllBtn = (

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card } from 'antd';
 
-import { StockInfo } from '../pages/HomePage';
-import { Position } from './templates/HomeTemplate';
+import { StockInfo } from '../pages/TournamentPage';
+import { Position } from './templates/TournamentTemplate';
 
-import { Round } from './templates/HomeTemplate';
+import { Round } from './templates/TournamentTemplate';
 import StockInfoDisplayable from './StockInfoDisplayable';
 
 type StockCardSelectableProps = {
