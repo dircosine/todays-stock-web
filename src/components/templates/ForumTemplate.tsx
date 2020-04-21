@@ -1,16 +1,9 @@
-import React, { useState } from 'react';
-import { Tag, Divider, Input, Button, Progress, Empty, Tabs } from 'antd';
-import Radio, { RadioChangeEvent } from 'antd/lib/radio';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import React, { useState, useEffect } from 'react';
+import { Tag, Divider, Button, Empty, Alert } from 'antd';
 
-import Emoji from '../Emoji';
 import SpaceVertical from '../SpaceVertical';
 
 import { StockInfo } from '../../pages/TournamentPage';
-
-import { Alert } from 'antd';
-import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
-import { ChartScale } from './TournamentTemplate';
 
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
@@ -18,6 +11,11 @@ import MyRank from '../MyRank';
 import TextArea from 'antd/lib/input/TextArea';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
+import TodaysRankTable from '../TodaysRankTable';
+import { StockInfoRank, MarketStat } from '../../pages/ForumPage';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import MarketStatPanel from '../MarketStatPanel';
+import Emoji from '../Emoji';
 
 const tagColors = [
   'magenta',
@@ -33,24 +31,29 @@ const tagColors = [
   'purple',
 ];
 
-type ForumTemplateProps = {
-  stockInfos: StockInfo[];
-};
+interface ForumTemplateProps extends RouteComponentProps {
+  myRank: StockInfo[];
+  todaysRank: StockInfoRank[];
+  marketStat: MarketStat | undefined;
+}
 
-function ForumTemplate({ stockInfos }: ForumTemplateProps) {
-  const [chartScaleMarket, setChartScaleMarket] = useState<ChartScale>('day');
-  const [marketTabSelected, setMarketTabSelected] = useState('코스피');
-  const [commentTags, setCommentTags] = useState([
-    stockInfos[0].name,
-    stockInfos[1].name,
-  ]);
+function ForumTemplate({
+  history,
+  myRank,
+  todaysRank,
+  marketStat,
+}: ForumTemplateProps) {
+  const [commentTags, setCommentTags] = useState<string[]>([]);
 
   const [showAllRank, setShowAllRank] = useState(false);
 
-  const handleScaleChange = (e: RadioChangeEvent) => {
-    e.preventDefault();
-    setChartScaleMarket(e.target.value);
-  };
+  useEffect(() => {
+    if (myRank.length > 2) {
+      setCommentTags([myRank[0].name, myRank[1].name]);
+    } else {
+      history.push('/');
+    }
+  }, [history, myRank]);
 
   const toggleShowAll = () => {
     setShowAllRank(!showAllRank);
@@ -67,7 +70,6 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
 
   const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submit!');
   };
 
   return (
@@ -82,97 +84,28 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
       </div>
       <div className="two-column content">
         <div className="column-1">
+          {!marketStat && (
+            <Alert
+              type="info"
+              message={
+                <p style={{ margin: 0 }}>
+                  통계 제공을 위한 데이터가 쪼끔 모자랍니다{' '}
+                  <Emoji symbol="😥" size={15} />
+                  <br /> 주변에 링크를 공유해 주세요
+                </p>
+              }
+              showIcon
+            />
+          )}
+          <SpaceHorizontal />
           <div className="panel statistics-market">
             <h3>시장 통계</h3>
-            <Tabs
-              defaultActiveKey="코스피"
-              onChange={(activeKey: string) => setMarketTabSelected(activeKey)}
-              tabBarExtraContent={
-                <div style={{ textAlign: 'end' }}>
-                  <Button
-                    type="link"
-                    onClick={() => handleAddTag(marketTabSelected)}
-                  >
-                    태그
-                  </Button>
-                  <Radio.Group
-                    onChange={handleScaleChange}
-                    defaultValue={chartScaleMarket}
-                  >
-                    <Radio.Button value="day">일봉</Radio.Button>
-                    <Radio.Button value="week">주봉</Radio.Button>
-                    <Radio.Button value="month">월봉</Radio.Button>
-                  </Radio.Group>
-                </div>
-              }
-            >
-              <Tabs.TabPane tab="코스피" key="코스피">
-                <div className="market kospi">
-                  <h4 hidden={true}>코스피 통계</h4>
-                  <div>
-                    <img
-                      src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
-                      alt="KOSPI Chart"
-                      width="100%"
-                    />
-                  </div>
-                  <div className="statistics">
-                    <Progress
-                      strokeWidth={16}
-                      percent={50}
-                      successPercent={30}
-                      showInfo={false}
-                    />
-                    <div className="forecast-label">
-                      <span>
-                        판다! <strong>30%</strong>
-                      </span>
-                      <span>
-                        홀드! <strong>20%</strong>
-                      </span>
-                      <span>
-                        산다! <strong>50%</strong>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="코스닥" key="코스닥">
-                <div className="market kosdaq">
-                  <h4 hidden={true}>코스닥 통계</h4>
-                  <div>
-                    <img
-                      src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
-                      alt="KOSDAQ Chart"
-                      width="100%"
-                    />
-                    <div className="statistics">
-                      <Progress
-                        strokeWidth={16}
-                        percent={70}
-                        successPercent={20}
-                        showInfo={false}
-                      />
-                      <div className="forecast-label">
-                        <span>
-                          판다! <strong>20%</strong>
-                        </span>
-                        <span>
-                          홀드! <strong>50%</strong>
-                        </span>
-                        <span>
-                          산다! <strong>30%</strong>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Tabs.TabPane>
-            </Tabs>
+            <MarketStatPanel marketStat={marketStat} onAddTag={handleAddTag} />
           </div>
           <SpaceHorizontal />
-          <div className="panel statistics-individual">
+          <div className="panel todays-rank">
             <h3>오늘의 종목 통계</h3>
+            <TodaysRankTable todaysRank={todaysRank} onAddTag={handleAddTag} />
           </div>
         </div>
         <SpaceVertical />
@@ -182,7 +115,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
           <div className="panel rank">
             <h3>내가 뽑은 순위</h3>
             <MyRank
-              stockInfos={stockInfos}
+              stockInfos={myRank}
               showAll={showAllRank}
               toggleShowAll={toggleShowAll}
               onAddTag={handleAddTag}
@@ -191,6 +124,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
           <SpaceHorizontal />
           <div className="panel comments">
             <h3>댓글</h3>
+            <p>원하는 종목을 태그해서 의견을 남길 수 있어요</p>
             <form className="comment-form" onSubmit={handleCommentSubmit}>
               <div className="username-tag">
                 <span className="username">
@@ -211,7 +145,7 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
                 ))}
               </div>
               <TextArea
-                placeholder="한 마디씩 남겨주세용"
+                placeholder="여기에 의견을 남겨주세요"
                 autoSize={{ minRows: 2 }}
               />
               <Button className="submit-btn" htmlType="submit" type="primary">
@@ -232,4 +166,4 @@ function ForumTemplate({ stockInfos }: ForumTemplateProps) {
   );
 }
 
-export default ForumTemplate;
+export default withRouter(ForumTemplate);

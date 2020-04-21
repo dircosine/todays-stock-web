@@ -16,6 +16,7 @@ import MyRank from '../MyRank';
 import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
+import { StockInfoRank } from '../../pages/ForumPage';
 
 export enum Round {
   Round32 = 32,
@@ -43,7 +44,7 @@ type TournamentTemplateProps = {
   stockInfos: StockInfo[];
 };
 
-const startRound = Round.Round8; // 유저 선택으로 변경
+const startRound = Round.RoundMarket; // 유저 선택으로 변경
 
 function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
@@ -62,6 +63,11 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   const [showAllRank, setShowAllRank] = useState(false);
 
+  const setResult = () => {
+    localStorage.setItem('myRank', JSON.stringify(stockInfos));
+    localStorage.setItem('marketForecast', JSON.stringify(marketForecast));
+  };
+
   const setNextRound = (): void => {
     setRound((p) => {
       switch (p) {
@@ -76,6 +82,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
         case Round.Round2:
           return Round.RoundMarket;
         case Round.RoundMarket:
+          setResult();
           return Round.Done;
         default:
           return Round.Interrupt;
@@ -166,21 +173,22 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           )}
       </div>
       <div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ flex: 1 }}>
-            <Alert
-              type="info"
-              showIcon
-              message={
-                <TextLoop mask>
-                  <div>32강은 차트만 보고 후딱 추려 보자구용</div>
-                  <div>종목 정보는 16강부터 제공됩니다</div>
-                </TextLoop>
-              }
-            />
-          </div>
-          <SpaceVertical />
-          {round !== Round.Done && (
+        {round !== Round.Done && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <Alert
+                type="info"
+                showIcon
+                message={
+                  <TextLoop mask>
+                    <div>32강은 차트만 보고 후딱 추려 보자구용</div>
+                    <div>종목 정보는 16강부터 제공됩니다</div>
+                  </TextLoop>
+                }
+              />
+            </div>
+            <SpaceVertical />
+
             <div className="scale-selector">
               <Radio.Group
                 onChange={handleScaleChange}
@@ -191,8 +199,8 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
                 <Radio.Button value="month">월봉</Radio.Button>
               </Radio.Group>
             </div>
-          )}
-        </div>
+          </div>
+        )}
         {round !== Round.Done && round !== Round.RoundMarket && (
           <div className="card-wrap">
             <StockCardSelectable
@@ -265,7 +273,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             <SpaceVertical />
             <div className="column-2">
               <div className="goto-forum panel">
-                <h3 hidden={true}>포럼으로 이동</h3>
+                <h3 hidden={true}>로 이동</h3>
                 <div style={{ textAlign: 'center' }}>
                   <p>
                     포럼으로 이동해서 다른 유저들의 의견과 통계를 확인해 보세요

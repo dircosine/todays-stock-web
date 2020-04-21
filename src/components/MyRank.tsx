@@ -94,9 +94,9 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                       <Tag>{item.market}</Tag>
                     </Space>
                   </div>
-                  <Button type="link" onClick={() => handleAddTag(item.name)}>
+                  {/* <Button type="link" onClick={() => handleAddTag(item.name)}>
                     태그
-                  </Button>
+                  </Button> */}
                 </div>
                 <Button
                   style={{ border: 0, boxShadow: 'none' }}
@@ -151,12 +151,12 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                           <Tag>{item.market}</Tag>
                         </Space>
                       </div>
-                      <Button
+                      {/* <Button
                         type="link"
                         onClick={() => handleAddTag(item.name)}
                       >
                         태그
-                      </Button>
+                      </Button> */}
                     </div>
                     <Button
                       style={{ border: 0, boxShadow: 'none' }}
@@ -212,12 +212,12 @@ function MyRank({ stockInfos, showAll, toggleShowAll, onAddTag }: MyRankProps) {
                           <Tag>{item.market}</Tag>
                         </Space>
                       </div>
-                      <Button
+                      {/* <Button
                         type="link"
                         onClick={() => handleAddTag(item.name)}
                       >
                         태그
-                      </Button>
+                      </Button> */}
                     </div>
                     <Button
                       style={{ border: 0, boxShadow: 'none' }}
