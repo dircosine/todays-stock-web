@@ -1,14 +1,8 @@
 import React from 'react';
-import TournamentTemplate, {
-  Round,
-} from '../components/templates/TournamentTemplate';
+import TournamentTemplate from '../components/templates/TournamentTemplate';
 import stockInfos from '../sample_stock_infos.json';
 
-export type StockInfo = {
-  name: string;
-  code: string;
-  market: string;
-  price: string;
+type MoreInfo = {
   cap: string;
   capRank: string;
   amountOfListed: string;
@@ -19,6 +13,26 @@ export type StockInfo = {
   dividendYield: string;
   industryPer: string;
   industryChange: string;
+};
+
+type PriceInfo = {
+  today: string;
+  exday: string;
+  change: string;
+  changePercent: string;
+  high: string;
+  low: string;
+  start: string;
+  volume: string;
+  tradingValue: string;
+};
+
+export type StockInfo = {
+  name: string;
+  code: string;
+  market: string;
+  price: PriceInfo;
+  more: MoreInfo;
 };
 
 type TournamentPageProps = {};

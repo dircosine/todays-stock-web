@@ -76,7 +76,7 @@ function StockInfoDisplayable({
       )}
       {infoExtent.includes('price') && (
         <div className="info-price">
-          <Price value={stockInfo.price} />
+          <Price value={stockInfo.price.today} />
         </div>
       )}
       {infoExtent.includes('more') && (
@@ -87,25 +87,25 @@ function StockInfoDisplayable({
             <ul>
               <li>
                 시가총액
-                <strong>{stockInfo.cap}</strong>억원 / {stockInfo.market}
-                <strong>{stockInfo.capRank}</strong>위
+                <strong>{stockInfo.more.cap}</strong>억원 / {stockInfo.market}
+                <strong>{stockInfo.more.capRank}</strong>위
               </li>
               <li>
                 상장주식수
-                <strong>{stockInfo.amountOfListed}</strong>
+                <strong>{stockInfo.more.amountOfListed}</strong>
               </li>
               <li>
-                52주 최고 <strong>{stockInfo.week52high}</strong> / 최저{' '}
-                <strong>{stockInfo.week52low}</strong>
+                52주 최고 <strong>{stockInfo.more.week52high}</strong> / 최저{' '}
+                <strong>{stockInfo.more.week52low}</strong>
               </li>
               <li>
                 PER
-                <strong>{stockInfo.per}</strong>
-                (업종평균 {stockInfo.industryPer})
+                <strong>{stockInfo.more.per}</strong>
+                (업종평균 {stockInfo.more.industryPer})
               </li>
               <li>
                 PBR
-                <strong>{stockInfo.pbr}</strong>
+                <strong>{stockInfo.more.pbr}</strong>
               </li>
             </ul>
           )}
