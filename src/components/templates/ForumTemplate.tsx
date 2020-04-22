@@ -119,7 +119,6 @@ function ForumTemplate({
               stockInfos={myRank}
               showAll={showAllRank}
               toggleShowAll={toggleShowAll}
-              onAddTag={handleAddTag}
             />
           </div>
           <SpaceHorizontal />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radio, Card, Button, Switch, Space, Tooltip } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip, Divider } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 
@@ -40,12 +40,11 @@ type TournamentTemplateProps = {
   stockInfos: StockInfo[];
 };
 
-const startRound = Round.Round32; // 유저 선택으로 변경
+const startRound = Round.Round4; // 유저 선택으로 변경
 
 function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
   const [round, setRound] = useState<Round>(startRound);
-  // const [round, setRound] = useState<Round>(Round.Round16);
   const [progress, setProgress] = useState(1);
   const [progressLimit, setProgressLimit] = useState(startRound / 2);
   const [leftIndex, setLeftIndex] = useState(0);
@@ -56,8 +55,6 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
     KOSPI: 'HOLD',
     KOSDAQ: 'HOLD',
   });
-
-  const [showAllRank, setShowAllRank] = useState(false);
 
   const [blind, setBlind] = useState(round === Round.Round32);
 
@@ -152,8 +149,14 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
     }
   };
 
-  const toggleShowAllRank = () => {
-    setShowAllRank(!showAllRank);
+  const handleReplay = () => {
+    if (
+      window.confirm('다시 플레이 하시겠어요? 이번 플레이 기록은 삭제됩니다.')
+    ) {
+      localStorage.removeItem('myRank');
+      localStorage.removeItem('marketForecast');
+      window.location.reload();
+    }
   };
 
   return (
@@ -173,55 +176,48 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
       </div>
 
       <p className="announce">
-        향후 전망이 더 좋아보이는 종목을 선택해 주세요!
+        {round !== Round.Done &&
+          round !== Round.RoundMarket &&
+          '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
+        {round === Round.RoundMarket &&
+          '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
-      <div
-        className="blind"
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
-        <Tooltip
-          placement="left"
-          title="종목 정보는 16강부터 제공됩니다"
-          defaultVisible={true}
-          visible={round === Round.Round32}
-        >
-          <Space>
-            <span>블라인드</span>
-            <Switch
-              checked={blind}
-              onChange={() => setBlind((p) => !p)}
-              disabled={round === Round.Round32}
-            />
-          </Space>
-        </Tooltip>
-      </div>
+      {round !== Round.Done && round !== Round.RoundMarket && (
+        <div className="blind">
+          <Tooltip
+            placement="left"
+            title="종목 정보는 16강부터 제공됩니다"
+            defaultVisible={true}
+            visible={round === Round.Round32}
+          >
+            <Space>
+              <span>블라인드</span>
+              <Switch
+                checked={blind}
+                onChange={() => setBlind((p) => !p)}
+                disabled={round === Round.Round32}
+              />
+            </Space>
+          </Tooltip>
+        </div>
+      )}
       {round !== Round.Done && (
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}
+          className={`scale-selector ${
+            round === Round.RoundMarket ? 'market-stage' : ''
+          }`}
         >
           <Space>
-            <div className="scale-selector">
-              <Radio.Group
-                onChange={handleScaleChange}
-                defaultValue={chartScale}
-              >
-                <Radio.Button value="day">일봉</Radio.Button>
-                <Radio.Button value="week">주봉</Radio.Button>
-                <Radio.Button value="month">월봉</Radio.Button>
-              </Radio.Group>
-            </div>
+            <Radio.Group onChange={handleScaleChange} defaultValue={chartScale}>
+              <Radio.Button value="day">일봉</Radio.Button>
+              <Radio.Button value="week">주봉</Radio.Button>
+              <Radio.Button value="month">월봉</Radio.Button>
+            </Radio.Group>
           </Space>
         </div>
       )}
+
       {round !== Round.Done && round !== Round.RoundMarket && (
         <div className="card-wrap">
           <StockCardSelectable
@@ -252,8 +248,9 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           />
         </div>
       )}
+
       {round === Round.RoundMarket && (
-        <div style={{ maxWidth: 450, margin: '0 auto' }}>
+        <div className="market-stage">
           <Card
             className="StockCardSelectable"
             bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
@@ -289,33 +286,55 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           </Card>
         </div>
       )}
+
       {round === Round.Done && (
-        <div className="two-column">
-          <div className="column-1 ">
-            <div className="rank panel">
-              <h3>내가 뽑은 순위</h3>
-              <MyRank
-                stockInfos={stockInfos}
-                showAll={showAllRank}
-                toggleShowAll={toggleShowAllRank}
-              />
+        <div className="done-stage">
+          <div className="two-column">
+            <div className="column-1 ">
+              <SharePanel />
             </div>
-          </div>
-          <SpaceVertical />
-          <div className="column-2">
-            <div className="goto-forum panel">
-              <h3 hidden={true}>로 이동</h3>
-              <div style={{ textAlign: 'center' }}>
-                <p>
-                  포럼으로 이동해서 다른 유저들의 의견과 통계를 확인해 보세요
-                </p>
-                <Button type="primary" shape="round">
-                  <Link to="/forum">포럼으로 이동</Link>
-                </Button>
+            <SpaceVertical />
+            <div className="column-2">
+              <div className="goto-forum panel">
+                <h3 hidden={true}>포럼으로</h3>
+                <div style={{ textAlign: 'center' }}>
+                  <p>다른 유저들의 의견과 오늘의 통계를 확인해 보세요</p>
+                  <Space>
+                    <Button type="default" shape="round" onClick={handleReplay}>
+                      다시하기
+                    </Button>
+                    <Button type="primary" shape="round">
+                      <Link to="/forum">포럼으로 이동</Link>
+                    </Button>
+                  </Space>
+                </div>
               </div>
             </div>
-            <SpaceHorizontal />
-            <SharePanel />
+          </div>
+          <SpaceHorizontal />
+          <Divider>여기, 직접 선택한 결과를 확인하세요!</Divider>
+          <div className="two-column">
+            <div className="column-1 ">
+              <div className="rank panel">
+                <h3 hidden={true}>내가 뽑은 순위</h3>
+                <MyRank
+                  stockInfos={stockInfos}
+                  showAll={true}
+                  partialDisplay="high"
+                />
+              </div>
+            </div>
+            <SpaceVertical />
+            <div className="column-2">
+              <div className="rank panel">
+                <h3 hidden={true}>내가 뽑은 순위</h3>
+                <MyRank
+                  stockInfos={stockInfos}
+                  showAll={true}
+                  partialDisplay="low"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

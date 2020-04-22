@@ -13,11 +13,23 @@
     font-size: 18px;
   }
 
+  .blind {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
   .scale-selector {
     display: flex;
-    flex-direction: row-reverse;
-    margin: 8px 0px;
+    justify-content: flex-end;
+    padding: 8px 0px;
   }
+
+  .market-stage {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
   .card-wrap {
     display: flex;
   }
