@@ -11,7 +11,7 @@ type StockCardSelectableProps = {
   stockInfo: StockInfo;
   chartScale: 'day' | 'week' | 'month';
   position: Position;
-  round: Round;
+  blind: boolean;
   onClick: (position: Position) => void;
 };
 
@@ -19,7 +19,7 @@ function StockCardSelectable({
   stockInfo,
   chartScale,
   position,
-  round,
+  blind,
   onClick,
 }: StockCardSelectableProps) {
   const handleCardClick = () => {
@@ -37,7 +37,7 @@ function StockCardSelectable({
       <StockInfoDisplayable
         stockInfo={stockInfo}
         infoExtent={['head', 'chart', 'price', 'more']}
-        hideInfo={round === Round.Round32}
+        hideInfo={blind}
         chartScale={chartScale}
       />
     </Card>

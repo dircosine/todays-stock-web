@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tag, Divider, Button, Empty, Alert } from 'antd';
+import { Tag, Divider, Button, Empty, Alert, message } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
 
@@ -51,6 +51,7 @@ function ForumTemplate({
     if (myRank.length > 2) {
       setCommentTags([myRank[0].name, myRank[1].name]);
     } else {
+      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
       history.push('/');
     }
   }, [history, myRank]);
@@ -124,7 +125,13 @@ function ForumTemplate({
           <SpaceHorizontal />
           <div className="panel comments">
             <h3>댓글</h3>
-            <p>원하는 종목을 태그해서 의견을 남길 수 있어요</p>
+            <p>
+              원하는 종목 및 시장을{' '}
+              <Button style={{ padding: 0 }} type="link">
+                태그
+              </Button>
+              해서 의견을 남길 수 있어요
+            </p>
             <form className="comment-form" onSubmit={handleCommentSubmit}>
               <div className="username-tag">
                 <span className="username">

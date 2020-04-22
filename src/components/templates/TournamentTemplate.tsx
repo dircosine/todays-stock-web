@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { Radio, Card, Button, Space, Divider } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 
 import { StockInfo } from '../../pages/TournamentPage';
-
-import { Alert } from 'antd';
-import TextLoop from 'react-text-loop';
 
 import './TournamentTemplate.scss';
 import { Link } from 'react-router-dom';
@@ -16,7 +13,6 @@ import MyRank from '../MyRank';
 import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
-import { StockInfoRank } from '../../pages/ForumPage';
 
 export enum Round {
   Round32 = 32,
@@ -44,7 +40,7 @@ type TournamentTemplateProps = {
   stockInfos: StockInfo[];
 };
 
-const startRound = Round.RoundMarket; // 유저 선택으로 변경
+const startRound = Round.Round32; // 유저 선택으로 변경
 
 function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
@@ -63,6 +59,8 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   const [showAllRank, setShowAllRank] = useState(false);
 
+  const [blind, setBlind] = useState(round === Round.Round32);
+
   const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(stockInfos));
     localStorage.setItem('marketForecast', JSON.stringify(marketForecast));
@@ -72,6 +70,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
     setRound((p) => {
       switch (p) {
         case Round.Round32:
+          setBlind(false);
           return Round.Round16;
         case Round.Round16:
           return Round.Round8;
@@ -168,27 +167,48 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           round !== Round.RoundMarket &&
           round !== Round.Done && (
             <p>
-              {progress} / {progressLimit}
+              <strong>{progress}</strong> / {progressLimit}
             </p>
           )}
       </div>
-      <div>
-        {round !== Round.Done && (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ flex: 1 }}>
-              <Alert
-                type="info"
-                showIcon
-                message={
-                  <TextLoop mask>
-                    <div>32강은 차트만 보고 후딱 추려 보자구용</div>
-                    <div>종목 정보는 16강부터 제공됩니다</div>
-                  </TextLoop>
-                }
-              />
-            </div>
-            <SpaceVertical />
 
+      <p className="announce">
+        향후 전망이 더 좋아보이는 종목을 선택해 주세요!
+      </p>
+
+      <div
+        className="blind"
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Tooltip
+          placement="left"
+          title="종목 정보는 16강부터 제공됩니다"
+          defaultVisible={true}
+          visible={round === Round.Round32}
+        >
+          <Space>
+            <span>블라인드</span>
+            <Switch
+              checked={blind}
+              onChange={() => setBlind((p) => !p)}
+              disabled={round === Round.Round32}
+            />
+          </Space>
+        </Tooltip>
+      </div>
+      {round !== Round.Done && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+          <Space>
             <div className="scale-selector">
               <Radio.Group
                 onChange={handleScaleChange}
@@ -199,96 +219,106 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
                 <Radio.Button value="month">월봉</Radio.Button>
               </Radio.Group>
             </div>
+          </Space>
+        </div>
+      )}
+      {round !== Round.Done && round !== Round.RoundMarket && (
+        <div className="card-wrap">
+          <StockCardSelectable
+            stockInfo={stockInfos[leftIndex]}
+            chartScale={chartScale}
+            position="left"
+            blind={blind}
+            onClick={handleCardClick}
+          />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: 24,
+              width: 30,
+            }}
+          >
+            vs
           </div>
-        )}
-        {round !== Round.Done && round !== Round.RoundMarket && (
-          <div className="card-wrap">
-            <StockCardSelectable
-              stockInfo={stockInfos[leftIndex]}
-              chartScale={chartScale}
-              position="left"
-              round={round}
-              onClick={handleCardClick}
-            />
-            <SpaceVertical />
-            <StockCardSelectable
-              stockInfo={stockInfos[rightIndex]}
-              chartScale={chartScale}
-              position="right"
-              round={round}
-              onClick={handleCardClick}
-            />
-          </div>
-        )}
-
-        {round === Round.RoundMarket && (
-          <div style={{ maxWidth: 450, margin: '0 auto' }}>
-            <Card
-              className="StockCardSelectable"
-              bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
-              actions={[
-                <Button
-                  type="link"
-                  style={{ width: '100%' }}
-                  shape="round"
-                  onClick={() => handleMarketForecastSelect('SELL')}
-                >
-                  판다!
-                </Button>,
-                <Button
-                  type="link"
-                  style={{ width: '100%' }}
-                  shape="round"
-                  onClick={() => handleMarketForecastSelect('HOLD')}
-                >
-                  홀드
-                </Button>,
-                <Button
-                  type="link"
-                  style={{ width: '100%' }}
-                  shape="round"
-                  onClick={() => handleMarketForecastSelect('BUY')}
-                >
-                  산다!
-                </Button>,
-              ]}
-              // hoverable
-            >
-              <MarketInfoDisplayable market={market} chartScale={chartScale} />
-            </Card>
-          </div>
-        )}
-        {round === Round.Done && (
-          <div className="two-column">
-            <div className="column-1 ">
-              <div className="rank panel">
-                <h3>내가 뽑은 순위</h3>
-                <MyRank
-                  stockInfos={stockInfos}
-                  showAll={showAllRank}
-                  toggleShowAll={toggleShowAllRank}
-                />
-              </div>
-            </div>
-            <SpaceVertical />
-            <div className="column-2">
-              <div className="goto-forum panel">
-                <h3 hidden={true}>로 이동</h3>
-                <div style={{ textAlign: 'center' }}>
-                  <p>
-                    포럼으로 이동해서 다른 유저들의 의견과 통계를 확인해 보세요
-                  </p>
-                  <Button type="primary" shape="round">
-                    <Link to="/forum">포럼으로 이동</Link>
-                  </Button>
-                </div>
-              </div>
-              <SpaceHorizontal />
-              <SharePanel />
+          {/* <SpaceVertical /> */}
+          <StockCardSelectable
+            stockInfo={stockInfos[rightIndex]}
+            chartScale={chartScale}
+            position="right"
+            blind={blind}
+            onClick={handleCardClick}
+          />
+        </div>
+      )}
+      {round === Round.RoundMarket && (
+        <div style={{ maxWidth: 450, margin: '0 auto' }}>
+          <Card
+            className="StockCardSelectable"
+            bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
+            actions={[
+              <Button
+                type="link"
+                style={{ width: '100%' }}
+                shape="round"
+                onClick={() => handleMarketForecastSelect('SELL')}
+              >
+                판다!
+              </Button>,
+              <Button
+                type="link"
+                style={{ width: '100%' }}
+                shape="round"
+                onClick={() => handleMarketForecastSelect('HOLD')}
+              >
+                홀드
+              </Button>,
+              <Button
+                type="link"
+                style={{ width: '100%' }}
+                shape="round"
+                onClick={() => handleMarketForecastSelect('BUY')}
+              >
+                산다!
+              </Button>,
+            ]}
+            // hoverable
+          >
+            <MarketInfoDisplayable market={market} chartScale={chartScale} />
+          </Card>
+        </div>
+      )}
+      {round === Round.Done && (
+        <div className="two-column">
+          <div className="column-1 ">
+            <div className="rank panel">
+              <h3>내가 뽑은 순위</h3>
+              <MyRank
+                stockInfos={stockInfos}
+                showAll={showAllRank}
+                toggleShowAll={toggleShowAllRank}
+              />
             </div>
           </div>
-        )}
-      </div>
+          <SpaceVertical />
+          <div className="column-2">
+            <div className="goto-forum panel">
+              <h3 hidden={true}>로 이동</h3>
+              <div style={{ textAlign: 'center' }}>
+                <p>
+                  포럼으로 이동해서 다른 유저들의 의견과 통계를 확인해 보세요
+                </p>
+                <Button type="primary" shape="round">
+                  <Link to="/forum">포럼으로 이동</Link>
+                </Button>
+              </div>
+            </div>
+            <SpaceHorizontal />
+            <SharePanel />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
