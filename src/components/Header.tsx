@@ -17,19 +17,19 @@ function Header({ location }: HeaderProps) {
         <div className="logo" />
       </Link>
 
-      {/* <Menu
+      <Menu
         theme="dark"
         mode="horizontal"
         defaultSelectedKeys={[current]}
         onClick={handleMenuClick}
       >
-        <Menu.Item key="/tournament">
+        <Menu.Item key="/">
           <Link to="/">오늘의 토너먼트</Link>
         </Menu.Item>
         <Menu.Item key="/forum">
           <Link to="/forum">오늘의 포럼</Link>
         </Menu.Item>
-      </Menu> */}
+      </Menu>
     </Layout.Header>
   );
 }

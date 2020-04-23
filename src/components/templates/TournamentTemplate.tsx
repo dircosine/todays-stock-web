@@ -21,10 +21,9 @@ export enum Round {
   Round8 = 8,
   Round4 = 4,
   Round2 = 2,
-  RoundMarket = 1,
-  Done = 0,
-  Interrupt = -1,
 }
+
+export type Stage = 'ROUND' | 'MARKET' | 'DONE' | 'INTERRUPTED';
 
 // type Round = '32' | '16' | '8' | '4' | '2';
 export type ChartScale = 'day' | 'week' | 'month';
@@ -41,11 +40,14 @@ type TournamentTemplateProps = {
   stockInfos: StockInfo[];
 };
 
-const startRound = Round.Done; // 유저 선택으로 변경
+const startRound = Round.Round32; // 유저 선택으로 변경
 
 function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
-  const [chartScale, setChartScale] = useState<ChartScale>('day');
   const [round, setRound] = useState<Round>(startRound);
+  const [stage, setStage] = useState<Stage>('MARKET');
+
+  const [chartScale, setChartScale] = useState<ChartScale>('day');
+
   const [progress, setProgress] = useState(1);
   const [progressLimit, setProgressLimit] = useState(startRound / 2);
   const [leftIndex, setLeftIndex] = useState(0);
@@ -62,12 +64,12 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(stockInfos));
-    localStorage.setItem('marketForecast', JSON.stringify(marketForecast));
+    // localStorage.setItem('marketForecast', JSON.stringify(marketForecast));
   };
 
-  const setNextRound = (): void => {
-    setRound((p) => {
-      switch (p) {
+  const goNextRound = (): void => {
+    setRound((prevRound) => {
+      switch (prevRound) {
         case Round.Round32:
           setBlind(false);
           return Round.Round16;
@@ -78,31 +80,42 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
         case Round.Round4:
           return Round.Round2;
         case Round.Round2:
-          return Round.RoundMarket;
-        case Round.RoundMarket:
+          goNextStage();
+          return Round.Round32;
+      }
+    });
+  };
+
+  const goNextStage = (): void => {
+    setStage((prevStage) => {
+      switch (prevStage) {
+        case 'ROUND':
+          return 'MARKET';
+        case 'MARKET':
           setResult();
-          return Round.Done;
-        default:
-          return Round.Interrupt;
+          return 'DONE';
+        case 'DONE':
+        case 'INTERRUPTED':
+          return 'INTERRUPTED';
       }
     });
   };
 
   const displayRound = (): string => {
-    switch (round) {
-      case Round.Round32:
-      case Round.Round16:
-      case Round.Round8:
-      case Round.Round4:
-        return `${round} 강`;
-      case Round.Round2:
-        return '결승';
-      case Round.RoundMarket:
-        return '시장 예측';
-      case Round.Done:
-        return '완료!';
-      default:
-        return '중단';
+    if (stage === 'DONE') {
+      return '완료!';
+    } else if (stage === 'MARKET') {
+      return '시장 예측';
+    } else {
+      switch (round) {
+        case Round.Round32:
+        case Round.Round16:
+        case Round.Round8:
+        case Round.Round4:
+          return `${round} 강`;
+        case Round.Round2:
+          return '결승';
+      }
     }
   };
 
@@ -133,7 +146,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             setLeftIndex(0);
             setRightIndex(pl / 2);
           }
-          setNextRound();
+          goNextRound();
           return pl / 2;
         });
         return 1;
@@ -146,8 +159,14 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
       setMarketForecast((p) => ({ ...p, KOSPI: forecast }));
       setMarket('KOSDAQ');
     } else {
-      setMarketForecast((p) => ({ ...p, KOSDAQ: forecast }));
-      setNextRound();
+      setMarketForecast((p) => {
+        localStorage.setItem(
+          'marketForecast',
+          JSON.stringify({ ...p, KOSDAQ: forecast }),
+        );
+        return { ...p, KOSDAQ: forecast };
+      });
+      goNextStage();
     }
   };
 
@@ -163,34 +182,27 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   return (
     <div className="TournamentTemplate">
-      <h1>
+      <h1 hidden={true}>오늘의 토너먼트</h1>
+      <h2>
         <EventDate date={new Date()} />의 토너먼트
-      </h1>
+      </h2>
       <div className="head">
         <h2>{displayRound()}</h2>
-        {round !== Round.Round2 &&
-          round !== Round.RoundMarket &&
-          round !== Round.Done && (
-            <p>
-              <strong>{progress}</strong> / {progressLimit}
-            </p>
-          )}
+        {stage === 'ROUND' && round !== Round.Round2 && (
+          <p>
+            <strong>{progress}</strong> / {progressLimit}
+          </p>
+        )}
       </div>
 
       <p className="announce">
-        {round !== Round.Done &&
-          round !== Round.RoundMarket &&
-          '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
-        {round === Round.RoundMarket &&
+        {stage === 'ROUND' && '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
+        {stage === 'MARKET' &&
           '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
-      <div
-        className={`control ${
-          round === Round.RoundMarket ? 'market-stage' : ''
-        }`}
-      >
-        {round !== Round.Done && round !== Round.RoundMarket && (
+      <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}>
+        {stage === 'ROUND' && (
           <div className="switch">
             <Tooltip
               className="blind"
@@ -218,7 +230,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             </Space>
           </div>
         )}
-        {round !== Round.Done && (
+        {stage !== 'DONE' && (
           <div className="scale-selector">
             <Space>
               <Radio.Group
@@ -234,7 +246,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
         )}
       </div>
 
-      {round !== Round.Done && round !== Round.RoundMarket && (
+      {stage === 'ROUND' && (
         <div className="card-wrap">
           <StockCardSelectable
             stockInfo={stockInfos[leftIndex]}
@@ -267,7 +279,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
         </div>
       )}
 
-      {round === Round.RoundMarket && (
+      {stage === 'MARKET' && (
         <div className="market-stage">
           <Card
             bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
@@ -304,7 +316,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
         </div>
       )}
 
-      {round === Round.Done && (
+      {stage === 'DONE' && (
         <div className="done-stage">
           <div className="two-column">
             <div className="column-1 ">
@@ -329,7 +341,10 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             </div>
           </div>
           <SpaceHorizontal />
-          <Divider>여기, 직접 선택한 결과를 확인하세요!</Divider>
+          <Divider>
+            <Emoji symbol="💎" /> 보석같은 종목 찾으셨나요? <br />
+            여기, 직접 선택한 결과를 확인하세요!
+          </Divider>
           <div className="two-column">
             <div className="column-1 ">
               <div className="rank panel">

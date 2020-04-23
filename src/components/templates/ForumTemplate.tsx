@@ -19,16 +19,16 @@ import Emoji from '../Emoji';
 
 const tagColors = [
   'magenta',
-  'red',
-  'volcano',
   'orange',
+  'purple',
   'gold',
   'lime',
-  'green',
-  'cyan',
-  'blue',
   'geekblue',
-  'purple',
+  'volcano',
+  'cyan',
+  'green',
+  'blue',
+  'red',
 ];
 
 interface ForumTemplateProps extends RouteComponentProps {
@@ -75,9 +75,10 @@ function ForumTemplate({
 
   return (
     <div className="ForumTemplate">
-      <h1>
+      <h1 hidden={true}>오늘의 포럼</h1>
+      <h2>
         <EventDate date={new Date()} />의 포럼
-      </h1>
+      </h2>
       <div className="head">
         {/* <h2>
           <Emoji symbol="🎉" /> 포럼
