@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 type EventDateProps = {
-  date: Date;
+  date: string;
 };
 
 function EventDate({ date }: EventDateProps) {
   // prettier-ignore
-  return <span>{`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`}</span>;
+  const splited = date.split('-');
+  return <span>{`${splited[0]}년 ${splited[1]}월 ${splited[2]}일`}</span>;
 }
 
 export default EventDate;

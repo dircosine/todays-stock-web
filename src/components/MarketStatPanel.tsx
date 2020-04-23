@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Button, Radio, Progress, Alert } from 'antd';
+import { Tabs, Button, Radio, Progress } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { MarketStat } from '../pages/ForumPage';
 

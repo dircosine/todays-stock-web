@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ForumTemplate from '../components/templates/ForumTemplate';
-import { StockInfo } from './TournamentPage';
+import { StockInfo, getYYYYMMDD } from './TournamentPage';
 
 import todaysStock from '../sample_stock_infos.json';
+import { message } from 'antd';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 export type StockInfoRank = StockInfo & {
   rank: number | undefined;
@@ -19,9 +21,21 @@ export type MarketStat = {
   kosdaq: ForecastStat;
 };
 
-interface ForumPageProps {}
+interface ForumPageProps extends RouteComponentProps {}
 
-function ForumPage(props: ForumPageProps) {
+function ForumPage({ history }: ForumPageProps) {
+  const eventDate = getYYYYMMDD(new Date());
+
+  useEffect(() => {
+    const doneDates: string[] = JSON.parse(
+      localStorage.getItem('doneDates') || '[]',
+    );
+    if (!doneDates.includes(eventDate)) {
+      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
+      history.push('/');
+    }
+  }, [eventDate, history]);
+
   const myRank: StockInfo[] = JSON.parse(
     localStorage.getItem('myRank') || '[]',
   );
@@ -39,6 +53,7 @@ function ForumPage(props: ForumPageProps) {
     }));
     return (
       <ForumTemplate
+        eventDate={eventDate}
         myRank={myRank}
         todaysRank={dummyTodaysRank}
         marketStat={marketStat}
@@ -47,6 +62,7 @@ function ForumPage(props: ForumPageProps) {
   } else {
     return (
       <ForumTemplate
+        eventDate={eventDate}
         myRank={myRank}
         todaysRank={todaysRank}
         marketStat={marketStat}
@@ -55,4 +71,4 @@ function ForumPage(props: ForumPageProps) {
   }
 }
 
-export default ForumPage;
+export default withRouter(ForumPage);

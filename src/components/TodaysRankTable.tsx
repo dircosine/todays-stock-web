@@ -29,7 +29,7 @@ function TodaysRankTable({ todaysRank, onAddTag }: TodaysRankTableProps) {
       ),
     },
     {
-      title: '1위 확률',
+      title: '1위 비율',
       dataIndex: 'winRate',
       render: (winRate: string) => (
         <div style={{ textAlign: 'center' }}>{winRate || '-'}</div>

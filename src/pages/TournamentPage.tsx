@@ -38,7 +38,7 @@ export type StockInfo = {
 type TournamentPageProps = {};
 
 // TODO: lib 분리
-function shuffle(a: StockInfo[]) {
+function shuffle(a: StockInfo[]): StockInfo[] {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -46,8 +46,21 @@ function shuffle(a: StockInfo[]) {
   return a;
 }
 
+export function getYYYYMMDD(d: Date): string {
+  const month =
+    d.getMonth() < 9 ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
+  const date = d.getDate() < 10 ? `0${d.getDate()}` : `${d.getDate()}`;
+  return `${d.getFullYear()}-${month}-${date}`;
+}
+
 function TournamentPage(props: TournamentPageProps) {
-  return <TournamentTemplate stockInfos={shuffle(stockInfos)} />;
+  const eventDate = getYYYYMMDD(new Date());
+  return (
+    <TournamentTemplate
+      stockInfos={shuffle(stockInfos)}
+      eventDate={eventDate}
+    />
+  );
 }
 
 export default TournamentPage;

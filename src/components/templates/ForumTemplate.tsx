@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Tag, Divider, Button, Empty, Alert, message } from 'antd';
+import React, { useState } from 'react';
+import { Tag, Divider, Button, Empty, Alert } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
 
@@ -13,7 +13,6 @@ import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import TodaysRankTable from '../TodaysRankTable';
 import { StockInfoRank, MarketStat } from '../../pages/ForumPage';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import MarketStatPanel from '../MarketStatPanel';
 import Emoji from '../Emoji';
 
@@ -31,14 +30,15 @@ const tagColors = [
   'red',
 ];
 
-interface ForumTemplateProps extends RouteComponentProps {
+interface ForumTemplateProps {
+  eventDate: string;
   myRank: StockInfo[];
   todaysRank: StockInfoRank[];
   marketStat: MarketStat | undefined;
 }
 
 function ForumTemplate({
-  history,
+  eventDate,
   myRank,
   todaysRank,
   marketStat,
@@ -46,15 +46,6 @@ function ForumTemplate({
   const [commentTags, setCommentTags] = useState<string[]>([]);
 
   const [showAllRank, setShowAllRank] = useState(false);
-
-  useEffect(() => {
-    if (myRank.length > 2) {
-      setCommentTags([myRank[0].name, myRank[1].name]);
-    } else {
-      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
-      history.push('/');
-    }
-  }, [history, myRank]);
 
   const toggleShowAll = () => {
     setShowAllRank(!showAllRank);
@@ -77,7 +68,7 @@ function ForumTemplate({
     <div className="ForumTemplate">
       <h1 hidden={true}>오늘의 포럼</h1>
       <h2>
-        <EventDate date={new Date()} />의 포럼
+        <EventDate date={eventDate} />의 포럼
       </h2>
       <div className="head">
         {/* <h2>
@@ -173,4 +164,4 @@ function ForumTemplate({
   );
 }
 
-export default withRouter(ForumTemplate);
+export default ForumTemplate;

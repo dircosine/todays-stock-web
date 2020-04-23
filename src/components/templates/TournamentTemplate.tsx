@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Radio, Card, Button, Switch, Space, Tooltip, Divider } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
@@ -38,13 +38,18 @@ type MarketForecast = {
 
 type TournamentTemplateProps = {
   stockInfos: StockInfo[];
+  eventDate: string;
 };
 
-const startRound = Round.Round32; // 유저 선택으로 변경
+const startRound = Round.Round8; // 유저 선택으로 변경
 
-function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
+function TournamentTemplate({
+  stockInfos,
+  eventDate,
+}: TournamentTemplateProps) {
+  const [myRank, setMyRank] = useState<StockInfo[]>(stockInfos);
   const [round, setRound] = useState<Round>(startRound);
-  const [stage, setStage] = useState<Stage>('MARKET');
+  const [stage, setStage] = useState<Stage>('ROUND');
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -54,7 +59,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [rightIndex, setRightIndex] = useState(startRound / 2);
 
   const [market, setMarket] = useState<Market>('KOSPI');
-  const [marketForecast, setMarketForecast] = useState<MarketForecast>({
+  const marketForecast = useRef<MarketForecast>({
     KOSPI: 'HOLD',
     KOSDAQ: 'HOLD',
   });
@@ -62,9 +67,33 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [blind, setBlind] = useState(round === Round.Round32);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
 
+  useEffect(() => {
+    const doneDates: string[] = JSON.parse(
+      localStorage.getItem('doneDates') || '[]',
+    );
+    if (doneDates.includes(eventDate)) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
+      marketForecast.current = JSON.parse(
+        localStorage.getItem('marketForcast') || '{}',
+      );
+      setStage('DONE');
+    }
+  }, [eventDate]);
+
   const setResult = () => {
-    localStorage.setItem('myRank', JSON.stringify(stockInfos));
-    // localStorage.setItem('marketForecast', JSON.stringify(marketForecast));
+    localStorage.setItem('myRank', JSON.stringify(myRank));
+    localStorage.setItem(
+      'marketForecast',
+      JSON.stringify(marketForecast.current),
+    );
+    const doneDates: string[] = JSON.parse(
+      localStorage.getItem('doneDates') || '[]',
+    );
+    localStorage.setItem(
+      'doneDates',
+      JSON.stringify([...doneDates, eventDate]),
+    );
   };
 
   const goNextRound = (): void => {
@@ -120,9 +149,12 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   };
 
   const swapPosition = () => {
-    const temp = stockInfos[leftIndex];
-    stockInfos[leftIndex] = stockInfos[rightIndex];
-    stockInfos[rightIndex] = temp;
+    setMyRank((p) => {
+      const temp = p[leftIndex];
+      p[leftIndex] = p[rightIndex];
+      p[rightIndex] = temp;
+      return p;
+    });
   };
 
   const handleScaleChange = (e: RadioChangeEvent) => {
@@ -156,16 +188,10 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
 
   const handleMarketForecastSelect = (forecast: Forecast) => {
     if (market === 'KOSPI') {
-      setMarketForecast((p) => ({ ...p, KOSPI: forecast }));
+      marketForecast.current = { ...marketForecast.current, KOSPI: forecast };
       setMarket('KOSDAQ');
     } else {
-      setMarketForecast((p) => {
-        localStorage.setItem(
-          'marketForecast',
-          JSON.stringify({ ...p, KOSDAQ: forecast }),
-        );
-        return { ...p, KOSDAQ: forecast };
-      });
+      marketForecast.current = { ...marketForecast.current, KOSDAQ: forecast };
       goNextStage();
     }
   };
@@ -176,6 +202,13 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
     ) {
       localStorage.removeItem('myRank');
       localStorage.removeItem('marketForecast');
+      const doneDates: string[] = JSON.parse(
+        localStorage.getItem('doneDates') || '[]',
+      );
+      localStorage.setItem(
+        'doneDates',
+        JSON.stringify(doneDates.filter((d) => d !== eventDate)),
+      );
       window.location.reload();
     }
   };
@@ -184,7 +217,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
     <div className="TournamentTemplate">
       <h1 hidden={true}>오늘의 토너먼트</h1>
       <h2>
-        <EventDate date={new Date()} />의 토너먼트
+        <EventDate date={eventDate} />의 토너먼트
       </h2>
       <div className="head">
         <h2>{displayRound()}</h2>
@@ -249,7 +282,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
       {stage === 'ROUND' && (
         <div className="card-wrap">
           <StockCardSelectable
-            stockInfo={stockInfos[leftIndex]}
+            stockInfo={myRank[leftIndex]}
             chartScale={chartScale}
             position="left"
             blind={blind}
@@ -269,7 +302,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           </div>
           {/* <SpaceVertical /> */}
           <StockCardSelectable
-            stockInfo={stockInfos[rightIndex]}
+            stockInfo={myRank[rightIndex]}
             chartScale={chartScale}
             position="right"
             blind={blind}
@@ -350,7 +383,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
                 <MyRank
-                  stockInfos={stockInfos}
+                  stockInfos={myRank}
                   showAll={true}
                   partialDisplay="high"
                 />
@@ -361,7 +394,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
                 <MyRank
-                  stockInfos={stockInfos}
+                  stockInfos={myRank}
                   showAll={true}
                   partialDisplay="low"
                 />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { ClickParam } from 'antd/lib/menu';
@@ -11,6 +11,10 @@ function Header({ location }: HeaderProps) {
     setCurrent(e.key);
   };
 
+  useEffect(() => {
+    setCurrent(location.pathname);
+  }, [location]);
+
   return (
     <Layout.Header>
       <Link to="/">
@@ -21,6 +25,7 @@ function Header({ location }: HeaderProps) {
         theme="dark"
         mode="horizontal"
         defaultSelectedKeys={[current]}
+        selectedKeys={[current]}
         onClick={handleMenuClick}
       >
         <Menu.Item key="/">
