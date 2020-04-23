@@ -1,9 +1,12 @@
 .TournamentTemplate {
+  .page-title {
+    font-size: 16px;
+  }
   .head {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    h2 {
+    .stage-title {
       padding: 0 20px;
     }
   }
@@ -35,12 +38,40 @@
     }
   }
 
+  .guide-stage {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+
+    .small {
+      font-size: 14px;
+    }
+
+    li {
+      // padding: 8px 0px;
+    }
+
+    .guide {
+      font-size: 16px;
+    }
+
+    .Emoji {
+      color: rgba($color: #000000, $alpha: 1);
+    }
+
+    .pin {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
   .market-stage {
     max-width: 450px;
     margin: 0 auto;
   }
 
-  .card-wrap {
+  .round-stage {
     display: flex;
   }
 

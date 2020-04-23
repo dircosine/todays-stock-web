@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 import { Radio, Card, Button, Switch, Space, Tooltip, Divider } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
@@ -23,7 +23,7 @@ export enum Round {
   Round2 = 2,
 }
 
-export type Stage = 'ROUND' | 'MARKET' | 'DONE' | 'INTERRUPTED';
+export type Stage = 'GUIDE' | 'ROUND' | 'MARKET' | 'DONE' | 'INTERRUPTED';
 
 // type Round = '32' | '16' | '8' | '4' | '2';
 export type ChartScale = 'day' | 'week' | 'month';
@@ -41,22 +41,22 @@ type TournamentTemplateProps = {
   eventDate: string;
 };
 
-const startRound = Round.Round8; // 유저 선택으로 변경
+const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({
   stockInfos,
   eventDate,
 }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>(stockInfos);
-  const [round, setRound] = useState<Round>(startRound);
-  const [stage, setStage] = useState<Stage>('ROUND');
+  const [round, setRound] = useState<Round>(START_ROUND);
+  const [stage, setStage] = useState<Stage>('GUIDE');
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
   const [progress, setProgress] = useState(1);
-  const [progressLimit, setProgressLimit] = useState(startRound / 2);
+  const [progressLimit, setProgressLimit] = useState(START_ROUND / 2);
   const [leftIndex, setLeftIndex] = useState(0);
-  const [rightIndex, setRightIndex] = useState(startRound / 2);
+  const [rightIndex, setRightIndex] = useState(START_ROUND / 2);
 
   const [market, setMarket] = useState<Market>('KOSPI');
   const marketForecast = useRef<MarketForecast>({
@@ -118,6 +118,8 @@ function TournamentTemplate({
   const goNextStage = (): void => {
     setStage((prevStage) => {
       switch (prevStage) {
+        case 'GUIDE':
+          return 'ROUND';
         case 'ROUND':
           return 'MARKET';
         case 'MARKET':
@@ -130,8 +132,14 @@ function TournamentTemplate({
     });
   };
 
-  const displayRound = (): string => {
-    if (stage === 'DONE') {
+  const displayStageTitle = (): string | ReactNode => {
+    if (stage === 'GUIDE') {
+      return (
+        <>
+          <strong>챠트 맛집</strong> 에 오신것을 환영합니다!
+        </>
+      );
+    } else if (stage === 'DONE') {
       return '완료!';
     } else if (stage === 'MARKET') {
       return '시장 예측';
@@ -216,11 +224,11 @@ function TournamentTemplate({
   return (
     <div className="TournamentTemplate">
       <h1 hidden={true}>오늘의 토너먼트</h1>
-      <h2>
+      <h2 className="page-title">
         <EventDate date={eventDate} />의 토너먼트
       </h2>
       <div className="head">
-        <h2>{displayRound()}</h2>
+        <h2 className="stage-title">{displayStageTitle()}</h2>
         {stage === 'ROUND' && round !== Round.Round2 && (
           <p>
             <strong>{progress}</strong> / {progressLimit}
@@ -229,6 +237,11 @@ function TournamentTemplate({
       </div>
 
       <p className="announce">
+        {stage === 'GUIDE' && (
+          <>
+            하루 5분, 보석같은 투자 종목 찾기 <Emoji symbol="💎" />
+          </>
+        )}
         {stage === 'ROUND' && '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
         {stage === 'MARKET' &&
           '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
@@ -263,7 +276,8 @@ function TournamentTemplate({
             </Space>
           </div>
         )}
-        {stage !== 'DONE' && (
+
+        {(stage === 'ROUND' || stage === 'MARKET') && (
           <div className="scale-selector">
             <Space>
               <Radio.Group
@@ -279,8 +293,53 @@ function TournamentTemplate({
         )}
       </div>
 
+      {stage === 'GUIDE' && (
+        <div className="guide-stage">
+          <Card title={'어떻게 하나요?'}>
+            <ul className="guide" style={{ textAlign: 'center' }}>
+              <li>
+                <Emoji symbol="🤔" />
+                <p>
+                  동시에 표시되는 두 종목 중,
+                  <br />
+                  향후 전망이 더 좋아보이는 쪽을 선택해 주세요
+                </p>
+              </li>
+              <li>
+                <Emoji symbol="🏅" />
+                <p>토너먼트를 진행하며 최고의 종목을 선정해 주세요!</p>
+              </li>
+              <li>
+                <Emoji symbol="💡" />
+                <p>
+                  다 끝나면 <strong>"오늘의 포럼"</strong>
+                  에서 투자 아이디어 얻어가기
+                </p>
+              </li>
+              <li>
+                <Emoji symbol="✨" />
+                <p>
+                  <strong>매일 32개의 새로운 종목</strong>이 제공됩니다
+                  <span className="small">(오후 5시 업데이트)</span> <br />
+                  내일도 쓱 들러보기
+                </p>
+              </li>
+            </ul>
+            <Divider type="horizontal" />
+            <Button
+              style={{ width: 200 }}
+              shape="round"
+              type="primary"
+              onClick={() => goNextStage()}
+            >
+              시작
+            </Button>
+          </Card>
+        </div>
+      )}
+
       {stage === 'ROUND' && (
-        <div className="card-wrap">
+        <div className="round-stage">
           <StockCardSelectable
             stockInfo={myRank[leftIndex]}
             chartScale={chartScale}
