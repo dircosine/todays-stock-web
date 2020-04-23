@@ -1,0 +1,34 @@
+.PriceInfoDisplay {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0px;
+
+  h4 {
+    margin: 0;
+  }
+
+  .main {
+    align-items: flex-end;
+    .today {
+      font-size: 20px;
+    }
+  }
+
+  .extra {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0px;
+  }
+
+  .red {
+    color: #f40003;
+  }
+
+  .blue {
+    color: #0e61d3;
+  }
+
+  .black {
+    color: black;
+  }
+}

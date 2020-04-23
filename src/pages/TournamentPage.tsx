@@ -2,7 +2,7 @@ import React from 'react';
 import TournamentTemplate from '../components/templates/TournamentTemplate';
 import stockInfos from '../sample_stock_infos.json';
 
-type MoreInfo = {
+export type MoreInfo = {
   cap: string;
   capRank: string;
   amountOfListed: string;
@@ -15,7 +15,7 @@ type MoreInfo = {
   industryChange: string;
 };
 
-type PriceInfo = {
+export type PriceInfo = {
   today: string;
   exday: string;
   change: string;

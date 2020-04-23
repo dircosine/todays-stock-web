@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Spin, Skeleton, Divider } from 'antd';
 
-import Price from './Price';
+import PriceInfoDisplay from './PriceInfoDisplay';
 import { StockInfo } from '../pages/TournamentPage';
 
 import './StockInfoDisplayable.scss';
+import MoreInfoDisplay from './MoreInfoDisplay';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
@@ -12,6 +13,7 @@ type StockInfoDisplayableProps = {
   stockInfo: StockInfo;
   chartScale?: 'day' | 'week' | 'month';
   hideInfo?: boolean;
+  showMoreInfo?: boolean;
   infoExtent: InfoSection[];
 };
 
@@ -19,6 +21,7 @@ function StockInfoDisplayable({
   stockInfo,
   chartScale,
   hideInfo,
+  showMoreInfo,
   infoExtent,
 }: StockInfoDisplayableProps) {
   const [imgLoading, setImgLoading] = useState(infoExtent.includes('chart'));
@@ -59,7 +62,9 @@ function StockInfoDisplayable({
             <strong className="name">???</strong>
           ) : (
             <>
-              <strong className="name">{stockInfo.name}</strong>
+              <h3 style={{ display: 'inline' }}>
+                <strong className="name">{stockInfo.name}</strong>
+              </h3>
               <span className="code">{stockInfo.code}</span>
             </>
           )}
@@ -76,40 +81,11 @@ function StockInfoDisplayable({
       )}
       {infoExtent.includes('price') && (
         <div className="info-price">
-          <Price value={stockInfo.price.today} />
+          <PriceInfoDisplay price={stockInfo.price} />
         </div>
       )}
-      {infoExtent.includes('more') && (
-        <div className="info-more">
-          {hideInfo ? (
-            <Skeleton title={false} paragraph={{ rows: 4 }} />
-          ) : (
-            <ul>
-              <li>
-                시가총액
-                <strong>{stockInfo.more.cap}</strong>억원 / {stockInfo.market}
-                <strong>{stockInfo.more.capRank}</strong>위
-              </li>
-              <li>
-                상장주식수
-                <strong>{stockInfo.more.amountOfListed}</strong>
-              </li>
-              <li>
-                52주 최고 <strong>{stockInfo.more.week52high}</strong> / 최저{' '}
-                <strong>{stockInfo.more.week52low}</strong>
-              </li>
-              <li>
-                PER
-                <strong>{stockInfo.more.per}</strong>
-                (업종평균 {stockInfo.more.industryPer})
-              </li>
-              <li>
-                PBR
-                <strong>{stockInfo.more.pbr}</strong>
-              </li>
-            </ul>
-          )}
-        </div>
+      {infoExtent.includes('more') && showMoreInfo && !hideInfo && (
+        <MoreInfoDisplay moreInfo={stockInfo.more} market={stockInfo.market} />
       )}
     </div>
   );
@@ -118,6 +94,8 @@ function StockInfoDisplayable({
 StockInfoDisplayable.defaultProps = {
   chartScale: 'day',
   hideInfo: false,
+  moreInfo: false,
+  showMoreInfo: false,
 };
 
 export default StockInfoDisplayable;

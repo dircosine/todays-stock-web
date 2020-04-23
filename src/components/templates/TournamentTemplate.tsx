@@ -13,6 +13,7 @@ import MyRank from '../MyRank';
 import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
+import Emoji from '../Emoji';
 
 export enum Round {
   Round32 = 32,
@@ -40,7 +41,7 @@ type TournamentTemplateProps = {
   stockInfos: StockInfo[];
 };
 
-const startRound = Round.Round4; // 유저 선택으로 변경
+const startRound = Round.Done; // 유저 선택으로 변경
 
 function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   const [chartScale, setChartScale] = useState<ChartScale>('day');
@@ -57,6 +58,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
   });
 
   const [blind, setBlind] = useState(round === Round.Round32);
+  const [showMoreInfo, setShowMoreInfo] = useState(false);
 
   const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(stockInfos));
@@ -183,40 +185,54 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
           '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
-      {round !== Round.Done && round !== Round.RoundMarket && (
-        <div className="blind">
-          <Tooltip
-            placement="left"
-            title="종목 정보는 16강부터 제공됩니다"
-            defaultVisible={true}
-            visible={round === Round.Round32}
-          >
-            <Space>
-              <span>블라인드</span>
+      <div
+        className={`control ${
+          round === Round.RoundMarket ? 'market-stage' : ''
+        }`}
+      >
+        {round !== Round.Done && round !== Round.RoundMarket && (
+          <div className="switch">
+            <Tooltip
+              className="blind"
+              placement="left"
+              title="종목 정보는 16강부터 제공됩니다"
+              defaultVisible={true}
+              visible={round === Round.Round32}
+            >
+              <Space>
+                <span>블라인드</span>
+                <Switch
+                  checked={blind}
+                  onChange={() => setBlind((p) => !p)}
+                  disabled={round === Round.Round32}
+                />
+              </Space>
+            </Tooltip>
+            <Space className="more-info">
+              <span>추가정보</span>
               <Switch
-                checked={blind}
-                onChange={() => setBlind((p) => !p)}
+                checked={showMoreInfo}
+                onChange={() => setShowMoreInfo((p) => !p)}
                 disabled={round === Round.Round32}
               />
             </Space>
-          </Tooltip>
-        </div>
-      )}
-      {round !== Round.Done && (
-        <div
-          className={`scale-selector ${
-            round === Round.RoundMarket ? 'market-stage' : ''
-          }`}
-        >
-          <Space>
-            <Radio.Group onChange={handleScaleChange} defaultValue={chartScale}>
-              <Radio.Button value="day">일봉</Radio.Button>
-              <Radio.Button value="week">주봉</Radio.Button>
-              <Radio.Button value="month">월봉</Radio.Button>
-            </Radio.Group>
-          </Space>
-        </div>
-      )}
+          </div>
+        )}
+        {round !== Round.Done && (
+          <div className="scale-selector">
+            <Space>
+              <Radio.Group
+                onChange={handleScaleChange}
+                defaultValue={chartScale}
+              >
+                <Radio.Button value="day">일봉</Radio.Button>
+                <Radio.Button value="week">주봉</Radio.Button>
+                <Radio.Button value="month">월봉</Radio.Button>
+              </Radio.Group>
+            </Space>
+          </div>
+        )}
+      </div>
 
       {round !== Round.Done && round !== Round.RoundMarket && (
         <div className="card-wrap">
@@ -225,6 +241,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             chartScale={chartScale}
             position="left"
             blind={blind}
+            showMoreInfo={showMoreInfo}
             onClick={handleCardClick}
           />
           <div
@@ -244,6 +261,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
             chartScale={chartScale}
             position="right"
             blind={blind}
+            showMoreInfo={showMoreInfo}
             onClick={handleCardClick}
           />
         </div>
@@ -252,7 +270,6 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
       {round === Round.RoundMarket && (
         <div className="market-stage">
           <Card
-            className="StockCardSelectable"
             bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
             actions={[
               <Button
@@ -298,7 +315,7 @@ function TournamentTemplate({ stockInfos }: TournamentTemplateProps) {
               <div className="goto-forum panel">
                 <h3 hidden={true}>포럼으로</h3>
                 <div style={{ textAlign: 'center' }}>
-                  <p>다른 유저들의 의견과 오늘의 통계를 확인해 보세요</p>
+                  <p>오늘의 통계와 다른 유저들의 의견을 확인해 보세요</p>
                   <Space>
                     <Button type="default" shape="round" onClick={handleReplay}>
                       다시하기

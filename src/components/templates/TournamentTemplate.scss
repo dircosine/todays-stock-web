@@ -13,16 +13,26 @@
     font-size: 18px;
   }
 
-  .blind {
+  .control {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
 
-  .scale-selector {
-    display: flex;
-    justify-content: flex-end;
-    padding: 8px 0px;
+    .switch {
+      display: flex;
+      align-items: center;
+    }
+
+    .blind,
+    .more-info {
+      margin-right: 8px;
+    }
+
+    .scale-selector {
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px 0px;
+    }
   }
 
   .market-stage {

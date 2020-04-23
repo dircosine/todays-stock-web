@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
 
 import { StockInfo } from '../pages/TournamentPage';
 import { Position } from './templates/TournamentTemplate';
@@ -12,6 +12,7 @@ type StockCardSelectableProps = {
   chartScale: 'day' | 'week' | 'month';
   position: Position;
   blind: boolean;
+  showMoreInfo: boolean;
   onClick: (position: Position) => void;
 };
 
@@ -20,6 +21,7 @@ function StockCardSelectable({
   chartScale,
   position,
   blind,
+  showMoreInfo,
   onClick,
 }: StockCardSelectableProps) {
   const handleCardClick = () => {
@@ -38,6 +40,7 @@ function StockCardSelectable({
         stockInfo={stockInfo}
         infoExtent={['head', 'chart', 'price', 'more']}
         hideInfo={blind}
+        showMoreInfo={showMoreInfo}
         chartScale={chartScale}
       />
     </Card>
