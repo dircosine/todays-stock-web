@@ -1,6 +1,6 @@
 import React from 'react';
-import { MoreInfo } from '../pages/TournamentPage';
 import { Space, Divider } from 'antd';
+import { MoreInfo } from '../lib/stock';
 
 interface MoreInfoDisplayProps {
   moreInfo: MoreInfo;

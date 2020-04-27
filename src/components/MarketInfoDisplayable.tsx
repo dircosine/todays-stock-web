@@ -3,10 +3,10 @@ import { Spin, Skeleton, Divider } from 'antd';
 
 import './MarketInfoDisplayable.scss';
 
-type MarketInfoDisplayableProps = {
+interface MarketInfoDisplayableProps {
   market: 'KOSPI' | 'KOSDAQ';
   chartScale?: 'day' | 'week' | 'month';
-};
+}
 
 function MarketInfoDisplayable({
   market,

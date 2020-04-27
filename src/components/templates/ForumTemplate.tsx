@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { Tag, Divider, Button, Empty, Alert } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
-
-import { StockInfo } from '../../pages/TournamentPage';
-
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
 import MyRank from '../MyRank';
@@ -12,9 +9,9 @@ import TextArea from 'antd/lib/input/TextArea';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import TodaysRankTable from '../TodaysRankTable';
-import { StockInfoRank, MarketStat } from '../../pages/ForumPage';
 import MarketStatPanel from '../MarketStatPanel';
 import Emoji from '../Emoji';
+import { TodaysStat, MarketStat, StockInfo } from '../../lib/stock';
 
 const tagColors = [
   'magenta',
@@ -33,18 +30,17 @@ const tagColors = [
 interface ForumTemplateProps {
   eventDate: string;
   myRank: StockInfo[];
-  todaysRank: StockInfoRank[];
-  marketStat: MarketStat | undefined;
+  todaysStat: TodaysStat[];
+  marketStat: MarketStat | null;
 }
 
 function ForumTemplate({
   eventDate,
   myRank,
-  todaysRank,
+  todaysStat,
   marketStat,
 }: ForumTemplateProps) {
   const [commentTags, setCommentTags] = useState<string[]>([]);
-
   const [showAllRank, setShowAllRank] = useState(false);
 
   const toggleShowAll = () => {
@@ -67,14 +63,9 @@ function ForumTemplate({
   return (
     <div className="ForumTemplate">
       <h1 hidden={true}>오늘의 포럼</h1>
-      <h2>
+      <h2 className="page-title">
         <EventDate date={eventDate} />의 포럼
       </h2>
-      <div className="head">
-        {/* <h2>
-          <Emoji symbol="🎉" /> 포럼
-        </h2> */}
-      </div>
       <div className="two-column content">
         <div className="column-1">
           {!marketStat && (
@@ -84,7 +75,7 @@ function ForumTemplate({
                 <p style={{ margin: 0 }}>
                   통계 제공을 위한 데이터가 쪼끔 모자랍니다{' '}
                   <Emoji symbol="😥" size={15} />
-                  <br /> 주변에 링크를 공유해 주세요
+                  <br /> 주변에 오늘의 링크를 공유해 주세요
                 </p>
               }
               showIcon
@@ -98,7 +89,7 @@ function ForumTemplate({
           <SpaceHorizontal />
           <div className="panel todays-rank">
             <h3>오늘의 종목 통계</h3>
-            <TodaysRankTable todaysRank={todaysRank} onAddTag={handleAddTag} />
+            <TodaysRankTable todaysStat={todaysStat} onAddTag={handleAddTag} />
           </div>
         </div>
         <SpaceVertical />

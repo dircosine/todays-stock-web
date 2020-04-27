@@ -1,13 +1,13 @@
 import React from 'react';
-import { PriceInfo } from '../pages/TournamentPage';
 import { Divider, Space } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 
 import './PriceInfoDisplay.scss';
+import { PriceInfo } from '../lib/stock';
 
-type PriceInfoDisplayProps = {
+interface PriceInfoDisplayProps {
   price: PriceInfo;
-};
+}
 
 type Color = 'red' | 'blue' | 'black';
 
@@ -58,7 +58,7 @@ function PriceInfoDisplay({ price }: PriceInfoDisplayProps) {
           <Space>
             거래량<strong>{price.volume}</strong>
             <Divider type="vertical" />
-            거래대금<strong>{price.tradingValue}</strong>
+            거래대금<strong>{price.tradingValue}</strong>백만
           </Space>
         </li>
       </ul>

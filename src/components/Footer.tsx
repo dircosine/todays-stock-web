@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 
-type FooterProps = {};
+interface FooterProps {}
 
 function Footer(props: FooterProps) {
   return (

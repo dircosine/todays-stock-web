@@ -1,11 +1,11 @@
 import React from 'react';
 
-type EmojiProps = {
+interface EmojiProps {
   className?: string;
   symbol: any;
   size?: number;
   ariaLabel?: string;
-};
+}
 
 function Emoji({ className, symbol, size, ariaLabel }: EmojiProps) {
   return (

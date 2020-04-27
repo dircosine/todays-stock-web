@@ -1,19 +1,19 @@
 import React from 'react';
 import { Card } from 'antd';
 
-import { StockInfo } from '../pages/TournamentPage';
 import { Position } from './templates/TournamentTemplate';
 
 import StockInfoDisplayable from './StockInfoDisplayable';
+import { StockInfo } from '../lib/stock';
 
-type StockCardSelectableProps = {
+interface StockCardSelectableProps {
   stockInfo: StockInfo;
   chartScale: 'day' | 'week' | 'month';
   position: Position;
   blind: boolean;
   showMoreInfo: boolean;
   onClick: (position: Position) => void;
-};
+}
 
 function StockCardSelectable({
   stockInfo,

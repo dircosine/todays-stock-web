@@ -1,14 +1,13 @@
 import React from 'react';
-import { StockInfo } from '../pages/TournamentPage';
 import { Table, Space, Button, Tag } from 'antd';
-import { StockInfoRank } from '../pages/ForumPage';
+import { TodaysStat, StockInfo } from '../lib/stock';
 
 interface TodaysRankTableProps {
-  todaysRank: StockInfoRank[] | undefined;
+  todaysStat: TodaysStat[] | undefined;
   onAddTag: (name: string) => void;
 }
 
-function TodaysRankTable({ todaysRank, onAddTag }: TodaysRankTableProps) {
+function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
   const columns = [
     {
       title: '순위',
@@ -50,7 +49,7 @@ function TodaysRankTable({ todaysRank, onAddTag }: TodaysRankTableProps) {
     <Table
       style={{ margin: '0px -24px' }}
       pagination={{ defaultPageSize: 8, position: ['bottomCenter'] }}
-      dataSource={todaysRank}
+      dataSource={todaysStat}
       columns={columns}
       rowKey={(record) => record.code}
     />

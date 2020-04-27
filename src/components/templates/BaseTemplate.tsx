@@ -6,9 +6,9 @@ import Footer from '../Footer';
 
 import './BaseTemplate.scss';
 
-type BaseTemplateProps = {
+interface BaseTemplateProps {
   children: React.ReactNode;
-};
+}
 
 function BaseTemplate({ children }: BaseTemplateProps) {
   return (

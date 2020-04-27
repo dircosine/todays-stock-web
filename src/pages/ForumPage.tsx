@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ForumTemplate from '../components/templates/ForumTemplate';
-import { StockInfo, getYYYYMMDD } from './TournamentPage';
 
 import { message } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Axios from 'axios';
+import { getYYYYMMDD } from '../lib/utils';
+import { StockInfo, TodaysStat, MarketStat } from '../lib/stock';
 
-export type StockInfoRank = StockInfo & {
-  rank: number | undefined;
-  winRate: number | undefined;
-};
-
-type ForecastStat = {
-  sell: number;
-  hold: number;
-  buy: number;
-};
-export type MarketStat = {
-  kospi: ForecastStat;
-  kosdaq: ForecastStat;
-};
+/**
+ * todaysInfos: StockInfo[]     s3에서 받아온 오늘의 종목 정보
+ *
+ * myRank: StockInfo[]          내가 오늘 고른 종목의 순위 정보
+ *
+ * todaysStat: TodaysStat[]     오늘의 종목 통계
+ * marketStat: MarketStat       오늘의 시장 통계
+ */
 
 interface ForumPageProps extends RouteComponentProps {}
 
+const todaysStat: TodaysStat[] | null = null; // API GET HERE
+const marketStat: MarketStat | null = null; // API GET HERE
+
 function ForumPage({ history }: ForumPageProps) {
   const eventDate = getYYYYMMDD(new Date());
-  const [todaysInfos, setTodaysInfos] = useState<StockInfo[]>();
+  const myRank: StockInfo[] = JSON.parse(
+    localStorage.getItem('myRank') || '[]',
+  );
 
   useEffect(() => {
     const doneDates: string[] = JSON.parse(
@@ -34,59 +33,27 @@ function ForumPage({ history }: ForumPageProps) {
     if (!doneDates.includes(eventDate)) {
       message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
       history.push('/');
-    } else {
-      loadTodaysInfos();
     }
-    return () => setTodaysInfos(undefined);
   }, [eventDate, history]);
 
-  const loadTodaysInfos = async () => {
-    const { data: todaysInfos }: { data: StockInfo[] } = await Axios.get(
-      `https://res-todaysstock.s3.ap-northeast-2.amazonaws.com/20200426_stock_infos.json`,
-    );
-    if (todaysInfos.length === 32) {
-      setTodaysInfos(todaysInfos);
-    }
-  };
-
-  const myRank: StockInfo[] = JSON.parse(
-    localStorage.getItem('myRank') || '[]',
-  );
-
-  const todaysRank: StockInfoRank[] | undefined = undefined; // API GET HERE
-  const marketStat: MarketStat | undefined = undefined; // API GET HERE
-
-  if (!todaysRank) {
-    if (!todaysInfos) {
-      return <div>loading...</div>;
-    }
-    const dummyTodaysRank: StockInfoRank[] = todaysInfos.map((stockInfo) => ({
+  const createDummyStat = (todaysInfos: StockInfo[]): TodaysStat[] => {
+    return todaysInfos.map((stockInfo) => ({
       ...stockInfo,
       rank: undefined,
       winRate: undefined,
       // rank: index + 1,
       // winRate: 32 - index,
     }));
-    return (
-      // 통계 부족할 때
-      <ForumTemplate
-        eventDate={eventDate}
-        myRank={myRank}
-        todaysRank={dummyTodaysRank}
-        marketStat={marketStat}
-      />
-    );
-  } else {
-    return (
-      // 통계 있을 때
-      <ForumTemplate
-        eventDate={eventDate}
-        myRank={myRank}
-        todaysRank={todaysRank}
-        marketStat={marketStat}
-      />
-    );
-  }
+  };
+
+  return (
+    <ForumTemplate
+      eventDate={eventDate}
+      myRank={myRank}
+      todaysStat={todaysStat || createDummyStat(myRank)}
+      marketStat={marketStat}
+    />
+  );
 }
 
 export default withRouter(ForumPage);

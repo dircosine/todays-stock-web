@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { ClickParam } from 'antd/lib/menu';
 
-type HeaderProps = RouteComponentProps & {};
+interface HeaderProps extends RouteComponentProps {}
 
 function Header({ location }: HeaderProps) {
   const [current, setCurrent] = useState(location.pathname);

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-type EventDateProps = {
+interface EventDateProps {
   date: string;
-};
+}
 
 function EventDate({ date }: EventDateProps) {
   // prettier-ignore

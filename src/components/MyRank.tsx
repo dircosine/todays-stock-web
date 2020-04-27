@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { StockInfo } from '../pages/TournamentPage';
 import { List, Card, Space, Tag, Divider, Button } from 'antd';
 
 import { RightOutlined } from '@ant-design/icons';
 import StockInfoDisplayable from './StockInfoDisplayable';
 import Emoji from './Emoji';
+import { StockInfo } from '../lib/stock';
 
-type MyRankProps = {
+interface MyRankProps {
   stockInfos: StockInfo[];
   showAll: boolean;
   toggleShowAll?: () => void;
   partialDisplay?: 'none' | 'high' | 'low';
-};
+}
 
 function MyRank({
   stockInfos,

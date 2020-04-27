@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Tag, Spin, Skeleton, Divider } from 'antd';
 
 import PriceInfoDisplay from './PriceInfoDisplay';
-import { StockInfo } from '../pages/TournamentPage';
 
 import './StockInfoDisplayable.scss';
 import MoreInfoDisplay from './MoreInfoDisplay';
+import { StockInfo } from '../lib/stock';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
-type StockInfoDisplayableProps = {
+interface StockInfoDisplayableProps {
   stockInfo: StockInfo;
   chartScale?: 'day' | 'week' | 'month';
   hideInfo?: boolean;
   showMoreInfo?: boolean;
   infoExtent: InfoSection[];
-};
+}
 
 function StockInfoDisplayable({
   stockInfo,

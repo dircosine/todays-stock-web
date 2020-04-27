@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Tabs, Button, Radio, Progress } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import { MarketStat } from '../pages/ForumPage';
 
 import './MarketStatPanel.scss';
+import { MarketStat } from '../lib/stock';
 
 type ChartScale = 'day' | 'week' | 'month';
 
 interface MarketStatPanelProps {
-  marketStat: MarketStat | undefined;
+  marketStat: MarketStat | null;
   onAddTag: (name: string) => void;
 }
 

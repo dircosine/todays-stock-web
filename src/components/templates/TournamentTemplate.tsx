@@ -3,8 +3,6 @@ import { Radio, Card, Button, Switch, Space, Tooltip, Divider } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 
-import { StockInfo } from '../../pages/TournamentPage';
-
 import './TournamentTemplate.scss';
 import { Link } from 'react-router-dom';
 import SpaceVertical from '../SpaceVertical';
@@ -14,6 +12,7 @@ import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import Emoji from '../Emoji';
+import { StockInfo } from '../../lib/stock';
 
 export enum Round {
   Round32 = 32,
@@ -22,10 +21,7 @@ export enum Round {
   Round4 = 4,
   Round2 = 2,
 }
-
 export type Stage = 'GUIDE' | 'ROUND' | 'MARKET' | 'DONE' | 'INTERRUPTED';
-
-// type Round = '32' | '16' | '8' | '4' | '2';
 export type ChartScale = 'day' | 'week' | 'month';
 export type Position = 'left' | 'right';
 
@@ -36,16 +32,18 @@ type MarketForecast = {
   KOSDAQ: Forecast;
 };
 
-type TournamentTemplateProps = {
+interface TournamentTemplateProps {
   stockInfos: StockInfo[];
   eventDate: string;
-};
+  loading: boolean;
+}
 
 const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({
   stockInfos,
   eventDate,
+  loading,
 }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>(stockInfos);
   const [round, setRound] = useState<Round>(START_ROUND);
@@ -66,6 +64,10 @@ function TournamentTemplate({
 
   const [blind, setBlind] = useState(round === Round.Round32);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+
+  useEffect(() => {
+    setMyRank(stockInfos);
+  }, [stockInfos]);
 
   useEffect(() => {
     const doneDates: string[] = JSON.parse(
@@ -136,7 +138,7 @@ function TournamentTemplate({
     if (stage === 'GUIDE') {
       return (
         <>
-          <strong>"챠트 맛집"</strong> 에 오신것을 환영합니다!
+          <strong>"차트맛집"</strong> 에 오신것을 환영합니다!
         </>
       );
     } else if (stage === 'DONE') {
@@ -301,8 +303,6 @@ function TournamentTemplate({
                 <Emoji symbol="✨" />
                 <p>
                   <strong>매일 32개의 새로운 종목</strong>이 준비됩니다
-                  <span className="small">(오후 5시 업데이트)</span> <br />
-                  내일도 쓱 들러보기
                 </p>
               </li>
               <li>
@@ -315,7 +315,11 @@ function TournamentTemplate({
               </li>
               <li>
                 <Emoji symbol="🏅" />
-                <p>토너먼트를 진행하며 최고의 종목을 선정해 주세요!</p>
+                <p>
+                  토너먼트를 진행하며 최고의 종목을 선정해 주세요!
+                  <br />
+                  <span className="small">32강 - 16강 - 8강 - 4강 - 결승</span>
+                </p>
               </li>
               <li>
                 <Emoji symbol="💡" />
@@ -327,8 +331,9 @@ function TournamentTemplate({
               <li>
                 <Emoji symbol="👀" />
                 <p>
-                  <strong>내일도 한 번 쓱 들러주세요!</strong>
-                  <span className="small">(오후 6시 종목 업데이트)</span>
+                  <strong>내일도 쓱 한 번 들러주세요!</strong>
+                  <br />
+                  <span className="small"> (오후 6시 종목 업데이트)</span>
                 </p>
               </li>
             </ul>
@@ -338,6 +343,8 @@ function TournamentTemplate({
               shape="round"
               type="primary"
               onClick={() => goNextStage()}
+              loading={loading}
+              disabled={loading}
             >
               시작
             </Button>
