@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TournamentTemplate from '../components/templates/TournamentTemplate';
-import stockInfos from '../sample_stock_infos.json';
+
+import Axios from 'axios';
 
 export type MoreInfo = {
   cap: string;
@@ -55,9 +56,29 @@ export function getYYYYMMDD(d: Date): string {
 
 function TournamentPage(props: TournamentPageProps) {
   const eventDate = getYYYYMMDD(new Date());
+
+  const [todaysInfos, setTodaysInfos] = useState<StockInfo[]>();
+
+  useEffect(() => {
+    loadTodaysInfos();
+  }, []);
+
+  const loadTodaysInfos = async () => {
+    const { data: todaysInfos }: { data: StockInfo[] } = await Axios.get(
+      `https://res-todaysstock.s3.ap-northeast-2.amazonaws.com/20200426_stock_infos.json`,
+    );
+    if (todaysInfos.length === 32) {
+      setTodaysInfos(todaysInfos);
+    }
+  };
+
+  if (!todaysInfos) {
+    return <div>loading...</div>;
+  }
+
   return (
     <TournamentTemplate
-      stockInfos={shuffle(stockInfos)}
+      stockInfos={shuffle(todaysInfos)}
       eventDate={eventDate}
     />
   );

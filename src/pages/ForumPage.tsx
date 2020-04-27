@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ForumTemplate from '../components/templates/ForumTemplate';
 import { StockInfo, getYYYYMMDD } from './TournamentPage';
 
-import todaysStock from '../sample_stock_infos.json';
 import { message } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import Axios from 'axios';
 
 export type StockInfoRank = StockInfo & {
   rank: number | undefined;
@@ -25,6 +25,7 @@ interface ForumPageProps extends RouteComponentProps {}
 
 function ForumPage({ history }: ForumPageProps) {
   const eventDate = getYYYYMMDD(new Date());
+  const [todaysInfos, setTodaysInfos] = useState<StockInfo[]>();
 
   useEffect(() => {
     const doneDates: string[] = JSON.parse(
@@ -33,8 +34,20 @@ function ForumPage({ history }: ForumPageProps) {
     if (!doneDates.includes(eventDate)) {
       message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
       history.push('/');
+    } else {
+      loadTodaysInfos();
     }
+    return () => setTodaysInfos(undefined);
   }, [eventDate, history]);
+
+  const loadTodaysInfos = async () => {
+    const { data: todaysInfos }: { data: StockInfo[] } = await Axios.get(
+      `https://res-todaysstock.s3.ap-northeast-2.amazonaws.com/20200426_stock_infos.json`,
+    );
+    if (todaysInfos.length === 32) {
+      setTodaysInfos(todaysInfos);
+    }
+  };
 
   const myRank: StockInfo[] = JSON.parse(
     localStorage.getItem('myRank') || '[]',
@@ -44,7 +57,10 @@ function ForumPage({ history }: ForumPageProps) {
   const marketStat: MarketStat | undefined = undefined; // API GET HERE
 
   if (!todaysRank) {
-    const dummyTodaysRank: StockInfoRank[] = todaysStock.map((stockInfo) => ({
+    if (!todaysInfos) {
+      return <div>loading...</div>;
+    }
+    const dummyTodaysRank: StockInfoRank[] = todaysInfos.map((stockInfo) => ({
       ...stockInfo,
       rank: undefined,
       winRate: undefined,
@@ -52,6 +68,7 @@ function ForumPage({ history }: ForumPageProps) {
       // winRate: 32 - index,
     }));
     return (
+      // 통계 부족할 때
       <ForumTemplate
         eventDate={eventDate}
         myRank={myRank}
@@ -61,6 +78,7 @@ function ForumPage({ history }: ForumPageProps) {
     );
   } else {
     return (
+      // 통계 있을 때
       <ForumTemplate
         eventDate={eventDate}
         myRank={myRank}
