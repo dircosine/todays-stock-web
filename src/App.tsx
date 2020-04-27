@@ -11,7 +11,7 @@ function App() {
         <BaseTemplate>
           <Switch>
             <Route exact path="/" component={TournamentPage} />
-            <Route exact path="/forum" component={ForumPage} />
+            <Route path="/forum" component={ForumPage} />
             <Redirect path="*" to="/" />
           </Switch>
         </BaseTemplate>
