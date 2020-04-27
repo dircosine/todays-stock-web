@@ -136,7 +136,7 @@ function TournamentTemplate({
     if (stage === 'GUIDE') {
       return (
         <>
-          <strong>챠트 맛집</strong> 에 오신것을 환영합니다!
+          <strong>"챠트 맛집"</strong> 에 오신것을 환영합니다!
         </>
       );
     } else if (stage === 'DONE') {
@@ -298,6 +298,14 @@ function TournamentTemplate({
           <Card title={'어떻게 하나요?'}>
             <ul className="guide" style={{ textAlign: 'center' }}>
               <li>
+                <Emoji symbol="✨" />
+                <p>
+                  <strong>매일 32개의 새로운 종목</strong>이 준비됩니다
+                  <span className="small">(오후 5시 업데이트)</span> <br />
+                  내일도 쓱 들러보기
+                </p>
+              </li>
+              <li>
                 <Emoji symbol="🤔" />
                 <p>
                   동시에 표시되는 두 종목 중,
@@ -313,15 +321,14 @@ function TournamentTemplate({
                 <Emoji symbol="💡" />
                 <p>
                   다 끝나면 <strong>"오늘의 포럼"</strong>
-                  에서 투자 아이디어 얻어가기
+                  에서 투자 아이디어를 얻어 가세요!
                 </p>
               </li>
               <li>
-                <Emoji symbol="✨" />
+                <Emoji symbol="👀" />
                 <p>
-                  <strong>매일 32개의 새로운 종목</strong>이 제공됩니다
-                  <span className="small">(오후 5시 업데이트)</span> <br />
-                  내일도 쓱 들러보기
+                  <strong>내일도 한 번 쓱 들러주세요!</strong>
+                  <span className="small">(오후 6시 종목 업데이트)</span>
                 </p>
               </li>
             </ul>
@@ -412,7 +419,15 @@ function TournamentTemplate({
         <div className="done-stage">
           <div className="two-column">
             <div className="column-1 ">
-              <SharePanel />
+              <SharePanel
+                message={
+                  <p>
+                    괜찮은 종목 찾으셨나요? <br />
+                    아래 링크를 복사해서 주변에 공유하거나, 저장해 뒀다 내일도
+                    들러주세요 <Emoji symbol="😀" size={16} />
+                  </p>
+                }
+              />
             </div>
             <SpaceVertical />
             <div className="column-2">
@@ -433,10 +448,7 @@ function TournamentTemplate({
             </div>
           </div>
           <SpaceHorizontal />
-          <Divider>
-            <Emoji symbol="💎" /> 보석같은 종목 찾으셨나요? <br />
-            여기, 직접 선택한 결과를 확인하세요!
-          </Divider>
+          <Divider>여기, 직접 선택한 결과를 확인하세요!</Divider>
           <div className="two-column">
             <div className="column-1 ">
               <div className="rank panel">

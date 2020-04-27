@@ -258,7 +258,7 @@ function MyRank({
   );
 }
 
-MyRank.defaultProp = {
+MyRank.defaultProps = {
   partialDisplay: 'none',
 };
 
