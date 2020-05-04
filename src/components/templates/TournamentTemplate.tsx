@@ -13,6 +13,18 @@ import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import Emoji from '../Emoji';
 import { StockInfo } from '../../lib/stock';
+import { useMutation } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
+const POST_RESULT = gql`
+  mutation postTournamentResult(
+    $eventDate: String!
+    $rank: [String!]!
+    $market: String!
+  ) {
+    postTournamentResult(eventDate: $eventDate, rank: $rank, market: $market)
+  }
+`;
 
 export enum Round {
   Round32 = 32,
@@ -25,11 +37,11 @@ export type Stage = 'GUIDE' | 'ROUND' | 'MARKET' | 'DONE' | 'INTERRUPTED';
 export type ChartScale = 'day' | 'week' | 'month';
 export type Position = 'left' | 'right';
 
-type Market = 'KOSPI' | 'KOSDAQ';
-type Forecast = 'BUY' | 'HOLD' | 'SELL';
+type Market = 'kospi' | 'kosdaq';
+type Forecast = 'buy' | 'hold' | 'sell';
 type MarketForecast = {
-  KOSPI: Forecast;
-  KOSDAQ: Forecast;
+  kospi: Forecast;
+  kosdaq: Forecast;
 };
 
 interface TournamentTemplateProps {
@@ -38,7 +50,7 @@ interface TournamentTemplateProps {
   loading: boolean;
 }
 
-const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({
   stockInfos,
@@ -56,14 +68,16 @@ function TournamentTemplate({
   const [leftIndex, setLeftIndex] = useState(0);
   const [rightIndex, setRightIndex] = useState(START_ROUND / 2);
 
-  const [market, setMarket] = useState<Market>('KOSPI');
+  const [market, setMarket] = useState<Market>('kospi');
   const marketForecast = useRef<MarketForecast>({
-    KOSPI: 'HOLD',
-    KOSDAQ: 'HOLD',
+    kospi: 'hold',
+    kosdaq: 'hold',
   });
 
   const [blind, setBlind] = useState(round === Round.Round32);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+
+  const [postResultMutation] = useMutation(POST_RESULT);
 
   useEffect(() => {
     setMyRank(stockInfos);
@@ -83,6 +97,19 @@ function TournamentTemplate({
     }
   }, [eventDate]);
 
+  const postResult = async () => {
+    console.log(myRank);
+    console.log(marketForecast.current);
+    const rank = myRank.map((item) => item.name);
+    await postResultMutation({
+      variables: {
+        rank,
+        eventDate,
+        market: JSON.stringify(marketForecast.current),
+      },
+    });
+  };
+
   const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(myRank));
     localStorage.setItem(
@@ -96,6 +123,8 @@ function TournamentTemplate({
       'doneDates',
       JSON.stringify([...doneDates, eventDate]),
     );
+
+    postResult();
   };
 
   const goNextRound = (): void => {
@@ -197,11 +226,11 @@ function TournamentTemplate({
   };
 
   const handleMarketForecastSelect = (forecast: Forecast) => {
-    if (market === 'KOSPI') {
-      marketForecast.current = { ...marketForecast.current, KOSPI: forecast };
-      setMarket('KOSDAQ');
+    if (market === 'kospi') {
+      marketForecast.current = { ...marketForecast.current, kospi: forecast };
+      setMarket('kosdaq');
     } else {
-      marketForecast.current = { ...marketForecast.current, KOSDAQ: forecast };
+      marketForecast.current = { ...marketForecast.current, kosdaq: forecast };
       goNextStage();
     }
   };
@@ -394,7 +423,7 @@ function TournamentTemplate({
                 type="link"
                 style={{ width: '100%' }}
                 shape="round"
-                onClick={() => handleMarketForecastSelect('SELL')}
+                onClick={() => handleMarketForecastSelect('sell')}
               >
                 판다!
               </Button>,
@@ -402,7 +431,7 @@ function TournamentTemplate({
                 type="link"
                 style={{ width: '100%' }}
                 shape="round"
-                onClick={() => handleMarketForecastSelect('HOLD')}
+                onClick={() => handleMarketForecastSelect('hold')}
               >
                 홀드
               </Button>,
@@ -410,7 +439,7 @@ function TournamentTemplate({
                 type="link"
                 style={{ width: '100%' }}
                 shape="round"
-                onClick={() => handleMarketForecastSelect('BUY')}
+                onClick={() => handleMarketForecastSelect('buy')}
               >
                 산다!
               </Button>,

@@ -3,8 +3,12 @@ import ForumTemplate from '../components/templates/ForumTemplate';
 
 import { message } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { getYYYYMMDD } from '../lib/utils';
-import { StockInfo, TodaysStat, MarketStat } from '../lib/stock';
+import { StockInfo, TodaysStat } from '../lib/stock';
+
+import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
+import _ from 'lodash';
 
 /**
  * todaysInfos: StockInfo[]     s3에서 받아온 오늘의 종목 정보
@@ -15,43 +19,89 @@ import { StockInfo, TodaysStat, MarketStat } from '../lib/stock';
  * marketStat: MarketStat       오늘의 시장 통계
  */
 
+const FORUM_PAGE = gql`
+  {
+    todaysInfo {
+      eventDate
+      stockInfo
+      marketStat
+      scores
+      comments {
+        id
+        message
+        user {
+          id
+          name
+        }
+        tags
+        createdAt
+      }
+    }
+  }
+`;
+
 interface ForumPageProps extends RouteComponentProps {}
 
-const todaysStat: TodaysStat[] | null = null; // API GET HERE
-const marketStat: MarketStat | null = null; // API GET HERE
-
 function ForumPage({ history }: ForumPageProps) {
-  const eventDate = getYYYYMMDD(new Date());
-  const myRank: StockInfo[] = JSON.parse(
-    localStorage.getItem('myRank') || '[]',
-  );
+  const { loading, data } = useQuery(FORUM_PAGE);
+
+  const myRank: StockInfo[] = JSON.parse(localStorage.getItem('myRank') || '[]');
 
   useEffect(() => {
-    const doneDates: string[] = JSON.parse(
-      localStorage.getItem('doneDates') || '[]',
-    );
-    if (!doneDates.includes(eventDate)) {
-      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
-      history.push('/');
+    if (data) {
+      const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
+      if (!doneDates.includes(data.todaysInfo.eventDate)) {
+        message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
+        history.push('/');
+      }
     }
-  }, [eventDate, history]);
+  }, [data, history]);
 
-  const createDummyStat = (todaysInfos: StockInfo[]): TodaysStat[] => {
-    return todaysInfos.map((stockInfo) => ({
-      ...stockInfo,
-      rank: undefined,
-      winRate: undefined,
-      // rank: index + 1,
-      // winRate: 32 - index,
-    }));
+  if (data) {
+    console.log();
+  }
+
+  const manipulateMarketStat = () => {
+    const marketStat = JSON.parse(data.todaysInfo.marketStat);
+    const sum = (marketStat.kospi.sell + marketStat.kospi.hold + marketStat.kospi.buy) / 100;
+
+    const result = ['kospi', 'kosdaq'].reduce((acc: any, market: string) => {
+      Object.assign(acc, {
+        [market]: ['sell', 'hold', 'buy'].reduce((acc: any, position: string) => {
+          Object.assign(acc, { [position]: Math.round(marketStat[market][position] / sum) });
+          return acc;
+        }, {}),
+      });
+      return acc;
+    }, {});
+
+    return result;
   };
+
+  const manipulateTodaysStat = (): TodaysStat[] => {
+    const stockInfo = JSON.parse(data.todaysInfo.stockInfo);
+    const scores = JSON.parse(data.todaysInfo.scores);
+    const scored = stockInfo.map((i: StockInfo) => ({
+      ...i,
+      score: scores[i.name],
+    }));
+    const todaysStat = _.sortBy(scored, 'score')
+      .reverse()
+      .map((item, index) => ({
+        ...item,
+        rank: index + 1,
+      }));
+    return todaysStat;
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <ForumTemplate
-      eventDate={eventDate}
+      eventDate={data.todaysInfo.eventDate}
       myRank={myRank}
-      todaysStat={todaysStat || createDummyStat(myRank)}
-      marketStat={marketStat}
+      todaysStat={manipulateTodaysStat()}
+      marketStat={manipulateMarketStat()}
     />
   );
 }

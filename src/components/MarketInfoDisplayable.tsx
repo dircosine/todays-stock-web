@@ -4,7 +4,7 @@ import { Spin, Skeleton, Divider } from 'antd';
 import './MarketInfoDisplayable.scss';
 
 interface MarketInfoDisplayableProps {
-  market: 'KOSPI' | 'KOSDAQ';
+  market: 'kospi' | 'kosdaq';
   chartScale?: 'day' | 'week' | 'month';
 }
 
@@ -29,7 +29,7 @@ function MarketInfoDisplayable({
         {/* Dummy lender for onLoad/onFail trigger */}
         <img
           alt={market + ' chart'}
-          src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScale}/${market}_end.png`}
+          src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScale}/${market.toUpperCase()}_end.png`}
           width="0%"
           onLoad={handleImgLoad}
         />
@@ -43,10 +43,10 @@ function MarketInfoDisplayable({
     );
   }
   return (
-    <div className="MarketInfoDisplayable">
+    <div className="Market.toUpperCase()InfoDisplayable">
       <div className="info-head">
         <strong className="name">
-          {market === 'KOSPI' ? '코스피' : '코스닥'}
+          {market === 'kospi' ? '코스피' : '코스닥'}
         </strong>
       </div>
       <Divider style={{ margin: '10px 0px' }} />
@@ -54,7 +54,7 @@ function MarketInfoDisplayable({
       {!imgLoading && (
         <img
           alt={market + ' chart'}
-          src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScale}/${market}_end.png`}
+          src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScale}/${market.toUpperCase()}_end.png`}
           width="100%"
         />
       )}

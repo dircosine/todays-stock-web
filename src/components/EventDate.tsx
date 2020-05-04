@@ -6,8 +6,7 @@ interface EventDateProps {
 
 function EventDate({ date }: EventDateProps) {
   // prettier-ignore
-  const splited = date.split('-');
-  return <span>{`${splited[0]}년 ${splited[1]}월 ${splited[2]}일`}</span>;
+  return <span>{`${date.slice(0, 4)}년 ${date.slice(4, 6)}월 ${date.slice(6, 8)}일`}</span>;
 }
 
 export default EventDate;

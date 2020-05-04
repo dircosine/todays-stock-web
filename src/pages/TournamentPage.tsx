@@ -1,32 +1,44 @@
 import React from 'react';
 import TournamentTemplate from '../components/templates/TournamentTemplate';
-import { getYYYYMMDD, shuffle } from '../lib/utils';
+import { shuffle } from '../lib/utils';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { StockInfo } from '../lib/stock';
 
 interface TournamentPageProps {}
 
-const STOCK_INFO = gql`
+export const TOURNAMENT_PAGE = gql`
   {
-    stockInfo(eventDate: "20200430")
+    todaysInfo {
+      stockInfo
+      eventDate
+    }
   }
 `;
 
 function TournamentPage(props: TournamentPageProps) {
-  const eventDate = getYYYYMMDD(new Date());
-  const { loading, error, data } = useQuery(STOCK_INFO);
+  const { loading, data } = useQuery(TOURNAMENT_PAGE);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>error</p>;
+  // const rank = todaysInfo.map((i) => i.name);
+  // const market = {
+  //   kospi: 'sell',
+  //   kosdaq: 'buy',
+  // };
 
-  const stockInfo: StockInfo[] = JSON.parse(data.stockInfo);
-  const infoShuffled = shuffle(stockInfo);
+  // const handlePostResult = async () => {
+  //   const res = await postResultMutation({
+  //     variables: { tournamentId: 3, rank, market: JSON.stringify(market) },
+  //   });
+  //   console.log(res);
+  // };
+
+  if (loading) return <div>Loading...</div>;
+
+  const stockInfo = JSON.parse(data.todaysInfo.stockInfo);
 
   return (
     <TournamentTemplate
-      stockInfos={infoShuffled}
-      eventDate={eventDate}
+      stockInfos={shuffle(stockInfo)}
+      eventDate={data.todaysInfo.eventDate}
       loading={loading}
     />
   );

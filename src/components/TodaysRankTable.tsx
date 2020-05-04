@@ -12,8 +12,8 @@ function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
     {
       title: '순위',
       dataIndex: 'rank',
-      render: (rank: string) => (
-        <div style={{ textAlign: 'center' }}>{rank || '-'}</div>
+      render: (rank: number) => (
+        <div style={{ textAlign: 'center' }}>{rank}</div>
       ),
     },
     {
@@ -28,10 +28,12 @@ function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
       ),
     },
     {
-      title: '1위 비율',
-      dataIndex: 'winRate',
-      render: (winRate: string) => (
-        <div style={{ textAlign: 'center' }}>{winRate || '-'}</div>
+      title: '점수',
+      dataIndex: 'score',
+      render: (score: number) => (
+        <div style={{ textAlign: 'center' }}>
+          <strong>{score}</strong>
+        </div>
       ),
     },
     {
