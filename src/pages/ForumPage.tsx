@@ -102,6 +102,7 @@ function ForumPage({ history }: ForumPageProps) {
       myRank={myRank}
       todaysStat={manipulateTodaysStat()}
       marketStat={manipulateMarketStat()}
+      comments={data.todaysInfo.comments}
     />
   );
 }

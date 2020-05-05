@@ -3,7 +3,7 @@ import { Table, Space, Button, Tag } from 'antd';
 import { TodaysStat, StockInfo } from '../lib/stock';
 
 interface TodaysRankTableProps {
-  todaysStat: TodaysStat[] | undefined;
+  todaysStat: TodaysStat[];
   onAddTag: (name: string) => void;
 }
 
@@ -12,9 +12,7 @@ function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
     {
       title: '순위',
       dataIndex: 'rank',
-      render: (rank: number) => (
-        <div style={{ textAlign: 'center' }}>{rank}</div>
-      ),
+      render: (rank: number) => <div style={{ textAlign: 'center' }}>{rank}</div>,
     },
     {
       title: '종목명',

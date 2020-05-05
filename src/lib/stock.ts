@@ -46,3 +46,28 @@ export type MarketStat = {
   kospi: ForecastStat;
   kosdaq: ForecastStat;
 };
+
+// *** Comments
+export type Comment = {
+  id: number;
+  user?: User;
+  message: string;
+  tags: string[];
+  createdAt: string;
+};
+
+// *** User
+export type User = {
+  id: number;
+  name: string;
+};
+
+// *** Tournament
+export type Tournament = {
+  id: number;
+  eventDate: string;
+  stockInfo: string;
+  marketStat?: string;
+  scores?: string;
+  comments?: Comment[];
+};

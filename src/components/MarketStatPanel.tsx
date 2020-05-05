@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Button, Radio, Progress } from 'antd';
+import { Tabs, Button, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import './MarketStatPanel.scss';
@@ -31,10 +31,7 @@ function MarketStatPanel({ marketStat, onAddTag }: MarketStatPanelProps) {
           <Button type="link" onClick={() => onAddTag(marketTabSelected)}>
             태그
           </Button>
-          <Radio.Group
-            onChange={handleScaleChange}
-            defaultValue={chartScaleMarket}
-          >
+          <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
             <Radio.Button value="day">일봉</Radio.Button>
             <Radio.Button value="week">주봉</Radio.Button>
             <Radio.Button value="month">월봉</Radio.Button>
