@@ -19,7 +19,7 @@ const authLink = setContext((_, { headers }) => {
 const httpLink = new HttpLink({
   uri:
     process.env.NODE_ENV === 'production'
-      ? 'http://localhost:4000/graphql'
+      ? 'https://todaysstock.herokuapp.com/graphql'
       : 'http://localhost:4000/graphql',
 });
 
@@ -28,12 +28,9 @@ const client = new ApolloClient({
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors && process.env.NODE_ENV !== 'production')
         graphQLErrors.forEach(({ message, locations, path }) =>
-          console.log(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-          ),
+          console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`),
         );
-      if (networkError && process.env.NODE_ENV !== 'production')
-        console.log(`[Network error]: ${networkError}`);
+      if (networkError && process.env.NODE_ENV !== 'production') console.log(`[Network error]: ${networkError}`);
     }),
     authLink.concat(httpLink),
   ]),
