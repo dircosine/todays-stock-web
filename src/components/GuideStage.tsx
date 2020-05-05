@@ -4,10 +4,9 @@ import { Card, Divider, Button } from 'antd';
 
 interface GuideStageProps {
   goNextStage: () => void;
-  loading: boolean;
 }
 
-function GuideStage({ goNextStage, loading }: GuideStageProps) {
+function GuideStage({ goNextStage }: GuideStageProps) {
   return (
     <div className="guide-stage">
       <Card title={'어떻게 하나요?'}>
@@ -58,8 +57,6 @@ function GuideStage({ goNextStage, loading }: GuideStageProps) {
           onClick={() => {
             if (goNextStage) goNextStage();
           }}
-          loading={loading}
-          disabled={loading}
         >
           시작
         </Button>

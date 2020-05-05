@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { StockInfo } from '../lib/stock';
 import { message } from 'antd';
+import Loader from '../components/Loader';
 
 export const TOURNAMENT_PAGE = gql`
   {
@@ -17,7 +18,8 @@ export const TOURNAMENT_PAGE = gql`
 
 interface TournamentPageProps {}
 function TournamentPage(props: TournamentPageProps) {
-  const { loading, data } = useQuery(TOURNAMENT_PAGE);
+  const { loading: apiLoading, data } = useQuery(TOURNAMENT_PAGE);
+  const [localLoading, setLocalLoading] = useState(true);
   const [isPlayed, setIsPlayed] = useState(false);
   const [myRank, setMyRank] = useState<StockInfo[] | null>(null);
 
@@ -28,15 +30,17 @@ function TournamentPage(props: TournamentPageProps) {
       setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
       message.success('오늘 토너먼트는 완료했습니다! ', 5);
       setIsPlayed(true);
+      setLocalLoading(false);
     }
   }, [data]);
+
+  if (apiLoading || localLoading) return <Loader />;
 
   return (
     <TournamentTemplate
       initStage={isPlayed ? 'DONE' : 'GUIDE'}
-      stockInfos={myRank || shuffle(JSON.parse(data?.getTodaysTournament.stockInfo || '[]'))}
+      stockInfos={myRank || shuffle(JSON.parse(data.getTodaysTournament.stockInfo))}
       eventDate={data?.getTodaysTournament.eventDate || '20200505'}
-      loading={loading}
     />
   );
 }

@@ -45,12 +45,11 @@ interface TournamentTemplateProps {
   initStage: Stage;
   stockInfos: StockInfo[];
   eventDate: string;
-  loading: boolean;
 }
 
 const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
-function TournamentTemplate({ initStage, stockInfos, eventDate, loading }: TournamentTemplateProps) {
+function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
@@ -284,7 +283,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate, loading }: Tourn
         )}
       </div>
 
-      {stage === 'GUIDE' && <GuideStage goNextStage={goNextStage} loading={loading} />}
+      {stage === 'GUIDE' && <GuideStage goNextStage={goNextStage} />}
 
       {stage === 'ROUND' && (
         <div className="round-stage">
