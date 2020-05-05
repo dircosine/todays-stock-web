@@ -8,7 +8,7 @@ interface TournamentPageProps {}
 
 export const TOURNAMENT_PAGE = gql`
   {
-    todaysInfo {
+    getTodaysTournament {
       stockInfo
       eventDate
     }
@@ -33,12 +33,12 @@ function TournamentPage(props: TournamentPageProps) {
 
   if (loading) return <div>Loading...</div>;
 
-  const stockInfo = JSON.parse(data.todaysInfo.stockInfo);
+  const stockInfo = JSON.parse(data.getTodaysTournament.stockInfo);
 
   return (
     <TournamentTemplate
       stockInfos={shuffle(stockInfo)}
-      eventDate={data.todaysInfo.eventDate}
+      eventDate={data.getTodaysTournament.eventDate}
       loading={loading}
     />
   );
