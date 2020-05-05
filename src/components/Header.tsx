@@ -17,9 +17,7 @@ function Header({ location }: HeaderProps) {
 
   return (
     <Layout.Header>
-      <Link to="/">
-        <div className="logo" />
-      </Link>
+      <div className="logo" />
 
       <Menu
         theme="dark"

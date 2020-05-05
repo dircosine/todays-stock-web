@@ -15,13 +15,10 @@ import Emoji from '../Emoji';
 import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import GuideStage from '../GuideStage';
 
 const POST_RESULT = gql`
-  mutation postTournamentResult(
-    $eventDate: String!
-    $rank: [String!]!
-    $market: String!
-  ) {
+  mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
     postTournamentResult(eventDate: $eventDate, rank: $rank, market: $market)
   }
 `;
@@ -45,6 +42,7 @@ type MarketForecast = {
 };
 
 interface TournamentTemplateProps {
+  initStage: Stage;
   stockInfos: StockInfo[];
   eventDate: string;
   loading: boolean;
@@ -52,14 +50,10 @@ interface TournamentTemplateProps {
 
 const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
-function TournamentTemplate({
-  stockInfos,
-  eventDate,
-  loading,
-}: TournamentTemplateProps) {
-  const [myRank, setMyRank] = useState<StockInfo[]>(stockInfos);
+function TournamentTemplate({ initStage, stockInfos, eventDate, loading }: TournamentTemplateProps) {
+  const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
-  const [stage, setStage] = useState<Stage>('GUIDE');
+  const [stage, setStage] = useState<Stage>(initStage);
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -79,23 +73,12 @@ function TournamentTemplate({
 
   const [postResultMutation] = useMutation(POST_RESULT);
 
-  useEffect(() => {
-    setMyRank(stockInfos);
-  }, [stockInfos]);
+  console.log(stage);
 
   useEffect(() => {
-    const doneDates: string[] = JSON.parse(
-      localStorage.getItem('doneDates') || '[]',
-    );
-    if (doneDates.includes(eventDate)) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
-      marketForecast.current = JSON.parse(
-        localStorage.getItem('marketForcast') || '{}',
-      );
-      setStage('DONE');
-    }
-  }, [eventDate]);
+    setStage(initStage);
+    setMyRank(stockInfos);
+  }, [initStage, stockInfos]);
 
   const postResult = async () => {
     console.log(myRank);
@@ -112,17 +95,9 @@ function TournamentTemplate({
 
   const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(myRank));
-    localStorage.setItem(
-      'marketForecast',
-      JSON.stringify(marketForecast.current),
-    );
-    const doneDates: string[] = JSON.parse(
-      localStorage.getItem('doneDates') || '[]',
-    );
-    localStorage.setItem(
-      'doneDates',
-      JSON.stringify([...doneDates, eventDate]),
-    );
+    localStorage.setItem('marketForecast', JSON.stringify(marketForecast.current));
+    const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
+    localStorage.setItem('doneDates', JSON.stringify([...doneDates, eventDate]));
 
     postResult();
   };
@@ -236,18 +211,11 @@ function TournamentTemplate({
   };
 
   const handleReplay = () => {
-    if (
-      window.confirm('다시 플레이 하시겠어요? 이번 플레이 기록은 삭제됩니다.')
-    ) {
+    if (window.confirm('다시 플레이 하시겠어요? 이번 플레이 기록은 삭제됩니다.')) {
       localStorage.removeItem('myRank');
       localStorage.removeItem('marketForecast');
-      const doneDates: string[] = JSON.parse(
-        localStorage.getItem('doneDates') || '[]',
-      );
-      localStorage.setItem(
-        'doneDates',
-        JSON.stringify(doneDates.filter((d) => d !== eventDate)),
-      );
+      const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
+      localStorage.setItem('doneDates', JSON.stringify(doneDates.filter((d) => d !== eventDate)));
       window.location.reload();
     }
   };
@@ -274,8 +242,7 @@ function TournamentTemplate({
           </>
         )}
         {stage === 'ROUND' && '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
-        {stage === 'MARKET' &&
-          '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
+        {stage === 'MARKET' && '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
       <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}>
@@ -290,11 +257,7 @@ function TournamentTemplate({
             >
               <Space>
                 <span>블라인드</span>
-                <Switch
-                  checked={blind}
-                  onChange={() => setBlind((p) => !p)}
-                  disabled={round === Round.Round32}
-                />
+                <Switch checked={blind} onChange={() => setBlind((p) => !p)} disabled={round === Round.Round32} />
               </Space>
             </Tooltip>
             <Space className="more-info">
@@ -311,10 +274,7 @@ function TournamentTemplate({
         {(stage === 'ROUND' || stage === 'MARKET') && (
           <div className="scale-selector">
             <Space>
-              <Radio.Group
-                onChange={handleScaleChange}
-                defaultValue={chartScale}
-              >
+              <Radio.Group onChange={handleScaleChange} defaultValue={chartScale}>
                 <Radio.Button value="day">일봉</Radio.Button>
                 <Radio.Button value="week">주봉</Radio.Button>
                 <Radio.Button value="month">월봉</Radio.Button>
@@ -324,62 +284,7 @@ function TournamentTemplate({
         )}
       </div>
 
-      {stage === 'GUIDE' && (
-        <div className="guide-stage">
-          <Card title={'어떻게 하나요?'}>
-            <ul className="guide" style={{ textAlign: 'center' }}>
-              <li>
-                <Emoji symbol="✨" />
-                <p>
-                  <strong>매일 32개의 새로운 종목</strong>이 준비됩니다
-                </p>
-              </li>
-              <li>
-                <Emoji symbol="🤔" />
-                <p>
-                  동시에 표시되는 두 종목 중,
-                  <br />
-                  향후 전망이 더 좋아보이는 쪽을 선택해 주세요
-                </p>
-              </li>
-              <li>
-                <Emoji symbol="🏅" />
-                <p>
-                  토너먼트를 진행하며 최고의 종목을 선정해 주세요!
-                  <br />
-                  <span className="small">32강 - 16강 - 8강 - 4강 - 결승</span>
-                </p>
-              </li>
-              <li>
-                <Emoji symbol="💡" />
-                <p>
-                  다 끝나면 <strong>"오늘의 포럼"</strong>
-                  에서 투자 아이디어를 얻어 가세요!
-                </p>
-              </li>
-              <li>
-                <Emoji symbol="👀" />
-                <p>
-                  <strong>내일도 쓱 한 번 들러주세요!</strong>
-                  <br />
-                  <span className="small"> (오후 6시 종목 업데이트)</span>
-                </p>
-              </li>
-            </ul>
-            <Divider type="horizontal" />
-            <Button
-              style={{ width: 200 }}
-              shape="round"
-              type="primary"
-              onClick={() => goNextStage()}
-              loading={loading}
-              disabled={loading}
-            >
-              시작
-            </Button>
-          </Card>
-        </div>
-      )}
+      {stage === 'GUIDE' && <GuideStage goNextStage={goNextStage} loading={loading} />}
 
       {stage === 'ROUND' && (
         <div className="round-stage">
@@ -459,8 +364,8 @@ function TournamentTemplate({
                 message={
                   <p>
                     괜찮은 종목 찾으셨나요? <br />
-                    아래 링크를 복사해서 주변에 공유하거나, 저장해 뒀다 내일도
-                    들러주세요 <Emoji symbol="😀" size={16} />
+                    아래 링크를 복사해서 주변에 공유하거나, 저장해 뒀다 내일도 들러주세요{' '}
+                    <Emoji symbol="😀" size={16} />
                   </p>
                 }
               />
@@ -489,22 +394,14 @@ function TournamentTemplate({
             <div className="column-1 ">
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank
-                  stockInfos={myRank}
-                  showAll={true}
-                  partialDisplay="high"
-                />
+                <MyRank stockInfos={myRank} showAll={true} partialDisplay="high" />
               </div>
             </div>
             <SpaceVertical />
             <div className="column-2">
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank
-                  stockInfos={myRank}
-                  showAll={true}
-                  partialDisplay="low"
-                />
+                <MyRank stockInfos={myRank} showAll={true} partialDisplay="low" />
               </div>
             </div>
           </div>

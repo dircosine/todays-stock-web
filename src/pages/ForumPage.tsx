@@ -9,6 +9,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import _ from 'lodash';
+import Loader from '../components/Loader';
 
 /**
  * todaysInfos: StockInfo[]     s3에서 받아온 오늘의 종목 정보
@@ -45,6 +46,10 @@ interface ForumPageProps extends RouteComponentProps {}
 function ForumPage({ history }: ForumPageProps) {
   const { loading, data } = useQuery(FORUM_PAGE);
 
+  if (!localStorage.getItem('myRank')) {
+    message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
+    history.push('/');
+  }
   const myRank: StockInfo[] = JSON.parse(localStorage.getItem('myRank') || '[]');
 
   useEffect(() => {
@@ -108,7 +113,7 @@ function ForumPage({ history }: ForumPageProps) {
     return todaysStat;
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
 
   return (
     <ForumTemplate

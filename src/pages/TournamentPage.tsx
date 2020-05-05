@@ -1,10 +1,10 @@
-import React from 'react';
-import TournamentTemplate from '../components/templates/TournamentTemplate';
+import React, { useEffect, useState } from 'react';
+import TournamentTemplate, { Stage } from '../components/templates/TournamentTemplate';
 import { shuffle } from '../lib/utils';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-
-interface TournamentPageProps {}
+import { StockInfo } from '../lib/stock';
+import { message } from 'antd';
 
 export const TOURNAMENT_PAGE = gql`
   {
@@ -15,30 +15,27 @@ export const TOURNAMENT_PAGE = gql`
   }
 `;
 
+interface TournamentPageProps {}
 function TournamentPage(props: TournamentPageProps) {
   const { loading, data } = useQuery(TOURNAMENT_PAGE);
+  const [isPlayed, setIsPlayed] = useState(false);
+  const [myRank, setMyRank] = useState<StockInfo[] | null>(null);
 
-  // const rank = todaysInfo.map((i) => i.name);
-  // const market = {
-  //   kospi: 'sell',
-  //   kosdaq: 'buy',
-  // };
-
-  // const handlePostResult = async () => {
-  //   const res = await postResultMutation({
-  //     variables: { tournamentId: 3, rank, market: JSON.stringify(market) },
-  //   });
-  //   console.log(res);
-  // };
-
-  if (loading) return <div>Loading...</div>;
-
-  const stockInfo = JSON.parse(data.getTodaysTournament.stockInfo);
+  useEffect(() => {
+    if (!data) return;
+    const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
+    if (doneDates.includes(data.getTodaysTournament.eventDate)) {
+      setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
+      message.success('오늘 토너먼트는 완료했습니다! ', 5);
+      setIsPlayed(true);
+    }
+  }, [data]);
 
   return (
     <TournamentTemplate
-      stockInfos={shuffle(stockInfo)}
-      eventDate={data.getTodaysTournament.eventDate}
+      initStage={isPlayed ? 'DONE' : 'GUIDE'}
+      stockInfos={myRank || shuffle(JSON.parse(data?.getTodaysTournament.stockInfo || '[]'))}
+      eventDate={data?.getTodaysTournament.eventDate || '20200505'}
       loading={loading}
     />
   );
