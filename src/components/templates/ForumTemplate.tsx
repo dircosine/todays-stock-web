@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert } from 'antd';
+import { Alert, Menu, Button } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
 import './ForumTemplate.scss';
@@ -23,7 +23,6 @@ interface ForumTemplateProps {
 
 function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: ForumTemplateProps) {
   const [commentTags, setCommentTags] = useState<string[]>([myRank[0].name, myRank[1].name]);
-  const [showAllRank, setShowAllRank] = useState(false);
 
   const makeTagColorMap = (): { [key: string]: string } => {
     // prettier-ignore
@@ -34,10 +33,6 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
       Object.assign(acc, { [value.name]: tagColors[index % 11] });
       return acc;
     }, {});
-  };
-
-  const toggleShowAll = () => {
-    setShowAllRank(!showAllRank);
   };
 
   const handleAddTag = (name: string) => {
@@ -52,10 +47,13 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
   return (
     <div className="ForumTemplate">
       <h1 hidden={true}>오늘의 포럼</h1>
-      <h2 className="page-title">
+      <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 포럼
       </h2>
-      <div className="two-column content">
+      <Button className="float" shape="round" type="primary">
+        댓글 >
+      </Button>
+      <div className="two-column">
         <div className="column-1">
           {!marketStat && (
             <Alert
@@ -71,12 +69,12 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
           )}
           <SpaceHorizontal />
           <div className="panel statistics-market">
-            <h3>시장 통계</h3>
+            <h3>오늘의 시장 통계</h3>
             <MarketStatPanel marketStat={marketStat} onAddTag={handleAddTag} />
           </div>
           <SpaceHorizontal />
           <div className="panel todays-rank">
-            <h3>오늘의 종목 통계</h3>
+            <h3>오늘의 종목 순위</h3>
             <TodaysRankTable todaysStat={todaysStat} onAddTag={handleAddTag} />
           </div>
           <SpaceHorizontal />
@@ -84,11 +82,6 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
         <SpaceVertical />
         <div className="column-2">
           <SharePanel />
-          <SpaceHorizontal />
-          <div className="panel rank">
-            <h3>내가 뽑은 순위</h3>
-            <MyRank stockInfos={myRank} showAll={showAllRank} toggleShowAll={toggleShowAll} />
-          </div>
           <SpaceHorizontal />
           <CommentPanel
             eventDate={eventDate}

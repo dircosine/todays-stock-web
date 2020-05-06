@@ -13,12 +13,7 @@ interface MyRankProps {
   partialDisplay?: 'none' | 'high' | 'low';
 }
 
-function MyRank({
-  stockInfos,
-  showAll,
-  toggleShowAll,
-  partialDisplay,
-}: MyRankProps) {
+function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankProps) {
   const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
 
   const toggleInfoOpen = (code: string) => {
@@ -45,9 +40,7 @@ function MyRank({
         height: 50,
       }}
     >
-      <Button onClick={handleShowAll}>
-        {showAll ? '목록 닫기' : '전체 보기'}
-      </Button>
+      <Button onClick={handleShowAll}>{showAll ? '목록 닫기' : '전체 보기'}</Button>
     </div>
   );
 
@@ -57,9 +50,7 @@ function MyRank({
         <>
           <List
             size="large"
-            dataSource={
-              showAll ? stockInfos.slice(0, 8) : stockInfos.slice(0, 4)
-            }
+            dataSource={showAll ? stockInfos.slice(0, 8) : stockInfos.slice(0, 4)}
             loadMore={!showAll && showAllBtn}
             renderItem={(item, index) => (
               <List.Item
@@ -101,21 +92,12 @@ function MyRank({
                     태그
                   </Button> */}
                     </div>
-                    <Button
-                      style={{ border: 0, boxShadow: 'none' }}
-                      onClick={() => toggleInfoOpen(item.code)}
-                    >
-                      <RightOutlined
-                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                      />
+                    <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                      <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                     </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
+                    <StockInfoDisplayable stockInfo={item} key={item.code} infoExtent={['price', 'chart', 'more']} />
                   )}
                 </Card>
               </List.Item>
@@ -124,7 +106,7 @@ function MyRank({
 
           {showAll && (
             <>
-              <Divider dashed={true}>16강 탈락! 그래도 이름은 알렸다..</Divider>
+              <Divider dashed={true}>여기부턴 16강 탈락!</Divider>
               <List
                 size="large"
                 dataSource={stockInfos.slice(8, 16)}
@@ -150,9 +132,7 @@ function MyRank({
                         >
                           <div>
                             <Space size={4}>
-                              <strong style={{ fontSize: 18 }}>
-                                {item.name}
-                              </strong>
+                              <strong style={{ fontSize: 18 }}>{item.name}</strong>
                               <span>{item.code}</span>
                               <Tag>{item.market}</Tag>
                             </Space>
@@ -164,13 +144,8 @@ function MyRank({
                         태그
                       </Button> */}
                         </div>
-                        <Button
-                          style={{ border: 0, boxShadow: 'none' }}
-                          onClick={() => toggleInfoOpen(item.code)}
-                        >
-                          <RightOutlined
-                            rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                          />
+                        <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                          <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                         </Button>
                       </div>
                       {infoOpenCodes.includes(item.code) && (
@@ -191,9 +166,7 @@ function MyRank({
 
       {partialDisplay !== 'high' && showAll && (
         <>
-          <Divider dashed={true}>
-            차트만 보고 걸렀지만.. 다시보니 선녀?!
-          </Divider>
+          <Divider dashed={true}>차트만 보고 걸렀지만.. 다시보니 선녀?!</Divider>
           <List
             size="large"
             dataSource={stockInfos.slice(16)}
@@ -232,21 +205,12 @@ function MyRank({
                         태그
                       </Button> */}
                     </div>
-                    <Button
-                      style={{ border: 0, boxShadow: 'none' }}
-                      onClick={() => toggleInfoOpen(item.code)}
-                    >
-                      <RightOutlined
-                        rotate={infoOpenCodes.includes(item.code) ? 90 : 0}
-                      />
+                    <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                      <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                     </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
+                    <StockInfoDisplayable stockInfo={item} key={item.code} infoExtent={['price', 'chart', 'more']} />
                   )}
                 </Card>
               </List.Item>

@@ -6,7 +6,11 @@ interface FooterProps {}
 function Footer(props: FooterProps) {
   return (
     <Layout.Footer style={{ textAlign: 'center' }}>
-      Ant Design ©2018 Created by Ant UED
+      문의 및 건의사항 메일주세요~
+      <br />
+      <a style={{ textDecoration: 'underline' }} href="mailto:chartjib@gmail.com">
+        chartjib@gmail.com
+      </a>
     </Layout.Footer>
   );
 }

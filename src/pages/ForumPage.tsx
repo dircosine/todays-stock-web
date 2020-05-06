@@ -89,20 +89,22 @@ function ForumPage({ history }: ForumPageProps) {
 
   const manipulateTodaysStat = (): TodaysStat[] => {
     const stockInfo: StockInfo[] = JSON.parse(data.getTodaysTournament.stockInfo);
-    const scores: { [key: string]: string } | null = JSON.parse(data.getTodaysTournament.scores);
+    const scores: { [key: string]: number } | null = JSON.parse(data.getTodaysTournament.scores);
 
     if (!scores) {
-      const dummyStat: TodaysStat[] = stockInfo.map((i: StockInfo) => ({
-        ...i,
+      const dummyStat: TodaysStat[] = myRank.map((info: StockInfo, index: number) => ({
+        ...info,
+        myRank: index + 1,
         rank: '-',
         score: '-',
       }));
       return dummyStat;
     }
 
-    const scored = stockInfo.map((i: StockInfo) => ({
-      ...i,
-      score: scores[i.name],
+    const scored = myRank.map((info: StockInfo, index: number) => ({
+      ...info,
+      myRank: index + 1,
+      score: scores[info.name],
     }));
     const todaysStat = _.sortBy(scored, 'score')
       .reverse()

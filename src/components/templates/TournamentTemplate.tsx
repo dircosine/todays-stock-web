@@ -259,7 +259,10 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         {stage === 'MARKET' && '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
-      <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`} hidden={stage === 'DONE'}>
+      <div
+        className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}
+        hidden={stage === 'DONE' || stage === 'GUIDE'}
+      >
         {stage === 'ROUND' && (
           <div className="switch">
             <Tooltip
@@ -362,25 +365,27 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
       {stage === 'DONE' && (
         <div className="done-stage">
-          <div className="two-column">
+          <div className="section-1 two-column">
             <div className="column-1 ">
               <SharePanel
                 message={
                   <p>
-                    괜찮은 종목 찾으셨나요? <br />
-                    아래 링크를 복사해서 주변에 공유하거나, 저장해 뒀다 내일도 들러주세요{' '}
-                    <Emoji symbol="😀" size={16} />
+                    아래 주소를 복사해서 주변에 공유하거나,
+                    <br />
+                    저장해 뒀다 <strong>내일도 들러주세요</strong> <Emoji symbol="😀" size={16} />
                   </p>
                 }
               />
-              <SpaceHorizontal />
             </div>
             <SpaceVertical />
             <div className="column-2">
               <div className="goto-forum panel">
                 <h3 hidden={true}>포럼으로</h3>
                 <div style={{ textAlign: 'center' }}>
-                  <p>오늘의 통계와 다른 유저들의 의견을 확인해 보세요</p>
+                  <p>
+                    좋은 투자 종목 찾으셨나요? <br />
+                    오늘의 통계와 다른 유저들의 의견도 확인해 보세요
+                  </p>
                   <Space>
                     <Button type="default" shape="round" onClick={handleReplay}>
                       다시하기
@@ -391,11 +396,12 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                   </Space>
                 </div>
               </div>
+              <SpaceHorizontal />
             </div>
           </div>
           <SpaceHorizontal />
-          <Divider>여기, 직접 선택한 결과를 확인하세요!</Divider>
-          <div className="two-column">
+          <Divider>여기, 직접 선정한 순위를 확인하세요!</Divider>
+          <div className="section-2 two-column">
             <div className="column-1 ">
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>

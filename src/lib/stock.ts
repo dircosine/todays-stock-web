@@ -35,7 +35,8 @@ export type StockInfo = {
 // *** Statistics
 export type TodaysStat = StockInfo & {
   rank: number | string;
-  score: string;
+  score: number | string;
+  myRank: number;
 };
 
 type ForecastStat = {

@@ -1,6 +1,14 @@
 @import '../../styles/mixin';
 
 .ForumTemplate {
+  .float {
+    position: sticky;
+    position: -webkit-sticky;
+    left: 75vw;
+    top: 10px;
+    z-index: 3;
+  }
+
   .page-title {
     font-size: 16px;
   }
@@ -29,6 +37,14 @@
     .scale-selector {
       text-align: end;
     }
+  }
+
+  .tag-column {
+    padding: 0;
+  }
+  .ant-table-column-sorters {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .rank {
