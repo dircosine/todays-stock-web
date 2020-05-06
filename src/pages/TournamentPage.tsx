@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import TournamentTemplate, { Stage } from '../components/templates/TournamentTemplate';
+import TournamentTemplate from '../components/templates/TournamentTemplate';
 import { shuffle } from '../lib/utils';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';

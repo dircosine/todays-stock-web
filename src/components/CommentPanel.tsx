@@ -18,28 +18,21 @@ const CREATE_COMMENT = gql`
   }
 `;
 
-const tagColors = [
-  'magenta',
-  'orange',
-  'purple',
-  'gold',
-  'lime',
-  'geekblue',
-  'volcano',
-  'cyan',
-  'green',
-  'blue',
-  'red',
-];
-
 interface CommentPanelProps {
   eventDate: string;
   comments: Comment[];
   commentTags: string[];
+  tagColorMap: { [key: string]: string };
   handleTagClose: (tag: string) => void;
 }
 
-function CommentPanel({ eventDate, comments: commentsProps, commentTags, handleTagClose }: CommentPanelProps) {
+function CommentPanel({
+  eventDate,
+  comments: commentsProps,
+  commentTags,
+  tagColorMap,
+  handleTagClose,
+}: CommentPanelProps) {
   const [comments, setComments] = useState<Comment[]>([...commentsProps].reverse());
   const [buttonLoading, setButtonLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -87,7 +80,7 @@ function CommentPanel({ eventDate, comments: commentsProps, commentTags, handleT
             <Tag
               key={i}
               closable
-              color={tagColors[i % 11]}
+              color={tagColorMap[tag]}
               onClose={(e: any) => {
                 e.preventDefault();
                 handleTagClose(tag);
@@ -122,7 +115,7 @@ function CommentPanel({ eventDate, comments: commentsProps, commentTags, handleT
                   datetime={item.tags?.map((tag, i) => (
                     <Tag
                       key={i}
-                      color={tagColors[i % 11]}
+                      color={tagColorMap[tag]}
                       onClose={(e: any) => {
                         e.preventDefault();
                         handleTagClose(tag);

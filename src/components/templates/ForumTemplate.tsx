@@ -25,6 +25,17 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
   const [commentTags, setCommentTags] = useState<string[]>([myRank[0].name, myRank[1].name]);
   const [showAllRank, setShowAllRank] = useState(false);
 
+  const makeTagColorMap = (): { [key: string]: string } => {
+    // prettier-ignore
+    const tagColors = ['magenta', 'orange', 'purple', 'gold', 
+    'lime', 'geekblue', 'volcano', 'cyan', 'green', 'blue', 'red'];
+
+    return todaysStat.reduce((acc, value, index) => {
+      Object.assign(acc, { [value.name]: tagColors[index % 11] });
+      return acc;
+    }, {});
+  };
+
   const toggleShowAll = () => {
     setShowAllRank(!showAllRank);
   };
@@ -82,6 +93,7 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
             eventDate={eventDate}
             comments={comments}
             commentTags={commentTags}
+            tagColorMap={makeTagColorMap()}
             handleTagClose={handleTagClose}
           />
         </div>
