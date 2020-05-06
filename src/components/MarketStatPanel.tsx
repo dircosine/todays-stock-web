@@ -32,14 +32,14 @@ function MarketStatPanel({ marketStat, onAddTag }: MarketStatPanelProps) {
             태그
           </Button>
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
-            <Radio.Button value="day">일봉</Radio.Button>
-            <Radio.Button value="week">주봉</Radio.Button>
-            <Radio.Button value="month">월봉</Radio.Button>
+            <Radio.Button value="day">일</Radio.Button>
+            <Radio.Button value="week">주</Radio.Button>
+            <Radio.Button value="month">월</Radio.Button>
           </Radio.Group>
         </div>
       }
     >
-      <Tabs.TabPane tab="코스피" key="코스피">
+      <Tabs.TabPane tab={<strong>코스피</strong>} key="코스피">
         <div className="market kospi">
           <h4 hidden={true}>코스피 통계</h4>
           <div>
@@ -52,7 +52,7 @@ function MarketStatPanel({ marketStat, onAddTag }: MarketStatPanelProps) {
           <MarketStatProgress marketStat={marketStat?.kospi || null} />
         </div>
       </Tabs.TabPane>
-      <Tabs.TabPane tab="코스닥" key="코스닥">
+      <Tabs.TabPane tab={<strong>코스닥</strong>} key="코스닥">
         <div className="market kosdaq">
           <h4 hidden={true}>코스닥 통계</h4>
           <div>

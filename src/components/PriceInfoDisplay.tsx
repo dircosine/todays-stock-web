@@ -12,12 +12,7 @@ interface PriceInfoDisplayProps {
 type Color = 'red' | 'blue' | 'black';
 
 function PriceInfoDisplay({ price }: PriceInfoDisplayProps) {
-  const color: Color =
-    price.change.slice(0, 1) === '-'
-      ? 'blue'
-      : price.change.slice(1) === '0'
-      ? 'black'
-      : 'red';
+  const color: Color = price.change.slice(0, 1) === '-' ? 'blue' : price.change.slice(1) === '0' ? 'black' : 'red';
 
   const caretIcon =
     price.change.slice(0, 1) === '-' ? (
@@ -42,26 +37,30 @@ function PriceInfoDisplay({ price }: PriceInfoDisplayProps) {
           <strong className={color}>{price.changePercent}</strong> %
         </span>
       </Space>
-      <ul className="extra">
-        <li>
-          <Space>
-            전일<strong>{price.exday}</strong>
+      <div className="extra">
+        <div>
+          <Space className="row-1">
+            <Space>
+              전일<strong>{price.exday}</strong>
+              <Divider type="vertical" />
+              시가<strong>{price.start}</strong>
+            </Space>
             <Divider type="vertical" />
-            시가<strong>{price.start}</strong>
-            <Divider type="vertical" />
-            고가<strong>{price.high}</strong>
-            <Divider type="vertical" />
-            저가<strong>{price.low}</strong>
+            <Space>
+              고가<strong>{price.high}</strong>
+              <Divider type="vertical" />
+              저가<strong>{price.low}</strong>
+            </Space>
           </Space>
-        </li>
-        <li>
+        </div>
+        <div className="row-2">
           <Space>
             거래량<strong>{price.volume}</strong>
             <Divider type="vertical" />
             거래대금<strong>{price.tradingValue}</strong>백만
           </Space>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 }

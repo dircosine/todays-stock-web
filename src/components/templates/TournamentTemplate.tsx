@@ -16,6 +16,7 @@ import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import GuideStage from '../GuideStage';
+import useDimension from '../../hooks/useDimension';
 
 const POST_RESULT = gql`
   mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
@@ -47,12 +48,14 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
+  const [dimRef, { width }] = useDimension({ scrollEvent: false });
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
+  const [isMobile, setIsMobile] = useState(false);
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -72,7 +75,14 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   const [postResultMutation] = useMutation(POST_RESULT);
 
-  console.log(stage);
+  useEffect(() => {
+    console.log(width);
+    if (width >= 768) {
+      setIsMobile(false);
+    } else {
+      setIsMobile(true);
+    }
+  }, [width]);
 
   useEffect(() => {
     setStage(initStage);
@@ -145,7 +155,12 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         </>
       );
     } else if (stage === 'DONE') {
-      return '완료!';
+      return (
+        <>
+          <Emoji symbol="🎉" />
+          완료!
+        </>
+      );
     } else if (stage === 'MARKET') {
       return '시장 예측';
     } else {
@@ -220,9 +235,9 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   };
 
   return (
-    <div className="TournamentTemplate">
+    <div className="TournamentTemplate" ref={dimRef}>
       <h1 hidden={true}>오늘의 토너먼트</h1>
-      <h2 className="page-title">
+      <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 토너먼트
       </h2>
       <div className="head">
@@ -244,12 +259,12 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         {stage === 'MARKET' && '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
 
-      <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}>
+      <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`} hidden={stage === 'DONE'}>
         {stage === 'ROUND' && (
           <div className="switch">
             <Tooltip
               className="blind"
-              placement="left"
+              placement={isMobile ? 'top' : 'left'}
               title="종목 정보는 16강부터 제공됩니다"
               defaultVisible={true}
               visible={round === Round.Round32}
@@ -295,17 +310,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
             showMoreInfo={showMoreInfo}
             onClick={handleCardClick}
           />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: 24,
-              width: 30,
-            }}
-          >
-            vs
-          </div>
+          <div className="vs">vs</div>
           {/* <SpaceVertical /> */}
           <StockCardSelectable
             stockInfo={myRank[rightIndex]}
@@ -368,6 +373,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                   </p>
                 }
               />
+              <SpaceHorizontal />
             </div>
             <SpaceVertical />
             <div className="column-2">

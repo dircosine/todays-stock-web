@@ -1,3 +1,5 @@
+@import '../../styles/mixin';
+
 .TournamentTemplate {
   .Emoji {
     color: rgba($color: #000000, $alpha: 1);
@@ -25,6 +27,11 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-end;
+      margin-top: 80px;
+    }
 
     .switch {
       display: flex;
@@ -52,10 +59,6 @@
       font-size: 14px;
     }
 
-    li {
-      // padding: 8px 0px;
-    }
-
     .guide {
       font-size: 16px;
     }
@@ -74,10 +77,27 @@
 
   .round-stage {
     display: flex;
+    @include mobile {
+      flex-direction: column;
+    }
+
+    .vs {
+      display: flex;
+      width: 30px;
+      @include mobile {
+        width: 100%;
+      }
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+    }
   }
 
   .two-column {
     display: flex;
+    @include mobile {
+      flex-direction: column;
+    }
 
     .panel {
       padding: 12px 24px;

@@ -79,6 +79,7 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
             <h3>오늘의 종목 통계</h3>
             <TodaysRankTable todaysStat={todaysStat} onAddTag={handleAddTag} />
           </div>
+          <SpaceHorizontal />
         </div>
         <SpaceVertical />
         <div className="column-2">

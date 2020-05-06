@@ -30,15 +30,15 @@ function TournamentPage(props: TournamentPageProps) {
       setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
       message.success('오늘 토너먼트는 완료했습니다! ', 5);
       setIsPlayed(true);
-      setLocalLoading(false);
     }
+    setLocalLoading(false);
   }, [data]);
 
   if (apiLoading || localLoading) return <Loader />;
 
   return (
     <TournamentTemplate
-      initStage={isPlayed ? 'DONE' : 'GUIDE'}
+      initStage={isPlayed ? 'DONE' : 'ROUND'}
       stockInfos={myRank || shuffle(JSON.parse(data.getTodaysTournament.stockInfo))}
       eventDate={data?.getTodaysTournament.eventDate || '20200505'}
     />

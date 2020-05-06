@@ -9,6 +9,7 @@ interface SharePanelProps {
 
 function SharePanel({ message }: SharePanelProps) {
   const [copyDone, setCopyDone] = useState(false);
+  const url = document.location.href.split('/').slice(0, 3).join('/');
 
   const handleCopy = () => {
     setCopyDone(true);
@@ -17,14 +18,10 @@ function SharePanel({ message }: SharePanelProps) {
   return (
     <div className="SharePanel panel">
       <h3>공유</h3>
-      {message ? (
-        message
-      ) : (
-        <p>오늘의 링크를 주변에 공유하고, 더 많은 의견을 확인해보세요!</p>
-      )}
+      {message ? message : <p>오늘의 링크를 주변에 공유하고, 더 많은 의견을 확인해보세요!</p>}
       <div style={{ display: 'flex' }}>
-        <Input style={{ flex: 1 }} value={document.location.href} disabled />
-        <CopyToClipboard text={document.location.href} onCopy={handleCopy}>
+        <Input style={{ flex: 1 }} value={url} disabled />
+        <CopyToClipboard text={url} onCopy={handleCopy}>
           <Button
             className="copy-btn"
             style={{ marginLeft: 4 }}

@@ -1,3 +1,5 @@
+@import '../../styles/mixin';
+
 .ForumTemplate {
   .page-title {
     font-size: 16px;
@@ -5,6 +7,9 @@
 
   .two-column {
     display: flex;
+    @include mobile {
+      flex-direction: column;
+    }
   }
 
   .column-1,
@@ -50,6 +55,16 @@
       .submit-btn {
         margin-top: 8px;
         align-self: flex-end;
+      }
+    }
+    .comment-content {
+      .tag {
+        margin-bottom: 2px;
+      }
+
+      .ant-comment-content-author-time {
+        display: flex;
+        flex-wrap: wrap;
       }
     }
   }

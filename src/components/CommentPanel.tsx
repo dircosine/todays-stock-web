@@ -114,6 +114,7 @@ function CommentPanel({
                   content={item.message}
                   datetime={item.tags?.map((tag, i) => (
                     <Tag
+                      className="tag"
                       key={i}
                       color={tagColorMap[tag]}
                       onClose={(e: any) => {
