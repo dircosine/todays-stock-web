@@ -1,11 +1,12 @@
 @import '../../styles/mixin';
 
 .ForumTemplate {
+  display: block;
+
   .float {
-    position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     left: 75vw;
-    top: 10px;
+    bottom: 10px;
     z-index: 3;
   }
 

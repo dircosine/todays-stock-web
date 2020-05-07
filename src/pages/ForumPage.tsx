@@ -111,7 +111,7 @@ function ForumPage({ history }: ForumPageProps) {
     return todaysStat;
   };
 
-  if (loading) return <Loader />;
+  if (loading || !myRank.length) return <Loader />;
 
   return (
     <ForumTemplate
