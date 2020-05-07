@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ForumTemplate from '../components/templates/ForumTemplate';
 
 import { message } from 'antd';
@@ -45,26 +45,23 @@ interface ForumPageProps extends RouteComponentProps {}
 
 function ForumPage({ history }: ForumPageProps) {
   const { loading, data } = useQuery(FORUM_PAGE);
+  const [myRank, setMyRank] = useState<StockInfo[]>(JSON.parse(localStorage.getItem('myRank') || '[]'));
 
-  if (!localStorage.getItem('myRank')) {
-    message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
-    history.push('/');
-  }
-  const myRank: StockInfo[] = JSON.parse(localStorage.getItem('myRank') || '[]');
+  useEffect(() => {
+    if (!myRank.length) {
+      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
+      history.push('/');
+    }
+  }, [myRank, history]);
 
   useEffect(() => {
     if (data) {
       const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
       if (!doneDates.includes(data.getTodaysTournament.eventDate)) {
-        message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
-        history.push('/');
+        setMyRank([]);
       }
     }
   }, [data, history]);
-
-  if (data) {
-    console.log();
-  }
 
   const manipulateMarketStat = (): MarketStat | null => {
     const marketStat = JSON.parse(data.getTodaysTournament.marketStat);
@@ -88,7 +85,6 @@ function ForumPage({ history }: ForumPageProps) {
   };
 
   const manipulateTodaysStat = (): TodaysStat[] => {
-    const stockInfo: StockInfo[] = JSON.parse(data.getTodaysTournament.stockInfo);
     const scores: { [key: string]: number } | null = JSON.parse(data.getTodaysTournament.scores);
 
     if (!scores) {
