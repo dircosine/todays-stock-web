@@ -18,7 +18,14 @@ function SharePanel({ message }: SharePanelProps) {
   return (
     <div className="SharePanel panel">
       <h3>공유</h3>
-      {message ? message : <p>오늘의 링크를 주변에 공유하고, 더 많은 의견을 확인해 보세요!</p>}
+      {message ? (
+        message
+      ) : (
+        <p>
+          참여자가 많을수록
+          <br /> 더 나은 통계와 더 많은 의견들을 확인할 수 있습니다!
+        </p>
+      )}
       <div style={{ display: 'flex' }}>
         <Input style={{ flex: 1 }} value={url} disabled />
         <CopyToClipboard text={url} onCopy={handleCopy}>

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Alert, Menu, Button } from 'antd';
+import { Alert, Button } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
-import MyRank from '../MyRank';
 import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import TodaysRankTable from '../TodaysRankTable';
@@ -12,6 +11,7 @@ import MarketStatPanel from '../MarketStatPanel';
 import Emoji from '../Emoji';
 import { TodaysStat, MarketStat, StockInfo, Comment } from '../../lib/stock';
 import CommentPanel from '../CommentPanel';
+import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 
 interface ForumTemplateProps {
   eventDate: string;
@@ -23,6 +23,7 @@ interface ForumTemplateProps {
 
 function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: ForumTemplateProps) {
   const [commentTags, setCommentTags] = useState<string[]>([myRank[0].name, myRank[1].name]);
+  const [dimRef, mobileLayout] = useMobileLayoutCheck();
 
   const makeTagColorMap = (): { [key: string]: string } => {
     // prettier-ignore
@@ -45,7 +46,7 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
   };
 
   return (
-    <div className="ForumTemplate">
+    <div className="ForumTemplate" ref={dimRef}>
       <h1 hidden={true}>오늘의 포럼</h1>
       <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 포럼
@@ -68,6 +69,12 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
             />
           )}
           <SpaceHorizontal />
+          {mobileLayout && (
+            <>
+              <SharePanel />
+              <SpaceHorizontal />
+            </>
+          )}
           <div className="panel statistics-market">
             <h3>오늘의 시장 통계</h3>
             <MarketStatPanel marketStat={marketStat} onAddTag={handleAddTag} />
@@ -81,7 +88,7 @@ function ForumTemplate({ eventDate, myRank, todaysStat, marketStat, comments }: 
         </div>
         <SpaceVertical />
         <div className="column-2">
-          <SharePanel />
+          {!mobileLayout && <SharePanel />}
           <SpaceHorizontal />
           <CommentPanel
             eventDate={eventDate}

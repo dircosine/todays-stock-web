@@ -16,7 +16,7 @@ import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import GuideStage from '../GuideStage';
-import useDimension from '../../hooks/useDimension';
+import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 
 const POST_RESULT = gql`
   mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
@@ -48,14 +48,13 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
-  const [dimRef, { width }] = useDimension({ scrollEvent: false });
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
-  const [isMobile, setIsMobile] = useState(false);
+  const [dimRef, mobileLayout] = useMobileLayoutCheck();
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -76,22 +75,11 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   const [postResultMutation] = useMutation(POST_RESULT);
 
   useEffect(() => {
-    console.log(width);
-    if (width >= 768) {
-      setIsMobile(false);
-    } else {
-      setIsMobile(true);
-    }
-  }, [width]);
-
-  useEffect(() => {
     setStage(initStage);
     setMyRank(stockInfos);
   }, [initStage, stockInfos]);
 
   const postResult = async () => {
-    console.log(myRank);
-    console.log(marketForecast.current);
     const rank = myRank.map((item) => item.name);
     await postResultMutation({
       variables: {
@@ -267,7 +255,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           <div className="switch">
             <Tooltip
               className="blind"
-              placement={isMobile ? 'top' : 'left'}
+              placement={mobileLayout ? 'top' : 'left'}
               title="종목 정보는 16강부터 제공됩니다"
               defaultVisible={true}
               visible={round === Round.Round32}

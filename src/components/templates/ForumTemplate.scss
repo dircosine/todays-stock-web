@@ -2,8 +2,8 @@
 
 .ForumTemplate {
   .float {
-    position: sticky;
     position: -webkit-sticky;
+    position: sticky;
     left: 75vw;
     top: 10px;
     z-index: 3;
