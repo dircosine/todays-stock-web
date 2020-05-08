@@ -6,7 +6,7 @@ import { Logo } from '../img';
 
 interface HeaderProps extends RouteComponentProps {}
 
-function Header({ location }: HeaderProps) {
+function Header({ location, history }: HeaderProps) {
   const [current, setCurrent] = useState(location.pathname);
   const handleMenuClick = (e: ClickParam) => {
     setCurrent(e.key);
@@ -27,11 +27,9 @@ function Header({ location }: HeaderProps) {
         selectedKeys={[current]}
         onClick={handleMenuClick}
       >
-        <Menu.Item key="/">
-          <Link to="/">오늘의 토너먼트</Link>
-        </Menu.Item>
+        <Menu.Item key="/">{current !== '/' ? <Link to="/">오늘의 토너먼트</Link> : '오늘의 토너먼트'}</Menu.Item>
         <Menu.Item key="/forum">
-          <Link to="/forum">오늘의 포럼</Link>
+          <Link to="/forum">오늘의 토너먼트</Link>
         </Menu.Item>
       </Menu>
     </Layout.Header>

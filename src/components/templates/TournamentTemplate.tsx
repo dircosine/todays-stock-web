@@ -17,6 +17,7 @@ import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import GuideStage from '../GuideStage';
 import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
+import Timer from '../Timer';
 
 const POST_RESULT = gql`
   mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
@@ -229,7 +230,8 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 토너먼트
       </h2>
-      <div className="head">
+      <div className="score-board">
+        <Timer initialSec={300} onTimeOver={() => alert('timeover!')} />
         <h2 className="stage-title">{displayStageTitle()}</h2>
         {stage === 'ROUND' && round !== Round.Round2 && (
           <p>
