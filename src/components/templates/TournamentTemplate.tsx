@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { Radio, Card, Button, Switch, Space, Tooltip, Divider } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip, Divider, Carousel } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 
@@ -48,13 +48,14 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
   const [dimRef, mobileLayout] = useMobileLayoutCheck();
+  const [carouselAutoPlay, setCarouselAutoPlay] = useState(true);
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -255,7 +256,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           <div className="switch">
             <Tooltip
               className="blind"
-              placement={mobileLayout ? 'top' : 'left'}
+              placement={'left'}
               title="종목 정보는 16강부터 제공됩니다"
               defaultVisible={true}
               visible={round === Round.Round32}
@@ -265,14 +266,14 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                 <Switch checked={blind} onChange={() => setBlind((p) => !p)} disabled={round === Round.Round32} />
               </Space>
             </Tooltip>
-            <Space className="more-info">
+            {/* <Space className="more-info">
               <span>추가정보</span>
               <Switch
                 checked={showMoreInfo}
                 onChange={() => setShowMoreInfo((p) => !p)}
                 disabled={round === Round.Round32}
               />
-            </Space>
+            </Space> */}
           </div>
         )}
 
@@ -293,24 +294,59 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
       {stage === 'ROUND' && (
         <div className="round-stage">
-          <StockCardSelectable
-            stockInfo={myRank[leftIndex]}
-            chartScale={chartScale}
-            position="left"
-            blind={blind}
-            showMoreInfo={showMoreInfo}
-            onClick={handleCardClick}
-          />
-          <div className="vs">vs</div>
-          {/* <SpaceVertical /> */}
-          <StockCardSelectable
-            stockInfo={myRank[rightIndex]}
-            chartScale={chartScale}
-            position="right"
-            blind={blind}
-            showMoreInfo={showMoreInfo}
-            onClick={handleCardClick}
-          />
+          {mobileLayout ? (
+            <Carousel
+              autoplay={carouselAutoPlay}
+              afterChange={(current) => {
+                if (current === 0) {
+                  setCarouselAutoPlay(false);
+                } else {
+                  setCarouselAutoPlay(true);
+                }
+              }}
+            >
+              <StockCardSelectable
+                stockInfo={myRank[leftIndex]}
+                chartScale={chartScale}
+                position="left"
+                blind={blind}
+                showMoreInfo={showMoreInfo}
+                onClick={handleCardClick}
+                isMobile={true}
+              />
+              <StockCardSelectable
+                stockInfo={myRank[rightIndex]}
+                chartScale={chartScale}
+                position="right"
+                blind={blind}
+                showMoreInfo={showMoreInfo}
+                onClick={handleCardClick}
+                isMobile={true}
+              />
+            </Carousel>
+          ) : (
+            <>
+              <StockCardSelectable
+                stockInfo={myRank[leftIndex]}
+                chartScale={chartScale}
+                position="left"
+                blind={blind}
+                showMoreInfo={showMoreInfo}
+                onClick={handleCardClick}
+                isMobile={false}
+              />
+              <div className="vs">vs</div>
+              <StockCardSelectable
+                stockInfo={myRank[rightIndex]}
+                chartScale={chartScale}
+                position="right"
+                blind={blind}
+                showMoreInfo={showMoreInfo}
+                onClick={handleCardClick}
+                isMobile={false}
+              />
+            </>
+          )}
         </div>
       )}
 

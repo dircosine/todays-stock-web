@@ -30,7 +30,7 @@
     @include mobile {
       flex-direction: column;
       align-items: flex-end;
-      margin-top: 80px;
+      margin-top: 30px;
     }
 
     .switch {
@@ -76,6 +76,18 @@
   }
 
   .round-stage {
+    .ant-carousel {
+      .slick-slide {
+        overflow: hidden;
+      }
+    }
+
+    .slick-dots {
+      button {
+        background-color: rgba($color: #000, $alpha: 0.5) !important;
+      }
+    }
+
     display: flex;
     @include mobile {
       flex-direction: column;

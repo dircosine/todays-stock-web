@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
 
 import { Position } from './templates/TournamentTemplate';
 
@@ -13,6 +13,7 @@ interface StockCardSelectableProps {
   blind: boolean;
   showMoreInfo: boolean;
   onClick: (position: Position) => void;
+  isMobile: boolean;
 }
 
 function StockCardSelectable({
@@ -22,6 +23,7 @@ function StockCardSelectable({
   blind,
   showMoreInfo,
   onClick,
+  isMobile,
 }: StockCardSelectableProps) {
   const handleCardClick = () => {
     onClick(position);
@@ -30,9 +32,9 @@ function StockCardSelectable({
   return (
     <Card
       className="StockCardSelectable"
-      style={{ flex: 1, borderRadius: 4 }}
+      style={{ flex: 1, borderRadius: 4, height: '100%' }}
       bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
-      onClick={handleCardClick}
+      onClick={!isMobile ? handleCardClick : undefined}
       hoverable
     >
       <StockInfoDisplayable
@@ -42,6 +44,13 @@ function StockCardSelectable({
         showMoreInfo={showMoreInfo}
         chartScale={chartScale}
       />
+      {isMobile && (
+        <div style={{ textAlign: 'end', paddingRight: 16 }}>
+          <Button size="large" type="primary" shape="round" onClick={handleCardClick}>
+            선 택
+          </Button>
+        </div>
+      )}
     </Card>
   );
 }

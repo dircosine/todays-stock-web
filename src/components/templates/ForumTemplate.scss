@@ -6,12 +6,18 @@
   .float {
     position: fixed;
     left: 75vw;
-    bottom: 10px;
+    bottom: 40px;
     z-index: 3;
+    box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.3);
   }
 
-  .page-title {
-    font-size: 16px;
+  .head {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .stage-title {
+      padding: 0 20px;
+    }
   }
 
   .two-column {
