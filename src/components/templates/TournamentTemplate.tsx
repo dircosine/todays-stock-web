@@ -49,7 +49,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
@@ -122,6 +122,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   const goNextStage = (): void => {
     setStage((prevStage) => {
+      window.scrollTo(0, 0);
       switch (prevStage) {
         case 'GUIDE':
           return 'ROUND';
@@ -141,7 +142,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
     if (stage === 'GUIDE') {
       return (
         <>
-          <strong>"차트맛집"</strong> 에 오신것을 환영합니다!
+          하루 5분, 보석같은 투자 종목 찾기 <Emoji symbol="💎" />
         </>
       );
     } else if (stage === 'DONE') {
@@ -230,22 +231,20 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 토너먼트
       </h2>
-      <div className="score-board">
-        <Timer initialSec={300} onTimeOver={() => alert('timeover!')} />
-        <h2 className="stage-title">{displayStageTitle()}</h2>
-        {stage === 'ROUND' && round !== Round.Round2 && (
-          <p>
-            <strong>{progress}</strong> / {progressLimit}
-          </p>
-        )}
+
+      <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
+        {stage === 'ROUND' && <Timer initialSec={300} onTimeOver={() => alert('timeover!')} />}
+        <h2 className="round-title">{displayStageTitle()}</h2>
+        <p className="progress">
+          {stage === 'ROUND' && round !== Round.Round2 && (
+            <>
+              <strong>{progress}</strong> / {progressLimit}
+            </>
+          )}
+        </p>
       </div>
 
       <p className="announce">
-        {stage === 'GUIDE' && (
-          <>
-            하루 5분, 보석같은 투자 종목 찾기 <Emoji symbol="💎" />
-          </>
-        )}
         {stage === 'ROUND' && '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
         {stage === 'MARKET' && '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
@@ -297,35 +296,44 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       {stage === 'ROUND' && (
         <div className="round-stage">
           {mobileLayout ? (
-            <Carousel
-              autoplay={carouselAutoPlay}
-              afterChange={(current) => {
-                if (current === 0) {
-                  setCarouselAutoPlay(false);
-                } else {
-                  setCarouselAutoPlay(true);
-                }
-              }}
-            >
-              <StockCardSelectable
-                stockInfo={myRank[leftIndex]}
-                chartScale={chartScale}
-                position="left"
-                blind={blind}
-                showMoreInfo={showMoreInfo}
-                onClick={handleCardClick}
-                isMobile={true}
-              />
-              <StockCardSelectable
-                stockInfo={myRank[rightIndex]}
-                chartScale={chartScale}
-                position="right"
-                blind={blind}
-                showMoreInfo={showMoreInfo}
-                onClick={handleCardClick}
-                isMobile={true}
-              />
-            </Carousel>
+            <>
+              <Carousel
+                autoplay={carouselAutoPlay}
+                afterChange={(current) => {
+                  if (current === 0) {
+                    setCarouselAutoPlay(false);
+                  } else {
+                    setCarouselAutoPlay(true);
+                  }
+                }}
+              >
+                <StockCardSelectable
+                  stockInfo={myRank[leftIndex]}
+                  chartScale={chartScale}
+                  position="left"
+                  blind={blind}
+                  showMoreInfo={showMoreInfo}
+                  onClick={handleCardClick}
+                  isMobile={true}
+                />
+                <StockCardSelectable
+                  stockInfo={myRank[rightIndex]}
+                  chartScale={chartScale}
+                  position="right"
+                  blind={blind}
+                  showMoreInfo={showMoreInfo}
+                  onClick={handleCardClick}
+                  isMobile={true}
+                />
+              </Carousel>
+              <div style={{ textAlign: 'center' }}>
+                <Space>
+                  <Emoji symbol="👈" />
+                  양쪽으로 슬라이드해서 확인
+                  <Emoji symbol="👉" />
+                </Space>
+              </div>
+            </>
           ) : (
             <>
               <StockCardSelectable
@@ -354,37 +362,37 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
       {stage === 'MARKET' && (
         <div className="market-stage">
-          <Card
-            bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}
-            actions={[
+          <Card bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}>
+            <MarketInfoDisplayable market={market} chartScale={chartScale} />
+            <div className="buttons">
               <Button
-                type="link"
-                style={{ width: '100%' }}
+                className="sell"
+                size="large"
                 shape="round"
+                type="primary"
                 onClick={() => handleMarketForecastSelect('sell')}
               >
-                판다!
-              </Button>,
+                판다
+              </Button>
               <Button
-                type="link"
-                style={{ width: '100%' }}
+                className="hold"
+                size="large"
                 shape="round"
+                type="primary"
                 onClick={() => handleMarketForecastSelect('hold')}
               >
                 홀드
-              </Button>,
+              </Button>
               <Button
-                type="link"
-                style={{ width: '100%' }}
+                className="buy"
+                size="large"
                 shape="round"
+                type="primary"
                 onClick={() => handleMarketForecastSelect('buy')}
               >
-                산다!
-              </Button>,
-            ]}
-            // hoverable
-          >
-            <MarketInfoDisplayable market={market} chartScale={chartScale} />
+                산다
+              </Button>
+            </div>
           </Card>
         </div>
       )}

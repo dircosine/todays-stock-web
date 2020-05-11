@@ -3,11 +3,12 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 
 interface TimerProps {
+  className?: string;
   initialSec: number;
   onTimeOver: () => void;
 }
 
-function Timer({ initialSec, onTimeOver }: TimerProps) {
+function Timer({ className, initialSec, onTimeOver }: TimerProps) {
   const [timeSec, setTimeSec] = useState(initialSec);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ function Timer({ initialSec, onTimeOver }: TimerProps) {
   }, []);
 
   return (
-    <p>
+    <p className={`Timer ${className}`}>
       <Space>
         <ClockCircleOutlined />
         {`${Math.floor(timeSec / 60)}:${('0' + (timeSec % 60)).slice(-2)}`}
@@ -33,5 +34,9 @@ function Timer({ initialSec, onTimeOver }: TimerProps) {
     </p>
   );
 }
+
+Timer.defaultProps = {
+  className: '',
+};
 
 export default Timer;

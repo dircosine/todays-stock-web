@@ -1,6 +1,7 @@
 import React from 'react';
 import Emoji from './Emoji';
-import { Card, Divider, Button } from 'antd';
+import { Card, Divider, Button, Space, Tooltip } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface GuideStageProps {
   goNextStage: () => void;
@@ -9,47 +10,46 @@ interface GuideStageProps {
 function GuideStage({ goNextStage }: GuideStageProps) {
   return (
     <div className="guide-stage">
-      <Card title={'어떻게 하나요?'}>
+      <Card>
         <ul className="guide" style={{ textAlign: 'center' }}>
-          <li>
-            <Emoji symbol="✨" />
-            <p>
-              <strong>매일 32개의 새로운 주식 종목</strong>이 준비됩니다
-            </p>
-          </li>
           <li>
             <Emoji symbol="🤔" />
             <p>
-              동시에 표시되는 두 종목 중,
+              <strong>'뭐 살만한 거 없나?', 더이상 고민하지 마세요.</strong>
               <br />
-              향후 전망이 더 좋아보이는 쪽을 선택해 주세요
+              오늘의 토너먼트를 완료하면 저절로 알게 됩니다!
             </p>
           </li>
           <li>
             <Emoji symbol="🏅" />
             <p>
-              토너먼트를 진행하며 최고의 종목을 선정해 주세요!
+              동시에 표시되는 두 종목 중,
               <br />
-              <span className="small">32강-16강-8강-4강-결승</span>
-            </p>
-          </li>
-          <li>
-            <Emoji symbol="💡" />
-            <p>
-              다 끝나면 <strong>"오늘의 포럼"</strong>
-              에서 투자 아이디어를 얻어 가세요!
-            </p>
-          </li>
-          <li>
-            <Emoji symbol="👀" />
-            <p>
-              <strong>내일도 쓱 한 번 들러주세요!</strong>
-              <br />
-              <span className="small"> (오후 7시 종목 업데이트)</span>
+              <strong>향방이 더 좋아보이는 쪽을 선택</strong>하기만 하세요.
             </p>
           </li>
         </ul>
         <Divider type="horizontal" />
+        <p>
+          <strong>32강</strong> 부터
+          <Divider type="vertical" />
+          <Tooltip
+            style={{ width: 360 }}
+            title={
+              <>
+                순위 참여 기준시간입니다.
+                <br />
+                시간이 초과되더라도 신중히 선택하면 더 좋은 종목을 찾을 수 있을 거에요.
+              </>
+            }
+            placement="top"
+          >
+            <Space>
+              제한시간 <strong>5분</strong>
+              <InfoCircleOutlined />
+            </Space>
+          </Tooltip>
+        </p>
         <Button
           style={{ width: 200 }}
           shape="round"
