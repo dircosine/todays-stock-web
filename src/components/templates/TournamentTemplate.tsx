@@ -233,7 +233,14 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       </h2>
 
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
-        {stage === 'ROUND' && <Timer initialSec={300} onTimeOver={() => alert('timeover!')} />}
+        {stage === 'ROUND' && (
+          <Timer
+            initialSec={300}
+            onTimeOver={() => {
+              console.log('timeover');
+            }}
+          />
+        )}
         <h2 className="round-title">{displayStageTitle()}</h2>
         <p className="progress">
           {stage === 'ROUND' && round !== Round.Round2 && (
@@ -264,7 +271,11 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
             >
               <Space>
                 <span>블라인드</span>
-                <Switch checked={blind} onChange={() => setBlind((p) => !p)} disabled={round === Round.Round32} />
+                <Switch
+                  checked={blind}
+                  onChange={() => setBlind((p) => !p)}
+                  disabled={round === Round.Round32}
+                />
               </Space>
             </Tooltip>
             {/* <Space className="more-info">
@@ -407,6 +418,8 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                     아래 주소를 복사해서 주변에 공유하거나,
                     <br />
                     저장해 뒀다 <strong>내일도 들러주세요</strong> <Emoji symbol="😀" size={16} />
+                    <br />
+                    매일 저녁 7시에 새로운 종목으로 업데이트 합니다!
                   </p>
                 }
               />
@@ -418,14 +431,14 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                 <div style={{ textAlign: 'center' }}>
                   <p>
                     좋은 투자 종목 찾으셨나요? <br />
-                    오늘의 통계와 다른 유저들의 의견도 확인해 보세요
+                    객장에서 다른 유저들의 의견도 확인해 보세요
                   </p>
                   <Space>
                     <Button type="default" shape="round" onClick={handleReplay}>
                       다시하기
                     </Button>
                     <Button type="primary" shape="round">
-                      <Link to="/forum">포럼으로 이동</Link>
+                      <Link to="/forum">객장으로 이동</Link>
                     </Button>
                   </Space>
                 </div>
@@ -439,14 +452,14 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
             <div className="column-1 ">
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank stockInfos={myRank} showAll={true} partialDisplay="high" />
+                <MyRank stockInfos={myRank} partialDisplay="high" />
               </div>
             </div>
             <SpaceVertical />
             <div className="column-2">
               <div className="rank panel">
                 <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank stockInfos={myRank} showAll={true} partialDisplay="low" />
+                <MyRank stockInfos={myRank} partialDisplay="low" />
               </div>
             </div>
           </div>

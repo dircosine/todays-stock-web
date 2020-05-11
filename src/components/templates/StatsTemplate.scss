@@ -1,6 +1,6 @@
 @import '../../styles/mixin';
 
-.ForumTemplate {
+.StatsTemplate {
   display: block;
 
   .float {
@@ -54,7 +54,7 @@
     padding-right: 8px;
   }
 
-  .myRank {
+  .rank {
     background: white;
     border-radius: 4px;
     .MyRank {
@@ -79,9 +79,6 @@
         margin-top: 8px;
         align-self: flex-end;
       }
-    }
-    .anticon-down {
-      margin-left: 0px;
     }
     .comment-content {
       .tag {

@@ -38,7 +38,7 @@ function TournamentPage(props: TournamentPageProps) {
 
   return (
     <TournamentTemplate
-      initStage={isPlayed ? 'DONE' : 'MARKET'}
+      initStage={isPlayed ? 'DONE' : 'GUIDE'}
       stockInfos={myRank || shuffle(JSON.parse(data.getTodaysTournament.stockInfo))}
       eventDate={data.getTodaysTournament.eventDate}
     />

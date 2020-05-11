@@ -25,7 +25,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
             <p>
               동시에 표시되는 두 종목 중,
               <br />
-              <strong>향방이 더 좋아보이는 쪽을 선택</strong>하기만 하세요.
+              <strong>향방이 더 좋아보이는 쪽을 선택</strong>하면 끝!
             </p>
           </li>
         </ul>

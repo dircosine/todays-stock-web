@@ -27,16 +27,19 @@ const FORUM_PAGE = gql`
       stockInfo
       marketStat
       scores
-      comments {
+    }
+    getAllComments {
+      id
+      message
+      user {
         id
-        message
-        user {
-          id
-          name
-        }
-        tags
-        createdAt
+        name
       }
+      tags
+      tournament {
+        eventDate
+      }
+      createdAt
     }
   }
 `;
@@ -45,7 +48,9 @@ interface ForumPageProps extends RouteComponentProps {}
 
 function ForumPage({ history }: ForumPageProps) {
   const { loading, data } = useQuery(FORUM_PAGE);
-  const [myRank, setMyRank] = useState<StockInfo[]>(JSON.parse(localStorage.getItem('myRank') || '[]'));
+  const [myRank, setMyRank] = useState<StockInfo[]>(
+    JSON.parse(localStorage.getItem('myRank') || '[]'),
+  );
 
   useEffect(() => {
     if (!myRank.length) {
@@ -63,63 +68,13 @@ function ForumPage({ history }: ForumPageProps) {
     }
   }, [data, history]);
 
-  const manipulateMarketStat = (): MarketStat | null => {
-    const marketStat = JSON.parse(data.getTodaysTournament.marketStat);
-
-    if (!marketStat) {
-      return null;
-    }
-
-    const sum = (marketStat.kospi.sell + marketStat.kospi.hold + marketStat.kospi.buy) / 100;
-    const result = ['kospi', 'kosdaq'].reduce((acc: any, market: string) => {
-      Object.assign(acc, {
-        [market]: ['sell', 'hold', 'buy'].reduce((acc: any, position: string) => {
-          Object.assign(acc, { [position]: Math.round(marketStat[market][position] / sum) });
-          return acc;
-        }, {}),
-      });
-      return acc;
-    }, {});
-
-    return result;
-  };
-
-  const manipulateTodaysStat = (): TodaysStat[] => {
-    const scores: { [key: string]: number } | null = JSON.parse(data.getTodaysTournament.scores);
-
-    if (!scores) {
-      const dummyStat: TodaysStat[] = myRank.map((info: StockInfo, index: number) => ({
-        ...info,
-        myRank: index + 1,
-        rank: '-',
-        score: '-',
-      }));
-      return dummyStat;
-    }
-
-    const scored = myRank.map((info: StockInfo, index: number) => ({
-      ...info,
-      myRank: index + 1,
-      score: scores[info.name],
-    }));
-    const todaysStat = _.sortBy(scored, 'score')
-      .reverse()
-      .map((item, index) => ({
-        ...item,
-        rank: index + 1,
-      }));
-    return todaysStat;
-  };
-
   if (loading || !myRank.length) return <Loader />;
 
   return (
     <ForumTemplate
       eventDate={data.getTodaysTournament.eventDate}
       myRank={myRank}
-      todaysStat={manipulateTodaysStat()}
-      marketStat={manipulateMarketStat()}
-      comments={data.getTodaysTournament.comments}
+      comments={data.getAllComments}
     />
   );
 }

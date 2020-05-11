@@ -8,13 +8,13 @@ import { StockInfo } from '../lib/stock';
 
 interface MyRankProps {
   stockInfos: StockInfo[];
-  showAll: boolean;
-  toggleShowAll?: () => void;
   partialDisplay?: 'none' | 'high' | 'low';
+  handleAddTag?: (tag: string) => void;
 }
 
-function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankProps) {
+function MyRank({ stockInfos, partialDisplay, handleAddTag }: MyRankProps) {
   const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
+  const [showAll, setShowAll] = useState(partialDisplay === 'none' ? false : true);
 
   const toggleInfoOpen = (code: string) => {
     if (infoOpenCodes.includes(code)) {
@@ -28,8 +28,8 @@ function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankPr
     }
   };
 
-  const handleShowAll = () => {
-    if (toggleShowAll) toggleShowAll();
+  const toggleShowAll = () => {
+    setShowAll((prev) => !prev);
   };
 
   const showAllBtn = (
@@ -40,7 +40,7 @@ function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankPr
         height: 50,
       }}
     >
-      <Button onClick={handleShowAll}>{showAll ? '목록 닫기' : '전체 보기'}</Button>
+      <Button onClick={toggleShowAll}>{showAll ? '목록 닫기' : '전체 보기'}</Button>
     </div>
   );
 
@@ -88,16 +88,25 @@ function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankPr
                           <Tag>{item.market}</Tag>
                         </Space>
                       </div>
-                      {/* <Button type="link" onClick={() => handleAddTag(item.name)}>
-                    태그
-                  </Button> */}
+                      {partialDisplay === 'none' && (
+                        <Button type="link" onClick={() => handleAddTag && handleAddTag(item.name)}>
+                          태그
+                        </Button>
+                      )}
                     </div>
-                    <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                    <Button
+                      style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
+                      onClick={() => toggleInfoOpen(item.code)}
+                    >
                       <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                     </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable stockInfo={item} key={item.code} infoExtent={['price', 'chart', 'more']} />
+                    <StockInfoDisplayable
+                      stockInfo={item}
+                      key={item.code}
+                      infoExtent={['price', 'chart', 'more']}
+                    />
                   )}
                 </Card>
               </List.Item>
@@ -137,14 +146,19 @@ function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankPr
                               <Tag>{item.market}</Tag>
                             </Space>
                           </div>
-                          {/* <Button
-                        type="link"
-                        onClick={() => handleAddTag(item.name)}
-                      >
-                        태그
-                      </Button> */}
+                          {partialDisplay === 'none' && (
+                            <Button
+                              type="link"
+                              onClick={() => handleAddTag && handleAddTag(item.name)}
+                            >
+                              태그
+                            </Button>
+                          )}
                         </div>
-                        <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                        <Button
+                          style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
+                          onClick={() => toggleInfoOpen(item.code)}
+                        >
                           <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                         </Button>
                       </div>
@@ -198,19 +212,25 @@ function MyRank({ stockInfos, showAll, toggleShowAll, partialDisplay }: MyRankPr
                           <Tag>{item.market}</Tag>
                         </Space>
                       </div>
-                      {/* <Button
-                        type="link"
-                        onClick={() => handleAddTag(item.name)}
-                      >
-                        태그
-                      </Button> */}
+                      {partialDisplay === 'none' && (
+                        <Button type="link" onClick={() => handleAddTag && handleAddTag(item.name)}>
+                          태그
+                        </Button>
+                      )}
                     </div>
-                    <Button style={{ border: 0, boxShadow: 'none' }} onClick={() => toggleInfoOpen(item.code)}>
+                    <Button
+                      style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
+                      onClick={() => toggleInfoOpen(item.code)}
+                    >
                       <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
                     </Button>
                   </div>
                   {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable stockInfo={item} key={item.code} infoExtent={['price', 'chart', 'more']} />
+                    <StockInfoDisplayable
+                      stockInfo={item}
+                      key={item.code}
+                      infoExtent={['price', 'chart', 'more']}
+                    />
                   )}
                 </Card>
               </List.Item>

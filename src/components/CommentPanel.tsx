@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Divider, Tag, Comment as CommentAntd, Empty, List } from 'antd';
+import { Button, Divider, Tag, Comment as CommentAntd, Empty, List, Dropdown, Input } from 'antd';
 import { Comment } from '../lib/stock';
-
-import TextArea from 'antd/lib/input/TextArea';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { DownOutlined } from '@ant-design/icons';
 
 const CREATE_COMMENT = gql`
   mutation createComment($input: CreateCommentInput!) {
@@ -23,6 +22,7 @@ interface CommentPanelProps {
   comments: Comment[];
   commentTags: string[];
   tagColorMap: { [key: string]: string };
+  marketMenu: JSX.Element;
   handleTagClose: (tag: string) => void;
 }
 
@@ -30,6 +30,7 @@ function CommentPanel({
   eventDate,
   comments: commentsProps,
   commentTags,
+  marketMenu,
   tagColorMap,
   handleTagClose,
 }: CommentPanelProps) {
@@ -63,9 +64,15 @@ function CommentPanel({
 
   return (
     <div className="panel comments">
-      <h3>댓글</h3>
+      <h3>의견 남기기</h3>
       <p>
-        원하는 종목 및 시장을{' '}
+        원하는 종목 및{' '}
+        <Dropdown overlay={marketMenu}>
+          <Button style={{ padding: 0 }} type="link">
+            시장 지수 <DownOutlined />
+          </Button>
+        </Dropdown>
+        를{' '}
         <Button style={{ padding: 0 }} type="link">
           태그
         </Button>
@@ -90,14 +97,15 @@ function CommentPanel({
             </Tag>
           ))}
         </div>
-        <TextArea
-          placeholder="여기에 의견을 남겨주세요"
+        <Input.TextArea
+          placeholder="여기에 입력하세요"
+          style={{ fontSize: 16 }}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           autoSize={{ minRows: 2 }}
         />
         <Button className="submit-btn" loading={buttonLoading} htmlType="submit" type="primary">
-          남기기
+          저장
         </Button>
       </form>
       <Divider />
@@ -107,11 +115,12 @@ function CommentPanel({
             className="comment-list"
             itemLayout="horizontal"
             dataSource={comments}
+            pagination={{ defaultPageSize: 10 }}
             renderItem={(item: Comment) => (
               <li>
                 <CommentAntd
                   author={item.user?.name || '익명'}
-                  content={item.message}
+                  content={<p>{item.message}</p>}
                   datetime={item.tags?.map((tag, i) => (
                     <Tag
                       className="tag"

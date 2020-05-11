@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, message } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { ClickParam } from 'antd/lib/menu';
 import { Logo } from '../img';
