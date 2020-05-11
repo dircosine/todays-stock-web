@@ -1,15 +1,9 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { Radio, Card, Button, Switch, Space, Tooltip, Divider, Carousel } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip, Carousel } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
-
 import './TournamentTemplate.scss';
-import { Link } from 'react-router-dom';
-import SpaceVertical from '../SpaceVertical';
 import MarketInfoDisplayable from '../MarketInfoDisplayable';
-import MyRank from '../MyRank';
-import SpaceHorizontal from '../SpaceHorizontal';
-import SharePanel from '../SharePanel';
 import EventDate from '../EventDate';
 import Emoji from '../Emoji';
 import { StockInfo } from '../../lib/stock';
@@ -18,6 +12,7 @@ import gql from 'graphql-tag';
 import GuideStage from '../GuideStage';
 import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 import Timer from '../Timer';
+import TournamentDoneStage from '../TournamentDoneStage';
 
 const POST_RESULT = gql`
   mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
@@ -49,7 +44,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round4; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
@@ -231,7 +226,6 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 토너먼트
       </h2>
-
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
         {stage === 'ROUND' && (
           <Timer
@@ -250,14 +244,12 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           )}
         </p>
       </div>
-
       <p className="announce">
         {stage === 'ROUND' && '향후 전망이 더 좋아보이는 종목을 선택해 주세요!'}
         {stage === 'MARKET' && '마지막으로, 시장 지수 향방에 대해 선택해 주세요!'}
       </p>
-
-      <div
-        className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}
+      {/* prettier-ignore */}
+      <div className={`control ${stage === 'MARKET' ? 'market-stage' : ''}`}
         hidden={stage === 'DONE' || stage === 'GUIDE'}
       >
         {stage === 'ROUND' && (
@@ -407,64 +399,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           </Card>
         </div>
       )}
-
-      {stage === 'DONE' && (
-        <div className="done-stage">
-          <div className="section-1 two-column">
-            <div className="column-1 ">
-              <SharePanel
-                message={
-                  <p>
-                    아래 주소를 복사해서 주변에 공유하거나,
-                    <br />
-                    저장해 뒀다 <strong>내일도 들러주세요</strong> <Emoji symbol="😀" size={16} />
-                    <br />
-                    매일 저녁 7시에 새로운 종목으로 업데이트 합니다!
-                  </p>
-                }
-              />
-            </div>
-            <SpaceVertical />
-            <div className="column-2">
-              <div className="goto-forum panel">
-                <h3 hidden={true}>포럼으로</h3>
-                <div style={{ textAlign: 'center' }}>
-                  <p>
-                    좋은 투자 종목 찾으셨나요? <br />
-                    객장에서 다른 유저들의 의견도 확인해 보세요
-                  </p>
-                  <Space>
-                    <Button type="default" shape="round" onClick={handleReplay}>
-                      다시하기
-                    </Button>
-                    <Button type="primary" shape="round">
-                      <Link to="/forum">객장으로 이동</Link>
-                    </Button>
-                  </Space>
-                </div>
-              </div>
-              <SpaceHorizontal />
-            </div>
-          </div>
-          <SpaceHorizontal />
-          <Divider>여기, 직접 선정한 순위를 확인하세요!</Divider>
-          <div className="section-2 two-column">
-            <div className="column-1 ">
-              <div className="rank panel">
-                <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank stockInfos={myRank} partialDisplay="high" />
-              </div>
-            </div>
-            <SpaceVertical />
-            <div className="column-2">
-              <div className="rank panel">
-                <h3 hidden={true}>내가 뽑은 순위</h3>
-                <MyRank stockInfos={myRank} partialDisplay="low" />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {stage === 'DONE' && <TournamentDoneStage myRank={myRank} onReplay={handleReplay} />}
     </div>
   );
 }

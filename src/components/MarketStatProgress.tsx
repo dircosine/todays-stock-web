@@ -16,34 +16,29 @@ function MarketStatProgress({ marketStat }: MarketStatProgressProps) {
             showInfo={false}
           />
           <div className="forecast-label">
-            <span>
-              판다! <strong>{marketStat.sell}%</strong>
+            <span className="sell">
+              판다 <strong>{marketStat.sell}%</strong>
             </span>
-            <span>
-              홀드! <strong>{marketStat.hold}%</strong>
+            <span className="hold">
+              홀드 <strong>{marketStat.hold}%</strong>
             </span>
-            <span>
-              산다! <strong>{marketStat.buy}%</strong>
+            <span className="buy">
+              산다 <strong>{marketStat.buy}%</strong>
             </span>
           </div>
         </div>
       ) : (
         <div className="statistics">
-          <Progress
-            strokeWidth={16}
-            percent={66.7}
-            successPercent={33.3}
-            showInfo={false}
-          />
+          <Progress strokeWidth={16} percent={66.7} successPercent={33.3} showInfo={false} />
           <div className="forecast-label">
-            <span>
-              판다! <strong>- %</strong>
+            <span className="sell">
+              판다 <strong>- %</strong>
             </span>
-            <span>
-              홀드! <strong>- %</strong>
+            <span className="hold">
+              홀드 <strong>- %</strong>
             </span>
-            <span>
-              산다! <strong>- %</strong>
+            <span className="buy">
+              산다 <strong>- %</strong>
             </span>
           </div>
         </div>

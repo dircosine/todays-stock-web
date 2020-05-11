@@ -35,4 +35,13 @@ $blue: #0e61d3;
 .forecast-label {
   display: flex;
   justify-content: space-between;
+  .sell {
+    color: mix(white, $blue, 50);
+  }
+  .hold {
+    color: mix(white, $black, 50);
+  }
+  .buy {
+    color: mix(white, $red, 50);
+  }
 }

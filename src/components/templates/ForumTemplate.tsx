@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, Button, Menu } from 'antd';
+import React, { useState } from 'react';
+import { Menu } from 'antd';
 
 import SpaceVertical from '../SpaceVertical';
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
 import SharePanel from '../SharePanel';
-import TodaysRankTable from '../TodaysRankTable';
-import MarketStatPanel from '../MarketStatPanel';
 import Emoji from '../Emoji';
-import { TodaysStat, MarketStat, StockInfo, Comment } from '../../lib/stock';
+import { StockInfo, Comment } from '../../lib/stock';
 import CommentPanel from '../CommentPanel';
-import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 import MyRank from '../MyRank';
 
 interface ForumTemplateProps {
@@ -59,13 +56,14 @@ function ForumTemplate({ eventDate, myRank, comments }: ForumTemplateProps) {
           객장
         </h2>
       </div>
+      <SpaceHorizontal />
       <div className="two-column">
         <div className="column-1">
           <SharePanel message="링크를 공유하고 더 많은 의견들을 확인해 보세요!" />
           <SpaceHorizontal />
           <div className="panel myRank">
             <h3>내가 뽑은 순위</h3>
-            <MyRank stockInfos={myRank} partialDisplay={'none'} handleAddTag={handleAddTag} />
+            <MyRank stockInfos={myRank} hasTagButton={true} handleAddTag={handleAddTag} />
           </div>
           <SpaceHorizontal />
         </div>

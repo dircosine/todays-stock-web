@@ -23,16 +23,20 @@ function Timer({ className, initialSec, onTimeOver }: TimerProps) {
         }
       });
     }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <p className={`Timer ${className}`}>
+    <div className={`Timer ${className}`} style={{ marginBottom: 14 }}>
       <Space>
         <ClockCircleOutlined />
         {`${Math.floor(timeSec / 60)}:${('0' + (timeSec % 60)).slice(-2)}`}
       </Space>
-    </p>
+    </div>
   );
 }
 

@@ -13,6 +13,9 @@ function GuideStage({ goNextStage }: GuideStageProps) {
       <Card>
         <ul className="guide" style={{ textAlign: 'center' }}>
           <li>
+            <p>주식 차트 좀 보시나요?</p>
+          </li>
+          <li>
             <Emoji symbol="🤔" />
             <p>
               <strong>'뭐 살만한 거 없나?', 더이상 고민하지 마세요.</strong>
@@ -30,7 +33,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
           </li>
         </ul>
         <Divider type="horizontal" />
-        <p>
+        <div style={{ marginBottom: 16 }}>
           <strong>32강</strong> 부터
           <Divider type="vertical" />
           <Tooltip
@@ -49,7 +52,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
               <InfoCircleOutlined />
             </Space>
           </Tooltip>
-        </p>
+        </div>
         <Button
           style={{ width: 200 }}
           shape="round"

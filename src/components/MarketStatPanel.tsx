@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Button, Radio } from 'antd';
+import { Tabs, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import './MarketStatPanel.scss';
@@ -10,11 +10,9 @@ type ChartScale = 'day' | 'week' | 'month';
 
 interface MarketStatPanelProps {
   marketStat: MarketStat | null;
-  onAddTag: (name: string) => void;
 }
 
-function MarketStatPanel({ marketStat, onAddTag }: MarketStatPanelProps) {
-  const [marketTabSelected, setMarketTabSelected] = useState('코스피');
+function MarketStatPanel({ marketStat }: MarketStatPanelProps) {
   const [chartScaleMarket, setChartScaleMarket] = useState<ChartScale>('day');
 
   const handleScaleChange = (e: RadioChangeEvent) => {
@@ -25,12 +23,8 @@ function MarketStatPanel({ marketStat, onAddTag }: MarketStatPanelProps) {
   return (
     <Tabs
       defaultActiveKey="코스피"
-      onChange={(activeKey: string) => setMarketTabSelected(activeKey)}
       tabBarExtraContent={
         <div style={{ textAlign: 'end' }}>
-          <Button type="link" onClick={() => onAddTag(marketTabSelected)}>
-            태그
-          </Button>
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
             <Radio.Button value="day">일</Radio.Button>
             <Radio.Button value="week">주</Radio.Button>

@@ -8,13 +8,13 @@ import { StockInfo } from '../lib/stock';
 
 interface MyRankProps {
   stockInfos: StockInfo[];
-  partialDisplay?: 'none' | 'high' | 'low';
+  hasTagButton: boolean;
   handleAddTag?: (tag: string) => void;
 }
 
-function MyRank({ stockInfos, partialDisplay, handleAddTag }: MyRankProps) {
+function MyRank({ stockInfos, hasTagButton, handleAddTag }: MyRankProps) {
   const [infoOpenCodes, setInfoOpenCodes] = useState<string[]>([]);
-  const [showAll, setShowAll] = useState(partialDisplay === 'none' ? false : true);
+  const [showAll, setShowAll] = useState(false);
 
   const toggleInfoOpen = (code: string) => {
     if (infoOpenCodes.includes(code)) {
@@ -44,198 +44,87 @@ function MyRank({ stockInfos, partialDisplay, handleAddTag }: MyRankProps) {
     </div>
   );
 
-  return (
-    <div className="MyRank">
-      {partialDisplay !== 'low' && (
-        <>
-          <List
-            size="large"
-            dataSource={showAll ? stockInfos.slice(0, 8) : stockInfos.slice(0, 4)}
-            loadMore={!showAll && showAllBtn}
-            renderItem={(item, index) => (
-              <List.Item
+  const ListParts = (source: StockInfo[], isFirst: boolean, hasLoadMore: boolean) => (
+    <List
+      size="large"
+      dataSource={source}
+      loadMore={hasLoadMore && showAllBtn}
+      renderItem={(item, index) => (
+        <List.Item
+          style={{
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+        >
+          <Card
+            bordered={false}
+            style={{
+              background: 'none',
+              width: '100%',
+            }}
+            bodyStyle={{
+              padding: '12px 0px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div
                 style={{
-                  paddingTop: 0,
-                  paddingBottom: 0,
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
                 }}
               >
-                <Card
-                  bordered={false}
-                  style={{
-                    background: 'none',
-                    width: '100%',
-                  }}
-                  bodyStyle={{
-                    padding: '12px 0px',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <div>
-                        {index === 0 && <Emoji symbol="🥇" />}
-                        {index === 1 && <Emoji symbol="🥈" />}
-                        {(index === 2 || index === 3) && <Emoji symbol="🥉" />}
-
-                        <Space size={4}>
-                          <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                          <span>{item.code}</span>
-                          <Tag>{item.market}</Tag>
-                        </Space>
-                      </div>
-                      {partialDisplay === 'none' && (
-                        <Button type="link" onClick={() => handleAddTag && handleAddTag(item.name)}>
-                          태그
-                        </Button>
-                      )}
-                    </div>
-                    <Button
-                      style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
-                      onClick={() => toggleInfoOpen(item.code)}
-                    >
-                      <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
-                    </Button>
-                  </div>
-                  {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
+                <div>
+                  {isFirst && (
+                    <>
+                      {index === 0 && <Emoji symbol="🥇" />}
+                      {index === 1 && <Emoji symbol="🥈" />}
+                      {(index === 2 || index === 3) && <Emoji symbol="🥉" />}{' '}
+                    </>
                   )}
-                </Card>
-              </List.Item>
-            )}
-          />
 
-          {showAll && (
-            <>
-              <Divider dashed={true}>여기부턴 16강 탈락!</Divider>
-              <List
-                size="large"
-                dataSource={stockInfos.slice(8, 16)}
-                renderItem={(item) => (
-                  <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <Card
-                      bordered={false}
-                      style={{
-                        background: 'none',
-                        width: '100%',
-                      }}
-                      bodyStyle={{
-                        padding: '12px 0px',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div
-                          style={{
-                            flex: 1,
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <div>
-                            <Space size={4}>
-                              <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                              <span>{item.code}</span>
-                              <Tag>{item.market}</Tag>
-                            </Space>
-                          </div>
-                          {partialDisplay === 'none' && (
-                            <Button
-                              type="link"
-                              onClick={() => handleAddTag && handleAddTag(item.name)}
-                            >
-                              태그
-                            </Button>
-                          )}
-                        </div>
-                        <Button
-                          style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
-                          onClick={() => toggleInfoOpen(item.code)}
-                        >
-                          <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
-                        </Button>
-                      </div>
-                      {infoOpenCodes.includes(item.code) && (
-                        <StockInfoDisplayable
-                          stockInfo={item}
-                          key={item.code}
-                          infoExtent={['price', 'chart', 'more']}
-                        />
-                      )}
-                    </Card>
-                  </List.Item>
+                  <Space size={4}>
+                    <strong style={{ fontSize: 18 }}>{item.name}</strong>
+                    <span>{item.code}</span>
+                    <Tag>{item.market}</Tag>
+                  </Space>
+                </div>
+                {hasTagButton && (
+                  <Button type="link" onClick={() => handleAddTag && handleAddTag(item.name)}>
+                    태그
+                  </Button>
                 )}
+              </div>
+              <Button
+                style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
+                onClick={() => toggleInfoOpen(item.code)}
+              >
+                <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
+              </Button>
+            </div>
+            {infoOpenCodes.includes(item.code) && (
+              <StockInfoDisplayable
+                stockInfo={item}
+                key={item.code}
+                infoExtent={['price', 'chart', 'more']}
               />
-            </>
-          )}
-        </>
-      )}
-
-      {partialDisplay !== 'high' && showAll && (
-        <>
-          <Divider dashed={true}>차트만 보고 걸렀지만.. 다시보니 선녀?!</Divider>
-          <List
-            size="large"
-            dataSource={stockInfos.slice(16)}
-            loadMore={showAll && partialDisplay === 'none' && showAllBtn}
-            renderItem={(item) => (
-              <List.Item style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <Card
-                  bordered={false}
-                  style={{
-                    background: 'none',
-                    width: '100%',
-                  }}
-                  bodyStyle={{
-                    padding: '12px 0px',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <div>
-                        <Space size={4}>
-                          <strong style={{ fontSize: 18 }}>{item.name}</strong>
-                          <span>{item.code}</span>
-                          <Tag>{item.market}</Tag>
-                        </Space>
-                      </div>
-                      {partialDisplay === 'none' && (
-                        <Button type="link" onClick={() => handleAddTag && handleAddTag(item.name)}>
-                          태그
-                        </Button>
-                      )}
-                    </div>
-                    <Button
-                      style={{ border: 0, boxShadow: 'none', paddingRight: 0 }}
-                      onClick={() => toggleInfoOpen(item.code)}
-                    >
-                      <RightOutlined rotate={infoOpenCodes.includes(item.code) ? 90 : 0} />
-                    </Button>
-                  </div>
-                  {infoOpenCodes.includes(item.code) && (
-                    <StockInfoDisplayable
-                      stockInfo={item}
-                      key={item.code}
-                      infoExtent={['price', 'chart', 'more']}
-                    />
-                  )}
-                </Card>
-              </List.Item>
             )}
-          />
+          </Card>
+        </List.Item>
+      )}
+    />
+  );
+
+  return (
+    <div className="MyRank">
+      {ListParts(showAll ? stockInfos.slice(0, 8) : stockInfos.slice(0, 4), true, !showAll)}
+
+      {showAll && (
+        <>
+          <Divider dashed={true}>여기부턴 16강 탈락!</Divider>
+          {ListParts(stockInfos.slice(8, 16), false, false)}
+          <Divider dashed={true}>차트만 보고 걸렀지만.. 다시보니 선녀?!</Divider>
+          {ListParts(stockInfos.slice(16), false, showAll)}
         </>
       )}
     </div>

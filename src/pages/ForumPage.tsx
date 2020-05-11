@@ -1,24 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ForumTemplate from '../components/templates/ForumTemplate';
-
 import { message } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { StockInfo, TodaysStat, MarketStat } from '../lib/stock';
-
+import { StockInfo } from '../lib/stock';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-
-import _ from 'lodash';
 import Loader from '../components/Loader';
-
-/**
- * todaysInfos: StockInfo[]     s3에서 받아온 오늘의 종목 정보
- *
- * myRank: StockInfo[]          내가 오늘 고른 종목의 순위 정보
- *
- * todaysStat: TodaysStat[]     오늘의 종목 통계
- * marketStat: MarketStat       오늘의 시장 통계
- */
 
 const FORUM_PAGE = gql`
   {
@@ -54,7 +41,7 @@ function ForumPage({ history }: ForumPageProps) {
 
   useEffect(() => {
     if (!myRank.length) {
-      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 5);
+      message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 3);
       history.push('/');
     }
   }, [myRank, history]);

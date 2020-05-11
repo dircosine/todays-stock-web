@@ -1,37 +1,23 @@
 import React from 'react';
-import { Table, Space, Button, Tag, Tooltip } from 'antd';
+import { Table, Space, Tag, Tooltip } from 'antd';
 import { TodaysStat, StockInfo } from '../lib/stock';
 import { ColumnsType } from 'antd/lib/table';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface TodaysRankTableProps {
   todaysStat: TodaysStat[];
-  onAddTag: (name: string) => void;
 }
 
-function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
+function TodaysRankTable({ todaysStat }: TodaysRankTableProps) {
   const columns: ColumnsType<TodaysStat> = [
     {
-      title: (
-        <Tooltip title="모든 유저의 순위를 취합하여 산정된 점수입니다" placement="right">
-          <span>
-            <InfoCircleOutlined />
-            <br />
-            총점
-          </span>
-        </Tooltip>
-      ),
-      dataIndex: 'score',
-      className: 'score-column',
+      title: '순위',
+      dataIndex: 'rank',
       align: 'center',
-      render: (score: number) => (
-        <div style={{ textAlign: 'center' }}>
-          <strong>{score}</strong>
-        </div>
-      ),
-      defaultSortOrder: 'descend',
-      sorter: (a: any, b: any) => a.score - b.score,
+      render: (myRank: number) => <div style={{ textAlign: 'center' }}>{myRank}</div>,
+      sorter: (a: any, b: any) => a.myRank - b.myRank,
       sortDirections: ['descend', 'ascend'],
+      defaultSortOrder: 'descend',
     },
     {
       title: '종목명',
@@ -47,26 +33,22 @@ function TodaysRankTable({ todaysStat, onAddTag }: TodaysRankTableProps) {
       ),
     },
     {
-      title: '내 순위',
-      dataIndex: 'myRank',
-      className: 'myrank-column',
+      title: (
+        <Tooltip title="모든 유저의 결과를 취합하여 산정된 점수입니다" placement="right">
+          <span>
+            <InfoCircleOutlined />
+            <br />
+            총점
+          </span>
+        </Tooltip>
+      ),
+      dataIndex: 'score',
+      className: 'score-column',
       align: 'center',
-      width: 80,
-      render: (myRank: number) => <div style={{ textAlign: 'center' }}>{myRank}</div>,
-      sorter: (a: any, b: any) => a.myRank - b.myRank,
-      sortDirections: ['descend', 'ascend'],
-    },
-
-    {
-      //prettier-ignore
-      title: <span>댓글<br/>태그</span>,
-      dataIndex: 'action',
-      className: 'tag-column',
-      align: 'center',
-      render: (_: null, record: StockInfo) => (
-        <Button type="link" onClick={() => onAddTag(record.name)}>
-          태그
-        </Button>
+      render: (score: number) => (
+        <div style={{ textAlign: 'center' }}>
+          <strong>{score}</strong>
+        </div>
       ),
     },
   ];

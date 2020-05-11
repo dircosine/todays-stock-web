@@ -36,7 +36,6 @@ export type StockInfo = {
 export type TodaysStat = StockInfo & {
   rank: number | string;
   score: number | string;
-  myRank: number;
 };
 
 type ForecastStat = {
