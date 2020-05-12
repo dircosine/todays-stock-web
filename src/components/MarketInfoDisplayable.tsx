@@ -8,10 +8,7 @@ interface MarketInfoDisplayableProps {
   chartScale?: 'day' | 'week' | 'month';
 }
 
-function MarketInfoDisplayable({
-  market,
-  chartScale,
-}: MarketInfoDisplayableProps) {
+function MarketInfoDisplayable({ market, chartScale }: MarketInfoDisplayableProps) {
   const [imgLoading, setImgLoading] = useState(false);
 
   useEffect(() => {
@@ -43,11 +40,9 @@ function MarketInfoDisplayable({
     );
   }
   return (
-    <div className="Market.toUpperCase()InfoDisplayable">
+    <div className="MarketInfoDisplayable">
       <div className="info-head">
-        <strong className="name">
-          {market === 'kospi' ? '코스피' : '코스닥'}
-        </strong>
+        <strong className="name">{market === 'kospi' ? '코스피' : '코스닥'}</strong>
       </div>
       <Divider style={{ margin: '10px 0px' }} />
 

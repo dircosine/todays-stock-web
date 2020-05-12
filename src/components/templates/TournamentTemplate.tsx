@@ -44,7 +44,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round4; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
@@ -55,9 +55,9 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
   const [progress, setProgress] = useState(1);
-  const [progressLimit, setProgressLimit] = useState(START_ROUND / 2);
-  const [leftIndex, setLeftIndex] = useState(0);
-  const [rightIndex, setRightIndex] = useState(START_ROUND / 2);
+  const progressLimit = useRef(START_ROUND / 2);
+  const leftIndex = useRef(0);
+  const rightIndex = useRef(START_ROUND / 2);
 
   const [market, setMarket] = useState<Market>('kospi');
   const marketForecast = useRef<MarketForecast>({
@@ -67,6 +67,8 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   const [blind, setBlind] = useState(round === Round.Round32);
   const [showMoreInfo] = useState(false);
+
+  const [aniMationClassName, setAniMationClassName] = useState('');
 
   const [postResultMutation] = useMutation(POST_RESULT);
 
@@ -163,9 +165,9 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   const swapPosition = () => {
     setMyRank((p) => {
-      const temp = p[leftIndex];
-      p[leftIndex] = p[rightIndex];
-      p[rightIndex] = temp;
+      const temp = p[leftIndex.current];
+      p[leftIndex.current] = p[rightIndex.current];
+      p[rightIndex.current] = temp;
       return p;
     });
   };
@@ -175,38 +177,47 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
     setChartScale(e.target.value);
   };
 
-  const handleCardClick = (position: Position) => {
+  const updateLogicState = (position: Position) => {
     if (position === 'right') {
       swapPosition();
     }
-
     setProgress((p) => {
-      if (p < progressLimit) {
-        setLeftIndex((p) => p + 1);
-        setRightIndex((p) => p + 1);
+      if (p < progressLimit.current) {
+        leftIndex.current += 1;
+        rightIndex.current += 1;
         return p + 1;
       } else {
-        setProgressLimit((pl) => {
-          if (round !== Round.Round2) {
-            setLeftIndex(0);
-            setRightIndex(pl / 2);
-          }
-          goNextRound();
-          return pl / 2;
-        });
+        leftIndex.current = 0;
+        rightIndex.current = progressLimit.current / 2;
+        progressLimit.current /= 2;
+        goNextRound();
         return 1;
       }
     });
   };
 
+  const handleCardClick = (position: Position) => {
+    setAniMationClassName('scale-out');
+    // wait for scale-out animation or chart img load
+    setTimeout(() => {
+      updateLogicState(position);
+      setAniMationClassName('fade-in');
+    }, 500);
+  };
+
   const handleMarketForecastSelect = (forecast: Forecast) => {
-    if (market === 'kospi') {
-      marketForecast.current = { ...marketForecast.current, kospi: forecast };
-      setMarket('kosdaq');
-    } else {
-      marketForecast.current = { ...marketForecast.current, kosdaq: forecast };
-      goNextStage();
-    }
+    setAniMationClassName('scale-out');
+
+    setTimeout(() => {
+      setAniMationClassName('fade-in');
+      if (market === 'kospi') {
+        marketForecast.current = { ...marketForecast.current, kospi: forecast };
+        setMarket('kosdaq');
+      } else {
+        marketForecast.current = { ...marketForecast.current, kosdaq: forecast };
+        goNextStage();
+      }
+    }, 500);
   };
 
   const handleReplay = () => {
@@ -238,7 +249,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         <p className="progress">
           {stage === 'ROUND' && round !== Round.Round2 && (
             <>
-              <strong>{progress}</strong> / {progressLimit}
+              <strong>{progress}</strong> / {progressLimit.current}
             </>
           )}
         </p>
@@ -299,9 +310,9 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         <div className="round-stage">
           {mobileLayout ? (
             <>
-              <Carousel>
+              <Carousel className={aniMationClassName}>
                 <StockCardSelectable
-                  stockInfo={myRank[leftIndex]}
+                  stockInfo={myRank[leftIndex.current]}
                   chartScale={chartScale}
                   position="left"
                   blind={blind}
@@ -310,7 +321,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                   isMobile={true}
                 />
                 <StockCardSelectable
-                  stockInfo={myRank[rightIndex]}
+                  stockInfo={myRank[rightIndex.current]}
                   chartScale={chartScale}
                   position="right"
                   blind={blind}
@@ -330,7 +341,8 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           ) : (
             <>
               <StockCardSelectable
-                stockInfo={myRank[leftIndex]}
+                className={aniMationClassName}
+                stockInfo={myRank[leftIndex.current]}
                 chartScale={chartScale}
                 position="left"
                 blind={blind}
@@ -340,7 +352,8 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
               />
               <div className="vs">vs</div>
               <StockCardSelectable
-                stockInfo={myRank[rightIndex]}
+                className={aniMationClassName}
+                stockInfo={myRank[rightIndex.current]}
                 chartScale={chartScale}
                 position="right"
                 blind={blind}
@@ -355,7 +368,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
       {stage === 'MARKET' && (
         <div className="market-stage">
-          <Card bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}>
+          <Card className={aniMationClassName} bodyStyle={{ paddingRight: 8, paddingLeft: 8 }}>
             <MarketInfoDisplayable market={market} chartScale={chartScale} />
             <div className="buttons">
               <Button
