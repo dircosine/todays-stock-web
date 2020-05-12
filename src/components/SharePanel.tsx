@@ -29,7 +29,7 @@ function SharePanel({ message }: SharePanelProps) {
           </Button>
         </CopyToClipboard>
       </div>
-      <div style={{ margin: '10 0px' }}>{message}</div>
+      <div style={{ margin: '10px 0px' }}>{message}</div>
     </div>
   );
 }

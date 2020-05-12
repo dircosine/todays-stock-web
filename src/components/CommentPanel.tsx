@@ -42,6 +42,8 @@ function CommentPanel({
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!message) return;
+
     setButtonLoading(true);
     try {
       const createCommentInput = {
@@ -104,7 +106,13 @@ function CommentPanel({
           onChange={(e) => setMessage(e.target.value)}
           autoSize={{ minRows: 2 }}
         />
-        <Button className="submit-btn" loading={buttonLoading} htmlType="submit" type="primary">
+        <Button
+          className="submit-btn"
+          loading={buttonLoading}
+          disabled={!message}
+          htmlType="submit"
+          type="primary"
+        >
           저장
         </Button>
       </form>
