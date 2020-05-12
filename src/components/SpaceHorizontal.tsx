@@ -1,7 +1,7 @@
 import React from 'react';
 
-function SpaceHorizontal() {
-  return <div className="space-vertical" style={{ height: 12 }} />;
+function SpaceHorizontal({ height = 12 }) {
+  return <div className="space-horizontal" style={{ height }} />;
 }
 
 export default SpaceHorizontal;
