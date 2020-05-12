@@ -51,7 +51,6 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
   const [dimRef, mobileLayout] = useMobileLayoutCheck();
-  const [carouselAutoPlay, setCarouselAutoPlay] = useState(true);
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -67,7 +66,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   });
 
   const [blind, setBlind] = useState(round === Round.Round32);
-  const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const [showMoreInfo] = useState(false);
 
   const [postResultMutation] = useMutation(POST_RESULT);
 
@@ -300,16 +299,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         <div className="round-stage">
           {mobileLayout ? (
             <>
-              <Carousel
-                autoplay={carouselAutoPlay}
-                afterChange={(current) => {
-                  if (current === 0) {
-                    setCarouselAutoPlay(false);
-                  } else {
-                    setCarouselAutoPlay(true);
-                  }
-                }}
-              >
+              <Carousel>
                 <StockCardSelectable
                   stockInfo={myRank[leftIndex]}
                   chartScale={chartScale}
