@@ -6,23 +6,18 @@ export const shuffle = <T>(a: T[]): T[] => {
   return a;
 };
 
-export const getYYYYMMDD = (d: Date): string => {
-  const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
-  const date = d.getDate() < 10 ? `0${d.getDate()}` : `${d.getDate()}`;
-
-  return `${d.getFullYear()}-${month}-${date}`;
-};
-
-export const getTargetEventDate = (now: Date): string => {
+export const getTargetEventDate = (now: Date, displayable: boolean = false): string => {
   if (now.getUTCHours() < 10) {
     now.setDate(now.getDate() - 1);
   }
-  return formatEventDate(now);
+  return formatEventDate(now, displayable);
 };
 
-export const formatEventDate = (d: Date): string => {
+export const formatEventDate = (d: Date, displayable: boolean): string => {
   const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
   const date = d.getUTCDate() < 10 ? `0${d.getUTCDate()}` : `${d.getUTCDate()}`;
 
-  return `${d.getFullYear()}${month}${date}`;
+  return displayable
+    ? `${d.getFullYear()}년 ${month}월 ${date}일`
+    : `${d.getFullYear()}${month}${date}`;
 };

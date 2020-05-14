@@ -236,15 +236,16 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
         {stage === 'ROUND' && (
           <Timer
-            initialSec={5}
+            initialSec={300}
             onTimeOver={() => {
               console.log('timeover');
               message.info(
                 <p>
-                  시간이 초과되어 유저간 순위 선정에는 제외되지만
+                  시간이 초과되어 유저간 순위 선정에는 제외되지만,
                   <br />
                   남은 선택들을 신중히 하면 더 좋은 종목을 찾을 수 있어요 <Emoji symbol="😀" />
                 </p>,
+                5,
               );
             }}
           />

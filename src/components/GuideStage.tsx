@@ -3,6 +3,7 @@ import Emoji from './Emoji';
 import { Card, Divider, Button, Space, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import SpaceHorizontal from './SpaceHorizontal';
+import { getTargetEventDate } from '../lib/utils';
 
 interface GuideStageProps {
   goNextStage: () => void;
@@ -88,6 +89,8 @@ function GuideStage({ goNextStage }: GuideStageProps) {
   const [startVisible, setStartVisible] = useState(false);
   const messageIndex = useRef(1);
 
+  const skipTutorial = localStorage.getItem('skipTutorial');
+
   useEffect(() => {
     if (answer) {
       setMessages(messagePrepare[answer].slice(0, messageIndex.current));
@@ -104,31 +107,48 @@ function GuideStage({ goNextStage }: GuideStageProps) {
     }
   };
 
+  const handleStart = () => {
+    if (!skipTutorial) {
+      localStorage.setItem('skipTutorial', 'true');
+    }
+    if (goNextStage) goNextStage();
+  };
+
   return (
     <div className="guide-stage">
-      <Card title="시작하기 전에..">
-        <ul className="guide">
-          <li className={`${!answer && 'active'}`}>
-            <p style={{ margin: '30px 0px' }}>
-              Q.
-              <br />
-              주식 차트 좀 볼 줄 아시나요?
-            </p>
-          </li>
-          <SpaceHorizontal height={40} />
-          {messages?.map((line, index) => {
-            return (
-              <li
-                key={index}
-                className={`fade-in ${index === messageIndex.current - 1 && 'active'}`}
-              >
-                {line}
-                <SpaceHorizontal height={40} />
-              </li>
-            );
-          })}
-        </ul>
-        {!startVisible && (
+      <Card title={skipTutorial ? '' : '시작하기 전에..'}>
+        {skipTutorial ? (
+          <ul className="guide" style={{ textAlign: 'center', padding: '30px 0px' }}>
+            <li>
+              지금 바로 오늘의 토너먼트를 완료하세요 <Emoji symbol="😀" />
+            </li>
+            <li className="small">{getTargetEventDate(new Date(), true)} 장마감 기준</li>
+          </ul>
+        ) : (
+          <ul className="guide">
+            <li className={`${!answer && 'active'}`}>
+              <p style={{ margin: '30px 0px' }}>
+                Q.
+                <br />
+                주식 차트 좀 볼 줄 아시나요?
+              </p>
+            </li>
+            <SpaceHorizontal height={40} />
+            {messages?.map((line, index) => {
+              return (
+                <li
+                  key={index}
+                  className={`fade-in ${index === messageIndex.current - 1 && 'active'}`}
+                >
+                  {line}
+                  <SpaceHorizontal height={40} />
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {!startVisible && !skipTutorial && (
           <>
             <SpaceHorizontal height={40} />
             {answer ? (
@@ -153,7 +173,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
             )}
           </>
         )}
-        {startVisible && (
+        {(startVisible || skipTutorial) && (
           <>
             <Divider type="horizontal" />
             <div style={{ marginBottom: 24 }}>
@@ -176,14 +196,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
                 </Space>
               </Tooltip>
             </div>
-            <Button
-              style={{ width: 200 }}
-              shape="round"
-              type="primary"
-              onClick={() => {
-                if (goNextStage) goNextStage();
-              }}
-            >
+            <Button style={{ width: 200 }} shape="round" type="primary" onClick={handleStart}>
               시작
             </Button>
           </>
