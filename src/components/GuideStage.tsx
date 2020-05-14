@@ -22,7 +22,10 @@ const messagePrepare: { [key: string]: ReactNode[] } = {
     <div>
       <p>방법은 정말 간단합니다.</p>
       <p>잠시 후 부터 여러개의 개별 종목 차트를 제시해 드릴텐데요.</p>
-      <p>동시에 표시되는 두 종목 중, 향후 전망이 더 좋아보이는 쪽을 선택만 하면 됩니다!</p>
+      <p>
+        동시에 표시되는 두 종목 중, 향후 전망이 더 좋아보이는 쪽을 선택만 하면 됩니다!{' '}
+        <span className="small">(이상형 월드컵)</span>
+      </p>
     </div>,
     <div>
       <p>
@@ -52,7 +55,10 @@ const messagePrepare: { [key: string]: ReactNode[] } = {
     <div>
       <p>방법은 정말 간단합니다.</p>
       <p>잠시 후 부터 여러개의 개별 종목 차트를 제시해 드릴텐데요.</p>
-      <p>동시에 표시되는 두 종목 중, 향후 전망이 더 좋아보이는 쪽을 선택만 하면 됩니다!</p>
+      <p>
+        동시에 표시되는 두 종목 중, 향후 전망이 더 좋아보이는 쪽을 선택만 하면 됩니다!{' '}
+        <span className="small">(이상형 월드컵)</span>
+      </p>
       <p>부담없이 느낌대로 골라 보세요.</p>
     </div>,
     <div>
@@ -74,7 +80,7 @@ const messagePrepare: { [key: string]: ReactNode[] } = {
   ],
 };
 
-const buttonLabelPrepare: string[] = ['?', '이해했어요', '알겠어요'];
+const buttonLabelPrepare: string[] = ['어떻게?', '이해했어요', '알겠어요'];
 
 function GuideStage({ goNextStage }: GuideStageProps) {
   const [answer, setAnswer] = useState<YesOrNo>();
@@ -100,7 +106,7 @@ function GuideStage({ goNextStage }: GuideStageProps) {
 
   return (
     <div className="guide-stage">
-      <Card>
+      <Card title="시작하기 전에..">
         <ul className="guide">
           <li className={`${!answer && 'active'}`}>
             <p style={{ margin: '30px 0px' }}>

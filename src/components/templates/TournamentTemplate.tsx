@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { Radio, Card, Button, Switch, Space, Tooltip, Carousel } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip, Carousel, message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 import './TournamentTemplate.scss';
@@ -47,7 +47,7 @@ interface TournamentTemplateProps {
 const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
-  const [myRank, setMyRank] = useState<StockInfo[]>([...stockInfos]);
+  const myRank = useRef<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
   const [dimRef, mobileLayout] = useMobileLayoutCheck();
@@ -74,11 +74,11 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   useEffect(() => {
     setStage(initStage);
-    setMyRank(stockInfos);
+    myRank.current = stockInfos;
   }, [initStage, stockInfos]);
 
   const postResult = async () => {
-    const rank = myRank.map((item) => item.name);
+    const rank = myRank.current.map((item) => item.name);
     await postResultMutation({
       variables: {
         rank,
@@ -89,7 +89,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   };
 
   const setResult = () => {
-    localStorage.setItem('myRank', JSON.stringify(myRank));
+    localStorage.setItem('myRank', JSON.stringify(myRank.current));
     localStorage.setItem('marketForecast', JSON.stringify(marketForecast.current));
     const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
     localStorage.setItem('doneDates', JSON.stringify([...doneDates, eventDate]));
@@ -163,13 +163,22 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
     }
   };
 
+  useEffect(() => {
+    // *** progress logic here
+    if (progress > progressLimit.current) {
+      leftIndex.current = 0;
+      rightIndex.current = progressLimit.current / 2;
+      progressLimit.current /= 2;
+      setProgress(1);
+      goNextRound();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress]);
+
   const swapPosition = () => {
-    setMyRank((p) => {
-      const temp = p[leftIndex.current];
-      p[leftIndex.current] = p[rightIndex.current];
-      p[rightIndex.current] = temp;
-      return p;
-    });
+    const temp = myRank.current[leftIndex.current];
+    myRank.current[leftIndex.current] = myRank.current[rightIndex.current];
+    myRank.current[rightIndex.current] = temp;
   };
 
   const handleScaleChange = (e: RadioChangeEvent) => {
@@ -177,30 +186,18 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
     setChartScale(e.target.value);
   };
 
-  const updateLogicState = (position: Position) => {
-    if (position === 'right') {
-      swapPosition();
-    }
-    setProgress((p) => {
-      if (p < progressLimit.current) {
-        leftIndex.current += 1;
-        rightIndex.current += 1;
-        return p + 1;
-      } else {
-        leftIndex.current = 0;
-        rightIndex.current = progressLimit.current / 2;
-        progressLimit.current /= 2;
-        goNextRound();
-        return 1;
-      }
-    });
-  };
-
   const handleCardClick = (position: Position) => {
     setAniMationClassName('scale-out');
     // wait for scale-out animation or chart img load
     setTimeout(() => {
-      updateLogicState(position);
+      if (position === 'right') {
+        swapPosition();
+      }
+      setProgress((p) => {
+        leftIndex.current += 1;
+        rightIndex.current += 1;
+        return p + 1;
+      });
       setAniMationClassName('fade-in');
     }, 500);
   };
@@ -239,9 +236,16 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
         {stage === 'ROUND' && (
           <Timer
-            initialSec={300}
+            initialSec={5}
             onTimeOver={() => {
               console.log('timeover');
+              message.info(
+                <p>
+                  시간이 초과되어 유저간 순위 선정에는 제외되지만
+                  <br />
+                  남은 선택들을 신중히 하면 더 좋은 종목을 찾을 수 있어요 <Emoji symbol="😀" />
+                </p>,
+              );
             }}
           />
         )}
@@ -312,7 +316,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
             <>
               <Carousel className={aniMationClassName}>
                 <StockCardSelectable
-                  stockInfo={myRank[leftIndex.current]}
+                  stockInfo={myRank.current[leftIndex.current]}
                   chartScale={chartScale}
                   position="left"
                   blind={blind}
@@ -321,7 +325,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
                   isMobile={true}
                 />
                 <StockCardSelectable
-                  stockInfo={myRank[rightIndex.current]}
+                  stockInfo={myRank.current[rightIndex.current]}
                   chartScale={chartScale}
                   position="right"
                   blind={blind}
@@ -342,7 +346,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
             <>
               <StockCardSelectable
                 className={aniMationClassName}
-                stockInfo={myRank[leftIndex.current]}
+                stockInfo={myRank.current[leftIndex.current]}
                 chartScale={chartScale}
                 position="left"
                 blind={blind}
@@ -353,7 +357,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
               <div className="vs">vs</div>
               <StockCardSelectable
                 className={aniMationClassName}
-                stockInfo={myRank[rightIndex.current]}
+                stockInfo={myRank.current[rightIndex.current]}
                 chartScale={chartScale}
                 position="right"
                 blind={blind}
@@ -402,7 +406,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
           </Card>
         </div>
       )}
-      {stage === 'DONE' && <TournamentDoneStage myRank={myRank} onReplay={handleReplay} />}
+      {stage === 'DONE' && <TournamentDoneStage myRank={myRank.current} onReplay={handleReplay} />}
     </div>
   );
 }
