@@ -1,1 +1,2 @@
-export { ReactComponent as Logo } from './todaysstock_logo.svg';
+export { ReactComponent as Logo } from './logo.svg';
+export { default as logo } from './logo.png';

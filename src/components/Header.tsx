@@ -41,7 +41,7 @@ function Header({ location, history }: HeaderProps) {
       if (hasRecord()) {
         history.push('/forum');
       } else {
-        message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 100);
+        message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 3);
       }
     } else {
       setCurrent(e.key);

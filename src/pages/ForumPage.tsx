@@ -6,6 +6,8 @@ import { StockInfo } from '../lib/stock';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import Loader from '../components/Loader';
+import { Helmet } from 'react-helmet';
+import { logo } from '../img';
 
 const FORUM_PAGE = gql`
   {
@@ -57,12 +59,26 @@ function ForumPage({ history }: ForumPageProps) {
 
   if (loading || !myRank.length) return <Loader />;
 
+  const url = `https://chartys.netlify.app/forum`;
+
   return (
-    <ForumTemplate
-      eventDate={data.getTodaysTournament.eventDate}
-      myRank={myRank}
-      comments={data.getAllComments}
-    />
+    <div>
+      <Helmet>
+        <title>객장</title>
+        <meta name="description" content="매일 새로운 투자 아이디어 공유. 차트연습장" />}
+        <link rel="canonical" href={url} />
+        <meta property="og:url" content={url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="객장" />
+        <meta property="og:description" content="하루 5분, 보석같은 투자 종목 찾기. 차트연습장" />
+        <meta property="og:image" content={logo} />}
+      </Helmet>
+      <ForumTemplate
+        eventDate={data.getTodaysTournament.eventDate}
+        myRank={myRank}
+        comments={data.getAllComments}
+      />
+    </div>
   );
 }
 

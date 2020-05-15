@@ -6,6 +6,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { StockInfo } from '../lib/stock';
 import { message } from 'antd';
 import Loader from '../components/Loader';
+import { Helmet } from 'react-helmet';
+import { logo } from '../img';
 
 export const TOURNAMENT_PAGE = gql`
   {
@@ -36,12 +38,26 @@ function TournamentPage(props: TournamentPageProps) {
 
   if (apiLoading || localLoading) return <Loader />;
 
+  const url = `https://chartys.netlify.app/`;
+
   return (
-    <TournamentTemplate
-      initStage={isPlayed ? 'DONE' : 'GUIDE'}
-      stockInfos={myRank || shuffle(JSON.parse(data.getTodaysTournament.stockInfo))}
-      eventDate={data.getTodaysTournament.eventDate}
-    />
+    <div>
+      <Helmet>
+        <title>오늘의 토너먼트</title>
+        <meta name="description" content="하루 5분, 보석같은 투자 종목 찾기. 차트연습장" />}
+        <link rel="canonical" href={url} />
+        <meta property="og:url" content={url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="오늘의 토너먼트" />
+        <meta property="og:description" content="하루 5분, 보석같은 투자 종목 찾기. 차트연습장" />
+        <meta property="og:image" content={logo} />}
+      </Helmet>
+      <TournamentTemplate
+        initStage={isPlayed ? 'DONE' : 'GUIDE'}
+        stockInfos={myRank || shuffle(JSON.parse(data.getTodaysTournament.stockInfo))}
+        eventDate={data.getTodaysTournament.eventDate}
+      />
+    </div>
   );
 }
 
