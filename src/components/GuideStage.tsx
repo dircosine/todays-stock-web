@@ -3,7 +3,6 @@ import Emoji from './Emoji';
 import { Card, Divider, Button, Space, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import SpaceHorizontal from './SpaceHorizontal';
-import { getTargetEventDate } from '../lib/utils';
 
 interface GuideStageProps {
   goNextStage: () => void;
@@ -122,7 +121,6 @@ function GuideStage({ goNextStage }: GuideStageProps) {
             <li>
               지금 바로 오늘의 토너먼트를 완료하세요 <Emoji symbol="😀" />
             </li>
-            <li className="small">{getTargetEventDate(new Date(), true)} 장마감 기준</li>
           </ul>
         ) : (
           <ul className="guide">

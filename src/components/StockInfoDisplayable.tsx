@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Tag, Spin, Skeleton, Divider } from 'antd';
+import { Tag, Spin, Divider } from 'antd';
 
 import PriceInfoDisplay from './PriceInfoDisplay';
 
 import './StockInfoDisplayable.scss';
 import MoreInfoDisplay from './MoreInfoDisplay';
 import { StockInfo } from '../lib/stock';
-import Axios from 'axios';
-import useDimension from '../hooks/useDimension';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
