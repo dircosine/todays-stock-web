@@ -6,6 +6,8 @@ import PriceInfoDisplay from './PriceInfoDisplay';
 import './StockInfoDisplayable.scss';
 import MoreInfoDisplay from './MoreInfoDisplay';
 import { StockInfo } from '../lib/stock';
+import Axios from 'axios';
+import useDimension from '../hooks/useDimension';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
@@ -35,25 +37,6 @@ function StockInfoDisplayable({
     setImgLoading(false);
   };
 
-  if (imgLoading) {
-    return (
-      <>
-        {/* Dummy lender for onLoad/onFail trigger */}
-        <img
-          alt={stockInfo.name + ' chart'}
-          src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
-          width="0%"
-          onLoad={handleImgLoad}
-        />
-        <div className="spinner">
-          <Spin />
-        </div>
-        <div className="info-more">
-          <Skeleton title={false} paragraph={{ rows: 4 }} active />
-        </div>
-      </>
-    );
-  }
   return (
     <div className="StockInfoDisplayable">
       {infoExtent.includes('head') && (
@@ -73,11 +56,20 @@ function StockInfoDisplayable({
       )}
       <Divider style={{ margin: '10px 0px' }} />
       {infoExtent.includes('chart') && (
-        <img
-          alt={stockInfo.name + ' chart'}
-          src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
-          width="100%"
-        />
+        <div className="img-wrap">
+          <img
+            className="chart"
+            alt={stockInfo.name + ' chart'}
+            src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
+            width={imgLoading ? '0%' : '100%'}
+            onLoad={handleImgLoad}
+          />
+          {imgLoading && (
+            <div className="spinner">
+              <Spin />
+            </div>
+          )}
+        </div>
       )}
       {infoExtent.includes('price') && (
         <div className="info-price">
