@@ -4,7 +4,6 @@ import { Menu } from 'antd';
 import SpaceVertical from '../SpaceVertical';
 import './ForumTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';
-import SharePanel from '../SharePanel';
 import Emoji from '../Emoji';
 import { StockInfo, Comment } from '../../lib/stock';
 import CommentPanel from '../CommentPanel';
@@ -59,8 +58,8 @@ function ForumTemplate({ eventDate, myRank, comments }: ForumTemplateProps) {
       <SpaceHorizontal />
       <div className="two-column">
         <div className="column-1">
-          <SharePanel message="링크를 공유하고 더 많은 의견들을 확인해 보세요!" />
-          <SpaceHorizontal />
+          {/* <SharePanel message="링크를 공유하고 더 많은 의견들을 확인해 보세요!" />
+          <SpaceHorizontal /> */}
           <div className="panel myRank">
             <h3>내가 뽑은 순위</h3>
             <MyRank stockInfos={myRank} hasTagButton={true} handleAddTag={handleAddTag} />

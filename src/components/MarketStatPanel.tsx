@@ -22,7 +22,9 @@ function MarketStatPanel({ marketStat }: MarketStatPanelProps) {
 
   return (
     <Tabs
-      defaultActiveKey="코스피"
+      defaultActiveKey="kospi"
+      size="small"
+      type="card"
       tabBarExtraContent={
         <div style={{ textAlign: 'end' }}>
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
@@ -33,29 +35,25 @@ function MarketStatPanel({ marketStat }: MarketStatPanelProps) {
         </div>
       }
     >
-      <Tabs.TabPane tab={<strong>코스피</strong>} key="코스피">
+      <Tabs.TabPane tab={<strong>코스피</strong>} key="kospi">
         <div className="market kospi">
           <h4 hidden={true}>코스피 통계</h4>
-          <div>
-            <img
-              src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
-              alt="KOSPI Chart"
-              width="100%"
-            />
-          </div>
+          <img
+            src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSPI_end.png`}
+            alt="KOSPI Chart"
+            width="100%"
+          />
           <MarketStatProgress marketStat={marketStat?.kospi || null} />
         </div>
       </Tabs.TabPane>
-      <Tabs.TabPane tab={<strong>코스닥</strong>} key="코스닥">
+      <Tabs.TabPane tab={<strong>코스닥</strong>} key="kosdaq">
         <div className="market kosdaq">
           <h4 hidden={true}>코스닥 통계</h4>
-          <div>
-            <img
-              src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
-              alt="KOSDAQ Chart"
-              width="100%"
-            />
-          </div>
+          <img
+            src={`https://ssl.pstatic.net/imgfinance/chart/mobile/candle/${chartScaleMarket}/KOSDAQ_end.png`}
+            alt="KOSDAQ Chart"
+            width="100%"
+          />
           <MarketStatProgress marketStat={marketStat?.kosdaq || null} />
         </div>
       </Tabs.TabPane>
