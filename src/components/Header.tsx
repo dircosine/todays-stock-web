@@ -46,6 +46,7 @@ function Header({ location, history }: HeaderProps) {
           ),
           onOk() {},
         });
+        break;
     }
   };
 
