@@ -60,3 +60,9 @@ export const TOURNAMENT_PAGE = gql`
     }
   }
 `;
+
+export const GET_EVENTDATE = gql`
+  {
+    getEventDate
+  }
+`;

@@ -4,6 +4,7 @@ import TournamentPage from './pages/TournamentPage';
 import ForumPage from './pages/ForumPage';
 import BaseTemplate from './components/templates/BaseTemplate';
 import { Helmet } from 'react-helmet';
+import ScorebookPage from './pages/ScorebookPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={TournamentPage} />
             <Route path="/forum" component={ForumPage} />
+            <Route path="/scorebook" component={ScorebookPage} />
             <Redirect path="*" to="/" />
           </Switch>
         </BaseTemplate>

@@ -24,6 +24,7 @@ function MarketStatPanel({ marketStat }: MarketStatPanelProps) {
     <Tabs
       defaultActiveKey="kospi"
       size="small"
+      type="card" // 중요 ** 기본 타입은 모바일에서 두 번째 탭(코스닥) 표시 안 됨 **
       tabBarExtraContent={
         <div style={{ textAlign: 'end' }}>
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
