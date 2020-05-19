@@ -42,7 +42,7 @@ function StockInfoDisplayable({
 
   const imgSrc =
     chartScale === 'day'
-      ? `https://${s3bucket}.ap-northeast-2.amazonaws.com/${eventDate}/today/charts/${eventDate}_${stockInfo.code}_day.png`
+      ? `https://${s3bucket}.s3.ap-northeast-2.amazonaws.com/${eventDate}/today/charts/${eventDate}_${stockInfo.code}_day.png`
       : `https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`;
 
   return (

@@ -21,6 +21,7 @@ function Header({ location, history }: HeaderProps) {
         setCurrent(e.key);
         break;
       case '/forum':
+        // case '/scorebook':
         hasRecord()
           ? history.push(e.key)
           : message.warning('먼저 오늘의 토너먼트를 완료해 주세요', 3);
