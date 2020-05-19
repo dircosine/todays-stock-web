@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import TournamentTemplate from '../components/templates/TournamentTemplate';
 import { shuffle } from '../lib/utils';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { StockInfo } from '../lib/stock';
 import { message } from 'antd';
 import Loader from '../components/Loader';
 import { Helmet } from 'react-helmet';
 import { logo } from '../img';
-
-export const TOURNAMENT_PAGE = gql`
-  {
-    getTodaysTournament {
-      stockInfo
-      eventDate
-    }
-  }
-`;
+import { TOURNAMENT_PAGE } from '../lib/queries';
 
 interface TournamentPageProps {}
 function TournamentPage(props: TournamentPageProps) {

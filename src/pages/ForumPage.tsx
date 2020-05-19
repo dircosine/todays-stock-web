@@ -4,34 +4,10 @@ import { message } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StockInfo } from '../lib/stock';
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import Loader from '../components/Loader';
 import { Helmet } from 'react-helmet';
 import { logo } from '../img';
-
-const FORUM_PAGE = gql`
-  {
-    getTodaysTournament {
-      eventDate
-      stockInfo
-      marketStat
-      scores
-    }
-    getAllComments {
-      id
-      message
-      user {
-        id
-        name
-      }
-      tags
-      tournament {
-        eventDate
-      }
-      createdAt
-    }
-  }
-`;
+import { FORUM_PAGE } from '../lib/queries';
 
 interface ForumPageProps extends RouteComponentProps {}
 

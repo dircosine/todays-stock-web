@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { StockInfo } from '../lib/stock';
 
-function useS3Download(resourceUrl: string) {
+export default function useS3Download(resourceUrl: string) {
   const [data, setData] = useState<StockInfo[] | null>(null);
   const [loading, setLoading] = useState(false);
 

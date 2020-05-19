@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Spin, Divider } from 'antd';
-
 import PriceInfoDisplay from './PriceInfoDisplay';
-
 import './StockInfoDisplayable.scss';
 import MoreInfoDisplay from './MoreInfoDisplay';
 import { StockInfo } from '../lib/stock';
+import { useQuery } from '@apollo/react-hooks';
+import { TOURNAMENT_PAGE } from '../lib/queries';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
@@ -25,6 +25,8 @@ function StockInfoDisplayable({
   infoExtent,
 }: StockInfoDisplayableProps) {
   const [imgLoading, setImgLoading] = useState(infoExtent.includes('chart'));
+  const { data } = useQuery(TOURNAMENT_PAGE, { fetchPolicy: 'cache-first' });
+  const eventDate = data.getTodaysTournament.eventDate;
 
   useEffect(() => {
     setImgLoading(infoExtent.includes('chart'));
@@ -34,6 +36,11 @@ function StockInfoDisplayable({
   const handleImgLoad = () => {
     setImgLoading(false);
   };
+
+  const imgSrc =
+    chartScale === 'day'
+      ? `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${eventDate}/today/charts/${eventDate}_${stockInfo.code}_day.png`
+      : `https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`;
 
   return (
     <div className="StockInfoDisplayable">
@@ -58,9 +65,10 @@ function StockInfoDisplayable({
           <img
             className="chart"
             alt={stockInfo.name + ' chart'}
-            src={`https://ssl.pstatic.net/imgfinance/chart/item/candle/${chartScale}/${stockInfo.code}.png`}
-            width={imgLoading ? '0%' : '100%'}
+            src={imgSrc}
+            width="100%"
             onLoad={handleImgLoad}
+            hidden={imgLoading}
           />
           {imgLoading && (
             <div className="spinner">

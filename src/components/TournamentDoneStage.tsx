@@ -7,22 +7,12 @@ import SharePanel from './SharePanel';
 import Emoji from './Emoji';
 import MyRank from './MyRank';
 import { StockInfo, MarketStat, TodaysStat } from '../lib/stock';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import Loader from './Loader';
 import MarketStatPanel from './MarketStatPanel';
 import TodaysRankTable from './TodaysRankTable';
 import _ from 'lodash';
-
-const DONE_STAGE = gql`
-  {
-    getTodaysTournament {
-      stockInfo
-      marketStat
-      scores
-    }
-  }
-`;
+import { DONE_STAGE } from '../lib/queries';
 
 interface TournamentDoneStageProps {
   myRank: StockInfo[];

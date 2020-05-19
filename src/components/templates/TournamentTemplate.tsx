@@ -8,17 +8,11 @@ import EventDate from '../EventDate';
 import Emoji from '../Emoji';
 import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import GuideStage from '../GuideStage';
 import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 import Timer from '../Timer';
 import TournamentDoneStage from '../TournamentDoneStage';
-
-const POST_RESULT = gql`
-  mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
-    postTournamentResult(eventDate: $eventDate, rank: $rank, market: $market)
-  }
-`;
+import { POST_RESULT } from '../../lib/queries';
 
 export enum Round {
   Round32 = 32,
@@ -187,9 +181,10 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   };
 
   const handleCardClick = (position: Position) => {
+    if (aniMationClassName === 'scale-out') return;
     setAniMationClassName('scale-out');
-    // wait for scale-out animation or chart img load
     setTimeout(() => {
+      // wait for scale-out animation
       if (position === 'right') {
         swapPosition();
       }

@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Divider, Tag, Comment as CommentAntd, Empty, List, Dropdown, Input } from 'antd';
 import { Comment } from '../lib/stock';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { DownOutlined } from '@ant-design/icons';
-
-const CREATE_COMMENT = gql`
-  mutation createComment($input: CreateCommentInput!) {
-    createComment(input: $input) {
-      id
-      userId
-      message
-      tags
-      createdAt
-    }
-  }
-`;
+import { CREATE_COMMENT } from '../lib/queries';
 
 interface CommentPanelProps {
   eventDate: string;

@@ -24,7 +24,6 @@ function MarketStatPanel({ marketStat }: MarketStatPanelProps) {
     <Tabs
       defaultActiveKey="kospi"
       size="small"
-      type="card"
       tabBarExtraContent={
         <div style={{ textAlign: 'end' }}>
           <Radio.Group onChange={handleScaleChange} defaultValue={chartScaleMarket}>
