@@ -38,7 +38,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const myRank = useRef<StockInfo[]>([...stockInfos]);
@@ -72,23 +72,30 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   }, [initStage, stockInfos]);
 
   const postResult = async () => {
+    // TODO: UserId 추가
     const rank = myRank.current.map((item) => item.name);
-    await postResultMutation({
+    const {
+      data: { postTournamentResult: resultId },
+    } = await postResultMutation({
       variables: {
         rank,
         eventDate,
         market: JSON.stringify(marketForecast.current),
       },
     });
+    if (!resultId) return;
+    return resultId;
   };
 
-  const setResult = () => {
+  const setResult = async () => {
+    const resultId = await postResult();
+
     localStorage.setItem('myRank', JSON.stringify(myRank.current));
     localStorage.setItem('marketForecast', JSON.stringify(marketForecast.current));
     const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
     localStorage.setItem('doneDates', JSON.stringify([...doneDates, eventDate]));
-
-    postResult();
+    const resultIds: number[] = JSON.parse(localStorage.getItem('resultIds') || '[]');
+    localStorage.setItem('resultIds', JSON.stringify([...resultIds, resultId]));
   };
 
   const goNextRound = (): void => {

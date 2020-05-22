@@ -1,14 +1,14 @@
 export const defaults = {
-  isLoggedIn: Boolean(localStorage.getItem('token')) || false,
+  isLoggedIn: Boolean(localStorage.getItem('email')) || false,
 };
 
 export const resolvers = {
   Query: {
-    isLoggedIn: () => Boolean(localStorage.getItem('token')) || false,
+    isLoggedIn: () => Boolean(localStorage.getItem('email')) || false,
   },
   Mutation: {
-    logUserIn: (_: any, { token }: any, { cache }: any) => {
-      localStorage.setItem('token', token);
+    logUserIn: (_: any, { email }: any, { cache }: any) => {
+      localStorage.setItem('email', email);
       cache.writeData({
         data: {
           isLoggedIn: true,
@@ -17,7 +17,7 @@ export const resolvers = {
       return null;
     },
     logUserOut: (_: any, __: any, { cache }: any) => {
-      localStorage.removeItem('token');
+      localStorage.removeItem('email');
       return null;
     },
   },

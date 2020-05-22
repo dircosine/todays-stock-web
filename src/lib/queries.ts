@@ -1,5 +1,25 @@
 import gql from 'graphql-tag';
 
+// *** Local
+export const CHECK_LOCAL_LOGIN = gql`
+  {
+    isLoggedIn @client
+  }
+`;
+
+export const LOCAL_LOG_IN = gql`
+  mutation logUserIn($email: String!) {
+    logUserIn(email: $email) @client
+  }
+`;
+
+export const LOCAL_LOG_OUT = gql`
+  mutation logUserOut {
+    logUserOut @client
+  }
+`;
+// ***
+
 export const CREATE_COMMENT = gql`
   mutation createComment($input: CreateCommentInput!) {
     createComment(input: $input) {
@@ -64,5 +84,15 @@ export const TOURNAMENT_PAGE = gql`
 export const GET_EVENTDATE = gql`
   {
     getEventDate
+  }
+`;
+
+export const CREATE_USER = gql`
+  mutation createUser($email: String!, $resultIds: [Int]) {
+    createUser(email: $email, resultIds: $resultIds) {
+      id
+      email
+      name
+    }
   }
 `;

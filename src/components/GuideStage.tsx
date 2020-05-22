@@ -3,6 +3,7 @@ import Emoji from './Emoji';
 import { Card, Divider, Button, Space, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import SpaceHorizontal from './SpaceHorizontal';
+import './GuideStage.scss';
 
 interface GuideStageProps {
   goNextStage: () => void;

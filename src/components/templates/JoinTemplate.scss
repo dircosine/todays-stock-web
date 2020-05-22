@@ -1,0 +1,17 @@
+.JoinTemplate {
+  max-width: 500px;
+  margin: 0 auto;
+  .join-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .input-label {
+    padding: 0px 8px;
+  }
+  .email-input {
+    font-size: 16px;
+  }
+  .submit-btn {
+    align-self: flex-end;
+  }
+}
