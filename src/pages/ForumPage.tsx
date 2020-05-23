@@ -7,12 +7,14 @@ import { useQuery } from '@apollo/react-hooks';
 import Loader from '../components/Loader';
 import { Helmet } from 'react-helmet';
 import { logo } from '../img';
-import { FORUM_PAGE } from '../lib/queries';
+import { FORUM_PAGE, GET_EVENTDATE } from '../lib/queries';
 
 interface ForumPageProps extends RouteComponentProps {}
 
 function ForumPage({ history }: ForumPageProps) {
-  const { loading, data } = useQuery(FORUM_PAGE);
+  const { data, loading } = useQuery(FORUM_PAGE);
+  const { data: eventDate, loading: eventDateLoading } = useQuery(GET_EVENTDATE);
+
   const [myRank, setMyRank] = useState<StockInfo[]>(
     JSON.parse(localStorage.getItem('myRank') || '[]'),
   );
@@ -25,15 +27,15 @@ function ForumPage({ history }: ForumPageProps) {
   }, [myRank, history]);
 
   useEffect(() => {
-    if (data) {
+    if (eventDate) {
       const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
-      if (!doneDates.includes(data.getTodaysTournament.eventDate)) {
+      if (!doneDates.includes(eventDate.getEventDate)) {
         setMyRank([]);
       }
     }
-  }, [data, history]);
+  }, [eventDate, history]);
 
-  if (loading || !myRank.length) return <Loader />;
+  if (loading || eventDateLoading || !myRank.length) return <Loader />;
 
   const url = `https://chartys.netlify.app/forum`;
 
@@ -50,7 +52,7 @@ function ForumPage({ history }: ForumPageProps) {
         <meta property="og:image" content={logo} />}
       </Helmet>
       <ForumTemplate
-        eventDate={data.getTodaysTournament.eventDate}
+        eventDate={eventDate.getEventDate}
         myRank={myRank}
         comments={data.getAllComments}
       />

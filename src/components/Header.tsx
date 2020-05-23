@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, message, Modal } from 'antd';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { ClickParam } from 'antd/lib/menu';
 import { Logo } from '../img';
 import { getTargetEventDate } from '../lib/utils';
-import Emoji from './Emoji';
 
-interface HeaderProps extends RouteComponentProps {}
+interface HeaderProps {}
 
-function Header({ location, history }: HeaderProps) {
-  const [current, setCurrent] = useState(location.pathname);
+function Header(props: HeaderProps) {
+  const history = useHistory();
+  const location = useLocation();
+  const [current, setCurrent] = useState('/' + location.pathname.split('/')[1]);
 
   useEffect(() => {
-    setCurrent(location.pathname);
+    setCurrent('/' + location.pathname.split('/')[1]);
   }, [location]);
 
   const handleMenuClick = (e: ClickParam) => {
     switch (e.key) {
-      case '/tournament':
+      case '/':
         setCurrent(e.key);
         break;
       case '/forum':
@@ -78,4 +79,4 @@ function Header({ location, history }: HeaderProps) {
   );
 }
 
-export default withRouter(Header);
+export default Header;

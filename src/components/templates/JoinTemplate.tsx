@@ -24,7 +24,6 @@ function JoinTemplate(props: JoinTemplateProps) {
       const {
         data: { createUser },
       } = await createUserMutation({ variables: { email, resultIds } });
-      console.log(createUser);
       localStorage.removeItem('resultIds');
       await localLoginMutation({ variables: { email: createUser.email } });
     } catch (e) {

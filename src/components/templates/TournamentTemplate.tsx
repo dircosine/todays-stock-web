@@ -73,6 +73,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
   const postResult = async () => {
     // TODO: UserId 추가
+    const userEmail = localStorage.getItem('email');
     const rank = myRank.current.map((item) => item.name);
     const {
       data: { postTournamentResult: resultId },
@@ -81,21 +82,22 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         rank,
         eventDate,
         market: JSON.stringify(marketForecast.current),
+        userEmail,
       },
     });
     if (!resultId) return;
+    if (!userEmail) {
+      const resultIds: number[] = JSON.parse(localStorage.getItem('resultIds') || '[]');
+      localStorage.setItem('resultIds', JSON.stringify([...resultIds, resultId]));
+    }
     return resultId;
   };
 
-  const setResult = async () => {
-    const resultId = await postResult();
-
+  const setResult = () => {
     localStorage.setItem('myRank', JSON.stringify(myRank.current));
     localStorage.setItem('marketForecast', JSON.stringify(marketForecast.current));
     const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
     localStorage.setItem('doneDates', JSON.stringify([...doneDates, eventDate]));
-    const resultIds: number[] = JSON.parse(localStorage.getItem('resultIds') || '[]');
-    localStorage.setItem('resultIds', JSON.stringify([...resultIds, resultId]));
   };
 
   const goNextRound = (): void => {
@@ -124,6 +126,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         case 'GUIDE':
           return 'ROUND';
         case 'ROUND':
+          postResult();
           return 'MARKET';
         case 'MARKET':
           setResult();
@@ -340,7 +343,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
               <div style={{ textAlign: 'center' }}>
                 <Space>
                   <Emoji symbol="👈" />
-                  양쪽으로 슬라이드해서 확인
+                  양쪽으로 슬라이드해서 비교
                   <Emoji symbol="👉" />
                 </Space>
               </div>

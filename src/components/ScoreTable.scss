@@ -1,0 +1,34 @@
+@import '../styles/variables';
+
+.red {
+  color: $red;
+}
+.black {
+  color: $black;
+}
+.blue {
+  color: $blue;
+}
+
+.score-percent-column {
+  text-align: center;
+}
+
+.expanded {
+  margin: 0;
+  padding-bottom: 30px;
+
+  .chart-wrap {
+    margin: 0px -16px;
+  }
+
+  .price-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .price {
+      font-size: 20px;
+    }
+  }
+}

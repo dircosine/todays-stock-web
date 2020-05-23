@@ -43,8 +43,13 @@ export const DONE_STAGE = gql`
 `;
 
 export const POST_RESULT = gql`
-  mutation postTournamentResult($eventDate: String!, $rank: [String!]!, $market: String!) {
-    postTournamentResult(eventDate: $eventDate, rank: $rank, market: $market)
+  mutation postTournamentResult(
+    $eventDate: String!
+    $rank: [String!]!
+    $market: String!
+    $userEmail: String
+  ) {
+    postTournamentResult(eventDate: $eventDate, rank: $rank, market: $market, userEmail: $userEmail)
   }
 `;
 
@@ -93,6 +98,41 @@ export const CREATE_USER = gql`
       id
       email
       name
+      tournamentResults {
+        rank
+        tournament {
+          eventDate
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query getUser($email: String!) {
+    getUser(email: $email) {
+      id
+      name
+      email
+      tournamentResults {
+        id
+        rank
+        tournament {
+          eventDate
+        }
+      }
+    }
+  }
+`;
+
+export const GET_TOURNAMENT_RESULTS = gql`
+  query getTournamentResults($userEmail: String!) {
+    getTournamentResults(userEmail: $userEmail) {
+      id
+      rank
+      tournament {
+        eventDate
+      }
     }
   }
 `;

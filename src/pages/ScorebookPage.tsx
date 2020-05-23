@@ -7,6 +7,7 @@ import { message } from 'antd';
 import { Helmet } from 'react-helmet';
 import { logo } from '../img';
 import JoinTemplate from '../components/templates/JoinTemplate';
+import ScorebookTemplate from '../components/templates/ScorebookTemplate';
 
 interface ScorebookPageProps extends RouteComponentProps {}
 
@@ -27,22 +28,20 @@ function ScorebookPage({ history }: ScorebookPageProps) {
 
   const url = `https://chartys.netlify.app/scorebook`;
 
-  console.log(loginData.isLoggedIn);
-
   if (!loginData.isLoggedIn) return <JoinTemplate />;
   return (
     <div>
       <Helmet>
         <title>채점</title>
-        <meta name="description" content="매일 새로운 투자 아이디어 공유. 차트연습장" />}
+        <meta name="description" content="하루 5분, 보석같은 투자 종목 찾기." />}
         <link rel="canonical" href={url} />
         <meta property="og:url" content={url} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="채점" />
-        <meta property="og:description" content="하루 5분, 보석같은 투자 종목 찾기. 차트연습장" />
+        <meta property="og:description" content="하루 5분, 보석같은 투자 종목 찾기." />
         <meta property="og:image" content={logo} />}
       </Helmet>
-      <div>채점 inner</div>
+      <ScorebookTemplate />
     </div>
   );
 }

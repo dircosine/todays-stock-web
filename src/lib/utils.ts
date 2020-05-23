@@ -21,3 +21,19 @@ export const formatEventDate = (d: Date, displayable: boolean): string => {
     ? `${d.getFullYear()}년 ${month}월 ${date}일`
     : `${d.getFullYear()}${month}${date}`;
 };
+
+export const eventDate2IsoString = (date: string): string => {
+  return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+};
+
+export const eventDate2Displayable = (date: string): string => {
+  return `${date.slice(0, 4)}년 ${date.slice(4, 6)}월 ${date.slice(6, 8)}일`;
+};
+
+export const calcAfterDate = (targetDate: string, after: string): string => {
+  const afterMap: { [key: string]: number } = { after1: 1, after10: 10, after20: 20 };
+  const isoString = eventDate2IsoString(targetDate);
+  const date = new Date(isoString);
+  date.setDate(date.getDate() + afterMap[after]);
+  return formatEventDate(date, false);
+};

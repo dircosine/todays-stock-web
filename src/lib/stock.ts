@@ -72,3 +72,10 @@ export type Tournament = {
   scores?: string;
   comments?: Comment[];
 };
+
+// *** TournamentResult
+export type TournamentReuslt = {
+  id: number;
+  rank: string[];
+  tournament: { eventDate: string };
+};
