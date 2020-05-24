@@ -21,6 +21,16 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
 
   if (loading) return <Loader />;
 
+  const removeDuplicateDate = () => {
+    const dates: string[] = [];
+    return data.getTournamentResults.filter((result: TournamentReuslt) => {
+      if (!dates.includes(result.tournament.eventDate)) {
+        dates.push(result.tournament.eventDate);
+        return result;
+      }
+    });
+  };
+
   const actions = (targetDate: string) => {
     return [1, 10, 20].map((after) => {
       const afterDate = calcAfterDate(targetDate, `after${after}`);
@@ -54,7 +64,7 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
         <h3>완료한 토너먼트 회차</h3>
         <p>경과 기간을 선택해서 채점 결과를 확인해 보세요</p>
         <List
-          dataSource={data.getTournamentResults}
+          dataSource={removeDuplicateDate()}
           renderItem={(item: TournamentReuslt, index) => (
             <List.Item actions={actions(item.tournament.eventDate)}>
               {eventDate2Displayable(item.tournament.eventDate)}

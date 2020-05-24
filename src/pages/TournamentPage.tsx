@@ -21,7 +21,6 @@ function TournamentPage(props: TournamentPageProps) {
     const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
     if (doneDates.includes(data.getTodaysTournament.eventDate)) {
       setMyRank(JSON.parse(localStorage.getItem('myRank') || '[]'));
-      message.success('오늘 토너먼트는 완료했습니다! ', 3);
       setIsPlayed(true);
     }
     setLocalLoading(false);

@@ -9,7 +9,7 @@ import { CREATE_USER, LOCAL_LOG_IN } from '../../lib/queries';
 interface JoinTemplateProps {}
 
 function JoinTemplate(props: JoinTemplateProps) {
-  const [email, setEmail] = useState('zidhdy@gmail.com');
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [createUserMutation] = useMutation(CREATE_USER);
@@ -27,8 +27,12 @@ function JoinTemplate(props: JoinTemplateProps) {
       localStorage.removeItem('resultIds');
       await localLoginMutation({ variables: { email: createUser.email } });
     } catch (e) {
-      console.log(e);
-      setLoading(false);
+      if (e.message.includes('Unique')) {
+        localStorage.removeItem('resultIds');
+        await localLoginMutation({ variables: { email } });
+      } else {
+        setLoading(false);
+      }
     }
   };
 
