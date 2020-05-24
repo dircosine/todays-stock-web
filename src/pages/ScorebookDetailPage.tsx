@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { RouteComponentProps, withRouter, useParams } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import Loader from '../components/Loader';
 import { GET_TOURNAMENT_RESULTS, GET_EVENTDATE } from '../lib/queries';
@@ -7,22 +7,28 @@ import { Helmet } from 'react-helmet';
 import { logo } from '../img';
 import ScorebookDetailTemplate from '../components/templates/ScorebookDetailTemplate';
 import { TournamentReuslt } from '../lib/stock';
+import { calcAfterDate, formatEventDate } from '../lib/utils';
 
 interface ScorebookDetailPagePageProps {}
 
 function ScorebookDetailPagePage(props: ScorebookDetailPagePageProps) {
-  const params = useParams<{ targetDate: string; resultId: string }>();
+  const history = useHistory();
+  const params = useParams<{ targetDate: string; after: string }>();
+
   useQuery(GET_EVENTDATE);
   const { data, loading } = useQuery(GET_TOURNAMENT_RESULTS, {
     variables: { userEmail: localStorage.getItem('email') },
   });
+
+  if (calcAfterDate(params.targetDate, `after${params.after}`) > formatEventDate(new Date(), false))
+    history.push('/scorebook');
 
   if (loading) return <Loader />;
 
   const url = `https://chartys.netlify.app/ScorebookDetailPage`;
 
   const [targetResult] = data.getTournamentResults.filter(
-    (e: TournamentReuslt) => e.id === parseInt(params.resultId),
+    (e: TournamentReuslt) => e.tournament.eventDate === params.targetDate,
   );
 
   return (
@@ -37,7 +43,11 @@ function ScorebookDetailPagePage(props: ScorebookDetailPagePageProps) {
         <meta property="og:description" content="하루 5분, 보석같은 투자 종목 찾기." />
         <meta property="og:image" content={logo} />}
       </Helmet>
-      <ScorebookDetailTemplate targetDate={params.targetDate} targetResult={targetResult} />
+      <ScorebookDetailTemplate
+        targetDate={params.targetDate}
+        targetResult={targetResult}
+        after={params.after}
+      />
     </div>
   );
 }

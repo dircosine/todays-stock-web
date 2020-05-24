@@ -30,9 +30,18 @@
     padding: 12px 24px;
     border-radius: 4px;
     background-color: white;
+    max-width: 550px;
   }
 }
 
 .dashboard {
   min-height: 200px;
+}
+
+.history {
+  margin: 0 auto;
+  padding: 12px 24px;
+  border-radius: 4px;
+  background-color: white;
+  max-width: 550px;
 }

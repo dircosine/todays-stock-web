@@ -20,7 +20,7 @@ function App() {
             <Route exact path="/" component={TournamentPage} />
             <Route path="/forum" component={ForumPage} />
             <Route exact path="/scorebook" component={ScorebookPage} />
-            <Route path="/scorebook/:targetDate/:resultId" component={ScorebookDetailPage} />
+            <Route path="/scorebook/:targetDate/:after" component={ScorebookDetailPage} />
             <Redirect path="*" to="/" />
           </Switch>
         </BaseTemplate>

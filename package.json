@@ -28,6 +28,7 @@
     "graphql-tag": "^2.10.3",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
+    "query-string": "^6.12.1",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",
     "react-copy-to-clipboard": "^5.0.2",
