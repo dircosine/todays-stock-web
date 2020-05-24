@@ -24,15 +24,14 @@ function ScoreTable({ changeInfos }: ScoreTableProps) {
       align: 'center',
       render: (myRank) => (
         <div style={{ textAlign: 'center' }}>
-          {myRank < 4 ? (
+          {myRank <= 4 ? (
             <div>
-              {myRank === 0 && <Emoji symbol="🥇" />}
-              {myRank === 1 && <Emoji symbol="🥈" />}
-              {myRank === 2 && <Emoji symbol="🥉" />}
-              {myRank === 3 && <Emoji symbol="🥉" />}
+              {myRank === 1 && <Emoji symbol="🥇" />}
+              {myRank === 2 && <Emoji symbol="🥈" />}
+              {myRank === 4 && <Emoji symbol="🥉" />}
             </div>
           ) : (
-            <strong>{myRank + 1}</strong>
+            <strong>{myRank}강</strong>
           )}
         </div>
       ),

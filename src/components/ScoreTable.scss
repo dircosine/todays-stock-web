@@ -19,13 +19,14 @@
   padding-bottom: 30px;
 
   .chart-wrap {
-    margin: 0px -16px;
+    margin: -16px;
   }
 
   .price-wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 16px;
 
     .price {
       font-size: 20px;

@@ -1,0 +1,23 @@
+@import '../../styles/variables';
+
+.anticon-down {
+  margin-left: 0 !important;
+}
+
+.head {
+  // background-color: $background;
+  // position: -webkit-sticky;
+  // position: sticky;
+  // top: 0;
+  // z-index: 1000;
+
+  .back-btn {
+    position: absolute;
+    left: 0;
+  }
+}
+
+.ant-statistic-title {
+  line-height: 32px;
+  // min-height: 32px;
+}

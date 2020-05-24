@@ -27,7 +27,7 @@ export const eventDate2IsoString = (date: string): string => {
 };
 
 export const eventDate2Displayable = (date: string): string => {
-  return `${date.slice(0, 4)}년 ${date.slice(4, 6)}월 ${date.slice(6, 8)}일`;
+  return `${date.slice(4, 6)}월 ${date.slice(6, 8)}일`;
 };
 
 export const calcAfterDate = (targetDate: string, after: string): string => {
