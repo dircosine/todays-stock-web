@@ -117,6 +117,17 @@
     }
   }
 
+  .done-stage {
+    .goto-scorebook {
+      position: relative;
+      .star-emoji {
+        position: absolute;
+        top: -16px;
+        right: 0px;
+      }
+    }
+  }
+
   .two-column {
     display: flex;
     @include mobile {

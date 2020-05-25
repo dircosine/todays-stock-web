@@ -22,7 +22,7 @@ function SharePanel({ message }: SharePanelProps) {
         <CopyToClipboard text={url} onCopy={handleCopy}>
           <Button
             className="copy-btn"
-            type={copyDone ? 'default' : 'primary'}
+            type="default"
             icon={copyDone ? <CheckOutlined /> : <ShareAltOutlined />}
           >
             {copyDone ? '' : '링크복사'}

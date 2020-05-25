@@ -12,7 +12,7 @@ import Loader from './Loader';
 import MarketStatPanel from './MarketStatPanel';
 import TodaysRankTable from './TodaysRankTable';
 import _ from 'lodash';
-import { DONE_STAGE } from '../lib/queries';
+import { DONE_STAGE, CHECK_LOCAL_LOGIN } from '../lib/queries';
 
 interface TournamentDoneStageProps {
   myRank: StockInfo[];
@@ -21,6 +21,7 @@ interface TournamentDoneStageProps {
 
 function TournamentDoneStage({ onReplay, myRank }: TournamentDoneStageProps) {
   const { data, loading } = useQuery(DONE_STAGE);
+  const { data: loginData } = useQuery(CHECK_LOCAL_LOGIN);
 
   const manipulateMarketStat = (marketStatString: string): MarketStat | null => {
     const marketStat = JSON.parse(marketStatString);
@@ -113,6 +114,26 @@ function TournamentDoneStage({ onReplay, myRank }: TournamentDoneStageProps) {
         <Divider />
         <div className="section-2 two-column">
           <div className="column-1">
+            {!loginData.isLoggedIn && (
+              <>
+                <div className="goto-scorebook panel">
+                  <Emoji className="star-emoji" symbol="💯" size={24} />
+                  <h3>채점 기능 오픈!</h3>
+                  <div style={{ textAlign: 'center' }}>
+                    <p>
+                      방금 완료한 순위 선정 결과를 채점해 드려요. <br />내 선택이 실제로 어떤
+                      수익률을 가져올지 확인해 보세요!
+                    </p>
+                    <Space>
+                      <Button type="primary" shape="round">
+                        <Link to="/scorebook">채점 신청하기</Link>
+                      </Button>
+                    </Space>
+                  </div>
+                </div>
+                <SpaceHorizontal />
+              </>
+            )}
             <div className="rank panel">
               <h3 hidden={true}>내가 뽑은 순위</h3>
               <Divider>여기, 직접 선정한 순위를 확인하세요!</Divider>
@@ -121,7 +142,7 @@ function TournamentDoneStage({ onReplay, myRank }: TournamentDoneStageProps) {
             <SpaceHorizontal />
           </div>
           <SpaceVertical />
-          <div className="column-1">
+          <div className="column-2">
             <div className="panel stats">
               <h2>오늘의 통계</h2>
               {!marketStat && (
