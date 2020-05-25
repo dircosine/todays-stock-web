@@ -108,6 +108,22 @@ export const CREATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER = gql`
+  mutation updateUser($email: String!, $newEmail: String, $name: String) {
+    updateUser(email: $email, newEmail: $newEmail, name: $name) {
+      id
+      email
+      name
+      tournamentResults {
+        rank
+        tournament {
+          eventDate
+        }
+      }
+    }
+  }
+`;
+
 export const GET_USER = gql`
   query getUser($email: String!) {
     getUser(email: $email) {
