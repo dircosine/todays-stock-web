@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import Loader from '../components/Loader';
 import { GET_TOURNAMENT_RESULTS, GET_EVENTDATE } from '../lib/queries';
@@ -20,7 +20,7 @@ function ScorebookDetailPagePage(props: ScorebookDetailPagePageProps) {
     variables: { userEmail: localStorage.getItem('email') },
   });
 
-  if (calcAfterDate(params.targetDate, `after${params.after}`) > formatEventDate(new Date(), false))
+  if (calcAfterDate(params.targetDate, `after${params.after}`) > formatEventDate(new Date()))
     history.push('/scorebook');
 
   if (loading) return <Loader />;

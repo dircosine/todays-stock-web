@@ -4,7 +4,6 @@ import { GET_TOURNAMENT_RESULTS, UPDATE_USER } from '../../lib/queries';
 import Loader from '../Loader';
 import Emoji from '../Emoji';
 import SpaceHorizontal from '../SpaceHorizontal';
-import SpaceVertical from '../SpaceVertical';
 import './ScorebookTemplate.scss';
 import { List, Button, Typography, message } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -62,13 +61,14 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
         dates.push(result.tournament.eventDate);
         return result;
       }
+      return null;
     });
   };
 
   const actions = (targetDate: string) => {
     return [1, 10, 20].map((after) => {
       const afterDate = calcAfterDate(targetDate, `after${after}`);
-      const nowDate = formatEventDate(new Date(), false);
+      const nowDate = formatEventDate(new Date());
       return (
         <Button
           type="link"

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Space, Tag, Spin, Divider } from 'antd';
+import React from 'react';
+import { Table, Space, Tag } from 'antd';
 import { ChangeInfo } from './templates/ScorebookDetailTemplate';
 import { ColumnsType } from 'antd/lib/table';
 

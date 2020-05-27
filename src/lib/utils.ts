@@ -6,14 +6,7 @@ export const shuffle = <T>(a: T[]): T[] => {
   return a;
 };
 
-export const getTargetEventDate = (now: Date, displayable: boolean = false): string => {
-  if (now.getUTCHours() < 10) {
-    now.setDate(now.getDate() - 1);
-  }
-  return formatEventDate(now, displayable);
-};
-
-export const formatEventDate = (d: Date, displayable: boolean): string => {
+export const formatEventDate = (d: Date, displayable: boolean = false): string => {
   const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : `${d.getMonth() + 1}`;
   const date = d.getUTCDate() < 10 ? `0${d.getUTCDate()}` : `${d.getUTCDate()}`;
 

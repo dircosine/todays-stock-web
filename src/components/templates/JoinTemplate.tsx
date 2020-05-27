@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Input, Button, Typography } from 'antd';
+import { Input, Button, Typography } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import './JoinTemplate.scss';
 import SpaceHorizontal from '../SpaceHorizontal';

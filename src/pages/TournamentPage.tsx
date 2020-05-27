@@ -3,7 +3,6 @@ import TournamentTemplate from '../components/templates/TournamentTemplate';
 import { shuffle } from '../lib/utils';
 import { useQuery } from '@apollo/react-hooks';
 import { StockInfo } from '../lib/stock';
-import { message } from 'antd';
 import Loader from '../components/Loader';
 import { Helmet } from 'react-helmet';
 import { logo } from '../img';

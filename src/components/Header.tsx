@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, message, Modal } from 'antd';
+import { Layout, Menu, message } from 'antd';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { ClickParam } from 'antd/lib/menu';
 import { Logo } from '../img';
-import { getTargetEventDate } from '../lib/utils';
+import { formatEventDate } from '../lib/utils';
 
 interface HeaderProps {}
 
@@ -53,7 +53,7 @@ function Header(props: HeaderProps) {
   };
 
   const hasRecord = (): boolean => {
-    const targetEventDate = getTargetEventDate(new Date());
+    const targetEventDate = formatEventDate(new Date());
     const doneDates: string[] = JSON.parse(localStorage.getItem('doneDates') || '[]');
     return doneDates.includes(targetEventDate) ? true : false;
   };
