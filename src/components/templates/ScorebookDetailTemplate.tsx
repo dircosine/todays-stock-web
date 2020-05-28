@@ -5,7 +5,7 @@ import SpaceHorizontal from '../SpaceHorizontal';
 import SpaceVertical from '../SpaceVertical';
 import useS3Download from '../../hooks/useS3Download';
 import Loader from '../Loader';
-import { calcAfterDate, eventDate2Displayable } from '../../lib/utils';
+import { calcAfterDate, eventDate2Displayable, formatEventDate } from '../../lib/utils';
 import ScoreTable from '../ScoreTable';
 import _ from 'lodash';
 import { Statistic, Row, Col, Button, Dropdown, Menu, Divider, Slider, Alert } from 'antd';
@@ -39,23 +39,21 @@ function ScorebookDetailTemplate({
   after,
 }: ScorebookDetailTemplateProps) {
   const history = useHistory();
-  const [afterString] = useState(`after${after}`);
-  const [afterDate, setAfterDate] = useState(calcAfterDate(targetDate, afterString));
+  const [afterString, setAfterString] = useState(`after${after}`);
+  const [afterDate, setAfterDate] = useState(calcAfterDate(targetDate, after));
   const { data: beforeInfos } = useS3Download(
     `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/today/${targetDate}_stock_infos.json`,
   );
   const { data: afterInfos } = useS3Download(
-    `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/${calcAfterDate(
-      targetDate,
-      afterString,
-    )}_stock_infos.json`,
+    `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/${afterDate}_stock_infos.json`,
   );
 
   const [averageNum, setAverageNum] = useState(4);
 
   useEffect(() => {
-    setAfterDate(calcAfterDate(targetDate, afterString));
-  }, [afterString, targetDate]);
+    setAfterDate(calcAfterDate(targetDate, after));
+    setAfterString(`after${after}`);
+  }, [after, targetDate]);
 
   if (!beforeInfos || !afterInfos) return <Loader />;
 
@@ -150,17 +148,40 @@ function ScorebookDetailTemplate({
     return (sum / (num || averageNum)).toFixed(2);
   };
 
+  const averageAll = average(32);
+
   const periodMenu = (
     <Menu>
-      <Menu.Item onClick={() => history.push(`/scorebook/${targetDate}/3`)}>3일</Menu.Item>
-      <Menu.Item disabled={true} onClick={() => history.push(`/scorebook/${targetDate}/10`)}>
-        10일
-      </Menu.Item>
-      <Menu.Item disabled={true} onClick={() => history.push(`/scorebook/${targetDate}/20`)}>
-        20일
-      </Menu.Item>
+      {[3, 10, 20].map((after) => {
+        const afterDate = calcAfterDate(targetDate, after.toString());
+        const nowDate = formatEventDate(new Date());
+        return (
+          <Menu.Item
+            key={after}
+            onClick={() => {
+              window.scrollTo(0, 0);
+              history.push(`/scorebook/${targetDate}/${after}`);
+            }}
+            disabled={afterDate > nowDate}
+          >
+            {after}일
+          </Menu.Item>
+        );
+      })}
     </Menu>
   );
+
+  // const periodMenu = (
+  //   <Menu>
+  //     <Menu.Item onClick={() => history.push(`/scorebook/${targetDate}/3`)}>3일</Menu.Item>
+  //     <Menu.Item disabled={true} onClick={() => history.push(`/scorebook/${targetDate}/10`)}>
+  //       10일
+  //     </Menu.Item>
+  //     <Menu.Item disabled={true} onClick={() => history.push(`/scorebook/${targetDate}/20`)}>
+  //       20일
+  //     </Menu.Item>
+  //   </Menu>
+  // );
 
   const averageMenu = (
     <Menu>
@@ -185,7 +206,7 @@ function ScorebookDetailTemplate({
           type="link"
           onClick={() => {
             window.scrollTo(0, 0);
-            history.goBack();
+            history.push('/scorebook');
           }}
         >
           <ArrowLeftOutlined />
@@ -228,7 +249,7 @@ function ScorebookDetailTemplate({
                 <Col span={9}>
                   <Statistic
                     title="채점 일자"
-                    value={eventDate2Displayable(calcAfterDate(targetDate, afterString))}
+                    value={eventDate2Displayable(afterDate)}
                     valueStyle={{ fontSize: 20 }}
                   />
                 </Col>
@@ -280,14 +301,14 @@ function ScorebookDetailTemplate({
                 <Col span={8}>
                   <Statistic
                     title={<div>회차 평균</div>}
-                    value={average(32)}
+                    value={averageAll}
                     valueStyle={{
                       color: `${
-                        average() > '0.00' ? 'red' : average() < '0.00' ? 'blue' : 'black'
+                        averageAll > '0.00' ? 'red' : averageAll < '0.00' ? 'blue' : 'black'
                       }`,
                     }}
                     precision={2}
-                    prefix={average() > '0.00' && '+'}
+                    prefix={averageAll > '0.00' && '+'}
                     suffix="%"
                   />
                 </Col>
@@ -318,7 +339,7 @@ function ScorebookDetailTemplate({
               changeInfos={sortedChangeInfos.slice(0, averageNum)}
               targetDate={eventDate2Displayable(targetDate)}
               after={after}
-              afterDate={eventDate2Displayable(calcAfterDate(targetDate, afterString))}
+              afterDate={eventDate2Displayable(afterDate)}
             />
           </div>
         </div>

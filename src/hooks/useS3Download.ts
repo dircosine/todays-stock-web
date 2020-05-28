@@ -25,8 +25,7 @@ export default function useS3Download(resourceUrl: string) {
       setData(null);
       setLoading(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resourceUrl]);
 
   return { data, loading };
 }

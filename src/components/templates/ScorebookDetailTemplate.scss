@@ -1,4 +1,24 @@
 @import '../../styles/variables';
+@import '../../styles/mixin';
+
+.two-column {
+  display: flex;
+  @include mobile {
+    flex-direction: column;
+  }
+  .column-1,
+  .column-2 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel {
+    padding: 12px 24px;
+    border-radius: 4px;
+    background-color: white;
+  }
+}
 
 .anticon-down {
   margin-left: 0 !important;

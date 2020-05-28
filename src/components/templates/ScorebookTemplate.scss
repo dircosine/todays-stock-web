@@ -11,27 +11,6 @@
       padding: 0 20px;
     }
   }
-
-  .two-column {
-    display: flex;
-    @include mobile {
-      flex-direction: column;
-    }
-  }
-
-  .column-1,
-  .column-2 {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .panel {
-    padding: 12px 24px;
-    border-radius: 4px;
-    background-color: white;
-    max-width: 550px;
-  }
 }
 
 .dashboard {

@@ -20,7 +20,7 @@ function ScorebookDetailPagePage(props: ScorebookDetailPagePageProps) {
     variables: { userEmail: localStorage.getItem('email') },
   });
 
-  if (calcAfterDate(params.targetDate, `after${params.after}`) > formatEventDate(new Date()))
+  if (calcAfterDate(params.targetDate, params.after.toString()) > formatEventDate(new Date()))
     history.push('/scorebook');
 
   if (loading) return <Loader />;

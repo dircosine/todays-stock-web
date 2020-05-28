@@ -24,9 +24,9 @@ export const eventDate2Displayable = (date: string): string => {
 };
 
 export const calcAfterDate = (targetDate: string, after: string): string => {
-  const afterMap: { [key: string]: number } = { after1: 1, after3: 3, after10: 10, after20: 20 };
+  // const afterMap: { [key: string]: number } = { after1: 1, after3: 3, after10: 10, after20: 20 };
   const isoString = eventDate2IsoString(targetDate);
   const date = new Date(isoString);
-  date.setDate(date.getDate() + afterMap[after]);
+  date.setDate(date.getDate() + parseInt(after));
   return formatEventDate(date, false);
 };

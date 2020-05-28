@@ -67,7 +67,7 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
 
   const actions = (targetDate: string) => {
     return [3, 10, 20].map((after) => {
-      const afterDate = calcAfterDate(targetDate, `after${after}`);
+      const afterDate = calcAfterDate(targetDate, after.toString());
       const nowDate = formatEventDate(new Date());
       return (
         <Button
