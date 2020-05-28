@@ -92,9 +92,21 @@ export const GET_EVENTDATE = gql`
   }
 `;
 
-export const CREATE_USER = gql`
-  mutation createUser($email: String!, $resultIds: [Int]) {
-    createUser(email: $email, resultIds: $resultIds) {
+export const PUT_USER = gql`
+  mutation putUser(
+    $email: String!
+    $resultIds: [Int]
+    $name: String
+    $newEmail: String
+    $noticeDate: String
+  ) {
+    putUser(
+      email: $email
+      resultIds: $resultIds
+      name: $name
+      newEmail: $newEmail
+      noticeDate: $noticeDate
+    ) {
       id
       email
       name

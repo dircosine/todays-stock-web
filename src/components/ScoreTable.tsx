@@ -11,8 +11,11 @@ import Emoji from './Emoji';
 
 interface ScoreTableProps {
   changeInfos: ChangeInfo[];
+  targetDate: string;
+  afterDate: string;
+  after: string;
 }
-function ScoreTable({ changeInfos }: ScoreTableProps) {
+function ScoreTable({ changeInfos, targetDate, afterDate, after }: ScoreTableProps) {
   const coloringCriteria = (value: number): string => {
     return value > 0 ? 'red' : value < 0 ? 'blue' : 'black';
   };
@@ -102,9 +105,9 @@ function ScoreTable({ changeInfos }: ScoreTableProps) {
               <table style={{ textAlign: 'center' }}>
                 <tbody>
                   <tr>
-                    <td>05월 20일 종가</td>
-                    <td>1일간 변동</td>
-                    <td>05월 21일 종가</td>
+                    <td>{targetDate}</td>
+                    <td>{after}일간 변동</td>
+                    <td>{afterDate}</td>
                   </tr>
                   <tr>
                     <td className="price">

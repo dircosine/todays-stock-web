@@ -105,7 +105,7 @@ function ScorebookDetailTemplate({
 
   const periodMenu = (
     <Menu>
-      <Menu.Item onClick={() => history.push(`/scorebook/${targetDate}/1`)}>1일</Menu.Item>
+      <Menu.Item onClick={() => history.push(`/scorebook/${targetDate}/3`)}>3일</Menu.Item>
       <Menu.Item disabled={true} onClick={() => history.push(`/scorebook/${targetDate}/10`)}>
         10일
       </Menu.Item>
@@ -195,7 +195,7 @@ function ScorebookDetailTemplate({
                         </Dropdown>
                       </div>
                     }
-                    value={1}
+                    value={after}
                     valueStyle={{ fontSize: 20 }}
                     suffix="일 간"
                   />
@@ -260,7 +260,12 @@ function ScorebookDetailTemplate({
               step={null}
               onChange={(value) => setAverageNum(value as number)}
             />
-            <ScoreTable changeInfos={sortedChangeInfos.slice(0, averageNum)} />
+            <ScoreTable
+              changeInfos={sortedChangeInfos.slice(0, averageNum)}
+              targetDate={eventDate2Displayable(targetDate)}
+              after={after}
+              afterDate={eventDate2Displayable(calcAfterDate(targetDate, afterString))}
+            />
           </div>
         </div>
       </div>

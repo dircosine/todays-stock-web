@@ -101,7 +101,7 @@ function TournamentDoneStage({ onReplay, myRank }: TournamentDoneStageProps) {
             <SharePanel
               message={
                 <p>
-                  매일 저녁 7시, 새로운 종목이 업데이트 됩니다
+                  매일 자정에 새로운 종목이 업데이트 됩니다
                   <br />
                   링크를 저장해 뒀다 <strong>내일도 들러주세요</strong>{' '}
                   <Emoji symbol="😀" size={16} />

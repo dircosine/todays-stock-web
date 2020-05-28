@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { GET_TOURNAMENT_RESULTS, UPDATE_USER } from '../../lib/queries';
+import { GET_TOURNAMENT_RESULTS, PUT_USER } from '../../lib/queries';
 import Loader from '../Loader';
 import Emoji from '../Emoji';
 import SpaceHorizontal from '../SpaceHorizontal';
@@ -18,7 +18,7 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
   const { data, loading } = useQuery(GET_TOURNAMENT_RESULTS, {
     variables: { userEmail: localStorage.getItem('email') },
   });
-  const [updateUserMutation] = useMutation(UPDATE_USER);
+  const [putUserMutation] = useMutation(PUT_USER);
 
   const handleEmailChange = async (value: string) => {
     if (!value) return;
@@ -27,12 +27,12 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
     const hide = message.loading('', 0);
     try {
       const {
-        data: { updateUser },
-      } = await updateUserMutation({
+        data: { putUser },
+      } = await putUserMutation({
         variables: { email, newEmail: value },
       });
-      localStorage.setItem('email', updateUser.email);
-      setEmail(updateUser.email);
+      localStorage.setItem('email', putUser.email);
+      setEmail(putUser.email);
     } catch (e) {
       if (e.message.includes('Unique')) {
         message.warning('이미 사용중인 메일 주소입니다', 3);
@@ -66,7 +66,7 @@ function ScorebookTemplate(props: ScorebookTemplateProps) {
   };
 
   const actions = (targetDate: string) => {
-    return [1, 10, 20].map((after) => {
+    return [3, 10, 20].map((after) => {
       const afterDate = calcAfterDate(targetDate, `after${after}`);
       const nowDate = formatEventDate(new Date());
       return (
