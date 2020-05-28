@@ -12,6 +12,7 @@ import { Statistic, Row, Col, Button, Dropdown, Menu, Divider, Slider, Alert } f
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import './ScorebookDetailTemplate.scss';
 import { useHistory } from 'react-router-dom';
+import ReactHighcharts from 'react-highcharts';
 
 export type ChangeInfo = {
   myRank: number;
@@ -95,6 +96,52 @@ function ScorebookDetailTemplate({
 
   const sortedChangeInfos = _.sortBy(changeInfos, 'myRank');
 
+  const chartData = sortedChangeInfos.map((info, index) => ({
+    name: `${index + 1}.${info.name}`,
+    y: info.changePercent,
+  }));
+
+  const chartConfig = {
+    chart: { type: 'column' },
+    title: { text: '' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: -45,
+        style: {
+          fontSize: '12px',
+        },
+      },
+    },
+    yAxis: { title: null },
+    legend: { enabled: false },
+    plotOptions: {
+      series: { borderWidth: 0, dataLabels: { enabled: true, format: '{point.y:.1f}%' } },
+    },
+    tooltip: {
+      headerFormat: '',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b>',
+    },
+    series: [
+      {
+        name: 'Stocks',
+        colorByPoint: false,
+        data: chartData,
+        dataLabels: {
+          enabled: false,
+          rotation: -90,
+          color: '#000',
+          align: 'center',
+          format: '{point.y:.1f}',
+          y: 10,
+          style: {
+            fontSize: '10px',
+          },
+        },
+      },
+    ],
+  };
+
   const average = (num?: number): string => {
     const sum = sortedChangeInfos.slice(0, num || averageNum).reduce((acc, info) => {
       acc += info.changePercent;
@@ -152,19 +199,21 @@ function ScorebookDetailTemplate({
       <div className="two-column">
         <div className="column-1">
           {average(32) === '0.00' && (
-            <Alert
-              type="warning"
-              message={
-                <p style={{ margin: 0 }}>
-                  기간 내 개장일이 없을 경우 수익률이 모두 '0%'로 표시됩니다(주말 등){' '}
-                  <Emoji symbol="😥" size={15} />
-                  <br /> 10일, 20일 경과 후 다시 확인해 보세요!
-                </p>
-              }
-              showIcon
-            />
+            <>
+              <Alert
+                type="warning"
+                message={
+                  <p style={{ margin: 0 }}>
+                    기간 내 개장일이 없을 경우 수익률이 모두 '0%'로 표시됩니다(주말 등){' '}
+                    <Emoji symbol="😥" size={15} />
+                    <br /> 10일, 20일 경과 후 다시 확인해 보세요!
+                  </p>
+                }
+                showIcon
+              />
+              <SpaceHorizontal />
+            </>
           )}
-          <SpaceHorizontal />
           <div className="panel summary">
             <h3 hidden={true}>채점 요약</h3>
             <div>
@@ -244,6 +293,11 @@ function ScorebookDetailTemplate({
                 </Col>
               </Row>
             </div>
+          </div>
+          <SpaceHorizontal />
+          <div className="panel chart">
+            <h3>내 순위별 수익률 분포</h3>
+            <ReactHighcharts config={chartConfig}></ReactHighcharts>
           </div>
           <SpaceHorizontal />
         </div>
