@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { Radio, Card, Button, Switch, Space, Tooltip, Carousel, message } from 'antd';
+import { Radio, Card, Button, Switch, Space, Tooltip, Carousel } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import StockCardSelectable from '../StockCardSelectable';
 import './TournamentTemplate.scss';
@@ -10,7 +10,6 @@ import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
 import GuideStage from '../GuideStage';
 import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
-import Timer from '../Timer';
 import TournamentDoneStage from '../TournamentDoneStage';
 import { POST_RESULT } from '../../lib/queries';
 
@@ -239,7 +238,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         <EventDate date={eventDate} />의 토너먼트
       </h2>
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
-        {stage === 'ROUND' && (
+        {/* {stage === 'ROUND' && (
           <Timer
             initialSec={300}
             onTimeOver={() => {
@@ -254,7 +253,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
               );
             }}
           />
-        )}
+        )} */}
         <h2 className="round-title">{displayStageTitle()}</h2>
         <p className="progress">
           {stage === 'ROUND' && round !== Round.Round2 && (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import Emoji from './Emoji';
-import { Card, Divider, Button, Space, Tooltip } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Divider, Button, Space } from 'antd';
 import SpaceHorizontal from './SpaceHorizontal';
 import './GuideStage.scss';
 
@@ -40,7 +39,7 @@ const messagePrepare: { [key: string]: ReactNode[] } = {
       <Emoji symbol="💯" />
       <p>오늘 선택한 결과는, 향후 실제 주가 변동에 따라 수익률 채점도 해 드립니다.</p>
       <p>
-        마지막으로, 매일 저녁 새로운 종목으로 업데이트 되니, 내일도 쓱 한번 들러주세요{' '}
+        마지막으로, 매일 자정 새로운 종목으로 업데이트 되니, 내일도 쓱 한번 들러주세요{' '}
         <Emoji symbol="😀" />
       </p>
     </div>,
@@ -74,7 +73,7 @@ const messagePrepare: { [key: string]: ReactNode[] } = {
       <Emoji symbol="💯" />
       <p>오늘 선택한 결과는, 향후 실제 주가 변동에 따라 수익률 채점도 해 드립니다.</p>
       <p>
-        마지막으로, 매일 저녁 새로운 종목으로 업데이트 되니, 내일도 쓱 한번 들러주세요{' '}
+        마지막으로, 매일 자정 새로운 종목으로 업데이트 되니, 내일도 쓱 한번 들러주세요{' '}
         <Emoji symbol="😀" />
       </p>
     </div>,
@@ -177,23 +176,6 @@ function GuideStage({ goNextStage }: GuideStageProps) {
             <Divider type="horizontal" />
             <div style={{ marginBottom: 24 }}>
               <strong>32강</strong> 부터
-              <Divider type="vertical" />
-              <Tooltip
-                style={{ width: 360 }}
-                title={
-                  <>
-                    유저간 수익률 순위 선정의 기준시간일 뿐,
-                    <br />
-                    시간이 초과되더라도 신중히 선택하면 더 좋은 종목을 찾을 수 있을 거에요.
-                  </>
-                }
-                placement="top"
-              >
-                <Space>
-                  제한시간 <strong>5분</strong>
-                  <InfoCircleOutlined />
-                </Space>
-              </Tooltip>
             </div>
             <Button style={{ width: 200 }} shape="round" type="primary" onClick={handleStart}>
               시작
