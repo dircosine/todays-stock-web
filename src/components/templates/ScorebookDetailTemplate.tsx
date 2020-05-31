@@ -14,6 +14,8 @@ import './ScorebookDetailTemplate.scss';
 import { useHistory } from 'react-router-dom';
 import ReactHighcharts from 'react-highcharts';
 
+const S3_BUCKET = process.env.NODE_ENV === 'production' ? 'res-todaysstock' : 'res-todaysstock-dev';
+
 export type ChangeInfo = {
   myRank: number;
   name: string;
@@ -42,10 +44,10 @@ function ScorebookDetailTemplate({
   const [afterString, setAfterString] = useState(`after${after}`);
   const [afterDate, setAfterDate] = useState(calcAfterDate(targetDate, after));
   const { data: beforeInfos } = useS3Download(
-    `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/today/${targetDate}_stock_infos.json`,
+    `https://${S3_BUCKET}.s3.ap-northeast-2.amazonaws.com/${targetDate}/today/${targetDate}_stock_infos.json`,
   );
   const { data: afterInfos } = useS3Download(
-    `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/${afterDate}_stock_infos.json`,
+    `https://${S3_BUCKET}.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/${afterDate}_stock_infos.json`,
   );
 
   const [averageNum, setAverageNum] = useState(4);
@@ -83,8 +85,8 @@ function ScorebookDetailTemplate({
       name: before.name,
       code: before.code,
       market: before.market,
-      beforeChartSrc: `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/today/charts/${targetDate}_${before.code}_day.png`,
-      afterChartSrc: `https://res-todaysstock-dev.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/charts/${afterDate}_${before.code}_day.png`,
+      beforeChartSrc: `https://${S3_BUCKET}.s3.ap-northeast-2.amazonaws.com/${targetDate}/today/charts/${targetDate}_${before.code}_day.png`,
+      afterChartSrc: `https://${S3_BUCKET}.s3.ap-northeast-2.amazonaws.com/${targetDate}/${afterString}/charts/${afterDate}_${before.code}_day.png`,
       beforePrice: before.price.today,
       afterPrice: after.price.today,
       change: invalidChange ? 0 : change,
