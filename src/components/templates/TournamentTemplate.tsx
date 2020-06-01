@@ -37,7 +37,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const myRank = useRef<StockInfo[]>([...stockInfos]);
@@ -71,7 +71,6 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   }, [initStage, stockInfos]);
 
   const postResult = async () => {
-    // TODO: UserId 추가
     const userEmail = localStorage.getItem('email');
     const rank = myRank.current.map((item) => item.name);
     const {
@@ -125,9 +124,9 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         case 'GUIDE':
           return 'ROUND';
         case 'ROUND':
-          postResult();
           return 'MARKET';
         case 'MARKET':
+          postResult();
           setResult();
           return 'DONE';
         case 'DONE':
