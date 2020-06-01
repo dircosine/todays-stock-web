@@ -37,7 +37,7 @@ interface TournamentTemplateProps {
   eventDate: string;
 }
 
-const START_ROUND = Round.Round2; // 추후 유저 선택으로 변경
+const START_ROUND = Round.Round32; // 추후 유저 선택으로 변경
 
 function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemplateProps) {
   const myRank = useRef<StockInfo[]>([...stockInfos]);
@@ -237,6 +237,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
         <EventDate date={eventDate} />의 토너먼트
       </h2>
       <div className={`stage-title ${stage === 'ROUND' && 'score-board'}`}>
+        <div className="timer-space-dummy" />
         {/* {stage === 'ROUND' && (
           <Timer
             initialSec={300}
