@@ -9,7 +9,6 @@ import Emoji from '../Emoji';
 import { StockInfo } from '../../lib/stock';
 import { useMutation } from '@apollo/react-hooks';
 import GuideStage from '../GuideStage';
-import useMobileLayoutCheck from '../../hooks/useMobileLayoutCheck';
 import TournamentDoneStage from '../TournamentDoneStage';
 import { POST_RESULT } from '../../lib/queries';
 
@@ -43,7 +42,6 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   const myRank = useRef<StockInfo[]>([...stockInfos]);
   const [round, setRound] = useState<Round>(START_ROUND);
   const [stage, setStage] = useState<Stage>(initStage);
-  const [dimRef, mobileLayout] = useMobileLayoutCheck();
 
   const [chartScale, setChartScale] = useState<ChartScale>('day');
 
@@ -231,7 +229,7 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
   };
 
   return (
-    <div className="TournamentTemplate" ref={dimRef}>
+    <div className="TournamentTemplate">
       <h1 hidden={true}>오늘의 토너먼트</h1>
       <h2 className="page-title" hidden={true}>
         <EventDate date={eventDate} />의 토너먼트
@@ -317,61 +315,58 @@ function TournamentTemplate({ initStage, stockInfos, eventDate }: TournamentTemp
 
       {stage === 'ROUND' && (
         <div className="round-stage">
-          {mobileLayout ? (
-            <>
-              <Carousel className={aniMationClassName}>
-                <StockCardSelectable
-                  stockInfo={myRank.current[leftIndex.current]}
-                  chartScale={chartScale}
-                  position="left"
-                  blind={blind}
-                  showMoreInfo={showMoreInfo}
-                  onClick={handleCardClick}
-                  isMobile={true}
-                />
-                <StockCardSelectable
-                  stockInfo={myRank.current[rightIndex.current]}
-                  chartScale={chartScale}
-                  position="right"
-                  blind={blind}
-                  showMoreInfo={showMoreInfo}
-                  onClick={handleCardClick}
-                  isMobile={true}
-                />
-              </Carousel>
-              <div style={{ textAlign: 'center' }}>
-                <Space>
-                  <Emoji symbol="👈" />
-                  양쪽으로 슬라이드해서 비교
-                  <Emoji symbol="👉" />
-                </Space>
-              </div>
-            </>
-          ) : (
-            <>
+          <div className="mobile">
+            <Carousel className={aniMationClassName} draggable={true}>
               <StockCardSelectable
-                className={aniMationClassName}
                 stockInfo={myRank.current[leftIndex.current]}
                 chartScale={chartScale}
                 position="left"
                 blind={blind}
                 showMoreInfo={showMoreInfo}
                 onClick={handleCardClick}
-                isMobile={false}
+                isMobile={true}
               />
-              <div className="vs">vs</div>
               <StockCardSelectable
-                className={aniMationClassName}
                 stockInfo={myRank.current[rightIndex.current]}
                 chartScale={chartScale}
                 position="right"
                 blind={blind}
                 showMoreInfo={showMoreInfo}
                 onClick={handleCardClick}
-                isMobile={false}
+                isMobile={true}
               />
-            </>
-          )}
+            </Carousel>
+            <div style={{ textAlign: 'center' }}>
+              <Space>
+                <Emoji symbol="👈" />
+                양쪽으로 슬라이드해서 비교
+                <Emoji symbol="👉" />
+              </Space>
+            </div>
+          </div>
+          <div className="desktop">
+            <StockCardSelectable
+              className={aniMationClassName}
+              stockInfo={myRank.current[leftIndex.current]}
+              chartScale={chartScale}
+              position="left"
+              blind={blind}
+              showMoreInfo={showMoreInfo}
+              onClick={handleCardClick}
+              isMobile={false}
+            />
+            <div className="vs">vs</div>
+            <StockCardSelectable
+              className={aniMationClassName}
+              stockInfo={myRank.current[rightIndex.current]}
+              chartScale={chartScale}
+              position="right"
+              blind={blind}
+              showMoreInfo={showMoreInfo}
+              onClick={handleCardClick}
+              isMobile={false}
+            />
+          </div>
         </div>
       )}
 

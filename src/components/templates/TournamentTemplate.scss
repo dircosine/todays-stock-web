@@ -89,6 +89,14 @@
   }
 
   .round-stage {
+    .desktop {
+      display: flex;
+      flex-direction: row;
+    }
+    .mobile {
+      display: none;
+    }
+
     .ant-carousel {
       .slick-slide {
         overflow: hidden;
@@ -101,20 +109,24 @@
       }
     }
 
-    display: flex;
-    @include mobile {
-      flex-direction: column;
-    }
-
     .vs {
       display: flex;
       width: 30px;
-      @include mobile {
-        width: 100%;
-      }
       justify-content: center;
       align-items: center;
       font-size: 24px;
+    }
+
+    @include mobile {
+      .desktop {
+        display: none;
+      }
+      .mobile {
+        display: block;
+      }
+      .vs {
+        width: 100%;
+      }
     }
   }
 
