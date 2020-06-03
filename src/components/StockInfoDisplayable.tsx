@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Tag, Spin, Divider } from 'antd';
+import React from 'react';
+import { Tag, Divider } from 'antd';
 import PriceInfoDisplay from './PriceInfoDisplay';
 import './StockInfoDisplayable.scss';
 import MoreInfoDisplay from './MoreInfoDisplay';
 import { StockInfo } from '../lib/stock';
 import { useQuery } from '@apollo/react-hooks';
 import { TOURNAMENT_PAGE } from '../lib/queries';
+import ImgLoadable from './ImgLoadable';
 
 export type InfoSection = 'head' | 'chart' | 'price' | 'more';
 
@@ -24,18 +25,8 @@ function StockInfoDisplayable({
   showMoreInfo,
   infoExtent,
 }: StockInfoDisplayableProps) {
-  const [imgLoading, setImgLoading] = useState(infoExtent.includes('chart'));
   const { data } = useQuery(TOURNAMENT_PAGE, { fetchPolicy: 'cache-first' });
   const eventDate = data.getTodaysTournament.eventDate;
-
-  useEffect(() => {
-    setImgLoading(infoExtent.includes('chart'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stockInfo]);
-
-  const handleImgLoad = () => {
-    setImgLoading(false);
-  };
 
   const s3bucket =
     process.env.NODE_ENV === 'production' ? 'res-todaysstock' : 'res-todaysstock-dev';
@@ -63,23 +54,7 @@ function StockInfoDisplayable({
         </div>
       )}
       <Divider style={{ margin: '10px 0px' }} />
-      {infoExtent.includes('chart') && (
-        <div className="img-wrap">
-          <img
-            className="chart"
-            alt={stockInfo.name + ' chart'}
-            src={imgSrc}
-            width="100%"
-            onLoad={handleImgLoad}
-            hidden={imgLoading}
-          />
-          {imgLoading && (
-            <div className="spinner">
-              <Spin />
-            </div>
-          )}
-        </div>
-      )}
+      {infoExtent.includes('chart') && <ImgLoadable src={imgSrc} alt={stockInfo.name + ' chart'} />}
       {infoExtent.includes('price') && (
         <div className="info-price">
           <PriceInfoDisplay price={stockInfo.price} />

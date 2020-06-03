@@ -216,7 +216,10 @@ function ScorebookDetailTemplate({
         </Button>
       </div>
       <div className="head">
-        <h2 className="stage-title">채점 결과</h2>
+        <h2 className="stage-title">
+          <Emoji symbol="💯" />
+          채점 결과
+        </h2>
       </div>
       <SpaceHorizontal />
       <div className="two-column">
