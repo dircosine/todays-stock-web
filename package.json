@@ -27,7 +27,7 @@
     "customize-cra": "^0.9.1",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "node-sass": "^4.13.1",
     "query-string": "^6.12.1",
     "react": "^16.13.1",
